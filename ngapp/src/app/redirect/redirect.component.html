@@ -1,0 +1,40 @@
+<style>
+  .preload-spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #007dc4; /*#DD5533;*/
+
+    margin: 100px auto;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+  }
+
+  @-webkit-keyframes sk-rotateplane {
+    0% { -webkit-transform: perspective(120px) }
+    50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+    100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+  }
+
+  @keyframes sk-rotateplane {
+    0% {
+      transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+    } 50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+      } 100% {
+          transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+          -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        }
+  }
+</style>
+<div class="preload-loading" style="width: 100%; position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(#D8D8D8, #FFFFFF, #FFFFFF, #FFFFFF, #D8D8D8);">
+  <div style="position: relative; text-align: center; top: 30%;">
+    <img alt="blueleaf-logo.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIcAAAAdCAMAAAC3xI8dAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAF1QTFRFAH3EAH3EAH3EAAAAAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3E/xXVUAAAAB90Uk5TgH9gAEDP/68gwJAQ8LBQMD+P71+/32+fcKDQTw/gH8q4MaoAAAMdSURBVHiczZfZgqsgDIZRkKLUpS5VO+15/8c8Sdgr006vZnJR8deQjxCBMlYURckPhnJxlF+a+NiDIlWyOikmwerjU5Tlpz1+7AHWUCTx2xxayjNj7a9zCCk76/vbHP0f4XC+f4yjHwb9KYdIfBIOPQxD1qN/xaEvIzaq6cDRzGBWjNuclyd6abmoA4e+LjLtz3hUpJ4EtOu5xB9QqFPD0RMFeeonjjpKTNzWs/RWPHGIxT+qwvD7yqurhgDMRqFOiWMMXcpF/4ijj33kmnB0GH8TQmzI40DQY2lQrXC4xMHYDlcww5GAzD/h0ItMrIk4IOC4WY8N2gZEQYyrVbtRrsTxVB9y3iKS8gccu5kPCCFMlYjAAW+FCgWo2flOsZrlqLhie13b4nrPoSiJNuOly6LhEL5eyK5mwSxTtctzuECCSql/y0Gbkx/0Be+U42jlGH3LnC+yJXWJRT6/5OAaQba3HDcs6MHZZGfTcLiqjShpO7sk6tdrDso4e8shj7ZbDuh4mWNbMMEirhka8PccX3f8hYS07zh0hqMOHAcTPlyw7zmmyk5c/Y4jFyvi2NmTqQzHnOMYzZRMhqM5cOjMvDzqxJrAIfjBQP2XKmN2/aB2tZh5SeqjNYnlPBbx2h6CMVuR2+EJll261dyz80L54Ku888FG9SHpBXOQ1kmS0q/Tc8C3lBKaXfAh50Sd8vVBsIUc7lDd52ToZcgX8+KGjZPrc1MxB6O1JNht6YwafzAYJ8cx4ktX+YXLB0s4aOnEDdIEN6I+Ex3FU1BRqwoc8CweemPWU1Cre1AvMs8BXU3DSvvdQyccpjijrZD7LMEWsM52M+88B/KGlWxzpz3wCCC0Auc5nJ3NrhFC9k8vmJ72VNxDPojcpIqL2Y2LPBZTqwOoZY7jdnvGiM+FZY7D/v+JMcI5CCGrS7HivvnwByFUR7PAQuHnOGrt0lK7EotDdo8MBxce/mH/l4Zz4Xb2hNFX5fupxXE9hQOSAGS1tXXLwiEO5bAedQ2sVHu544IV+u1ZC/esc/cqeGh6t92SLwf6YdANUyYAXbT1+Q/ENE6pNKc/TQAAAABJRU5ErkJggg"/>
+    <h3 style="color: #818181; font-size: 20px; font-weight: 300; font-family: 'Open Sans'; margin: 1rem 0;" [hidden]="errorMessage.length != 0">Loading...</h3>
+    <div class="preload-spinner" [hidden]="errorMessage.length != 0"></div>
+    <br /> <br />
+    <p style="color: #FF0000" [hidden]="errorMessage.length == 0"><br /><b>Error:</b> {{errorMessage}}</p><br />
+    <p [hidden]="errorMessage.length == 0">Click here to <a href="#oidc" (click)="urebalService.oidcLoginRedirect()">Retry</a></p>
+  </div>
+</div>

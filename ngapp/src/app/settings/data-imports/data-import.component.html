@@ -1,0 +1,428 @@
+<br />
+<div class="slds-grid slds-grid--vertical-stretch slds-wrap">
+  <article class="slds-size--3-of-12 urebal-card slds-m-around--x-small hidden card">
+    <div class="slds-card__header slds-grid urebal-card-header">
+      <header class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <h2>
+            <span class="slds-text-heading--small">Upload Account</span>
+          </h2>
+        </div>
+      </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner urebal-card-body">
+      <div class="slds-form-element__control">
+        <div class="slds-form-element slds-size--1-of-1">
+          <input class="slds-input slds-size--1-of-1" placeholder="Account Name" type="text" [(ngModel)]="portfolioName">
+        </div>
+
+        <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+          <div class="slds-file-selector__dropzone full-width">
+            <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-01" aria-describedby="file-selector-id">
+            <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-01">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-01">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+          </div>
+        </div>
+
+        <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+          <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnAccount" disabled (click)="uploadAccount($event)" >Upload Account</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="slds-card__footer">
+      <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+        <span class="slds-assistive-text">info</span>
+        <h2><b>Note:</b> Existing Account with the given account name will be overwritten.</h2>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('modelImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-card__header slds-grid urebal-card-header">
+      <header class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <h2>
+            <span class="slds-text-heading--small">Upload Security Based Model</span>
+          </h2>
+        </div>
+      </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner urebal-card-body">
+      <form>
+        <div class="slds-form-element__control">
+          <div class="slds-form-element slds-size--1-of-1">
+            <input autocomplete="off" class="slds-input slds-size--1-of-1" type="text" placeholder="Model Name" name="modelName" [(ngModel)]="modelName" required>
+          </div>
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-02" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body" id="file-selector-secondary-label">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-02">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-02">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnModel" disabled (click)="uploadModel($event)">Upload Security Based Model</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="slds-card__footer">
+      <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+        <span class="slds-assistive-text">info</span>
+        <h2><b>Note:</b> Existing Model with the given model name will be overwritten.</h2>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('attributesImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid urebal-card-header">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2>
+              <span class="slds-text-heading--small">Upload Attribute</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+          <div class="slds-form-element slds-size--1-of-1">
+            <input autocomplete="off" class="slds-input slds-size--1-of-1" type="text" placeholder="Attribute Type" [(ngModel)]="type"><br />
+            <input  autocomplete="off" class="slds-input slds-size--1-of-1 urebal-margin-top" type="text" placeholder="Attribute Name" [(ngModel)]="attributeName">
+          </div>
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-03" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-03">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-03">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnAttributes" disabled (click)="uploadAttribute($event)">Upload Attributes</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+          <span class="slds-assistive-text">info</span>
+          <h2><b>Note:</b> Attribute with matching attribute type and name will be overwritten.</h2>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('priceImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid urebal-card-header">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2>
+              <span class="slds-text-heading--small">Upload Price</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-04" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-04">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-04">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnPrice" disabled (click)="uploadPrice($event)" >Upload Price</button>
+          </div>
+
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+          <span class="slds-assistive-text">info</span>
+          <h2><b>Note:</b> Prices for securities that already exist will be overwritten.</h2>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('tiltingParamImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid urebal-card-header">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2>
+              <span class="slds-text-heading--small">Upload Tilting Parameters</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+          <div class="slds-form-element slds-size--1-of-1">
+            <input autocomplete="off" class="slds-input slds-size--1-of-1" type="text" placeholder="Tilt Parameter Name" [(ngModel)]="tiltingParamName">
+          </div>
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-06" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-06">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-06">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnTiltParameter" disabled (click)="uploadTiltParameter($event)" >Upload Tilt Parameter</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+          <span class="slds-assistive-text">info</span>
+          <h2><b>Note:</b>  Tilting Parameters for securities that already exist will be overwritten.</h2>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('ranksImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid urebal-card-header">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2>
+              <span class="slds-text-heading--small">Upload Security Ranking</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+          <div class="slds-form-element slds-size--1-of-1">
+            <input autocomplete="off" class="slds-input slds-size--1-of-1" type="text" placeholder="Security Ranking Name" [(ngModel)]="rankSetId">
+          </div>
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-07" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-07">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-07">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnSecurityRanking" disabled (click)="uploadSecurityRanks($event)" >Upload Security Ranks</button>
+          </div>
+
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+          <span class="slds-assistive-text">info</span>
+          <h2><b>Note:</b>  Security Ranks for securities that already exist in a set will be overwritten.</h2>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('securityMasterImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid urebal-card-header">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2>
+              <span class="slds-text-heading--small">Upload Security Master</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+							<span class="slds-checkbox">
+									<input id="chkDeleteAllSec" type="checkbox" name="checkbox"
+                         [(ngModel)]="bDeleteAllSec"
+                         [checked]="bDeleteAllSec"
+                         aria-describedby="toggle-restriction">
+
+									<label class="slds-checkbox__label" for="chkDeleteAllSec">
+										<span class="slds-checkbox--faux"></span>
+										<span class="slds-form-element__label">&nbsp;&nbsp;Delete all old securities</span>
+									</label>
+							</span>
+          </div>
+
+          <div class="slds-file-selector slds-file-selector_files full-width urebal-margin-top">
+            <div class="slds-file-selector__dropzone full-width">
+              <input type="file" (change)="selectFile($event);" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-08" aria-describedby="file-selector-id">
+              <span class="slds-file-selector__body">
+                  <label class="slds-file-selector__text slds-medium-show full-width urebal-word-wrap upload-message" for="file-upload-input-08" id="uploadSecurityMasterStatus">{{DEFAULT_UPLOAD_MESSAGE}}</label>
+                  <span class="remove-file hidden" (click)="cleanFile($event);">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'" />
+                    </svg>
+                  </span>
+                  <label class="slds-file-selector__button slds-button_neutral" for="file-upload-input-08">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'" />
+                    </svg>
+                    Upload
+                  </label>
+                </span>
+            </div>
+          </div>
+
+          <div class="slds-size--1-of-1" style="margin-top: 0.5rem;">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" id="btnSecurityMaster" disabled (click)="uploadSecurityMaster($event)" >Upload Security Master</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <div class="slds-notify slds-notify_alert  urebal-theme_info" role="alert">
+          <span class="slds-assistive-text">info</span>
+          <h2><b>Note:</b>  Security Master will be updated for only matching securities.</h2>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('accountImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid">
+        &nbsp;
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+          <div class="slds-size--1-of-1 slds-text-align_center" style="margin-top: 0.5rem;">
+            <svg class="import-account-icon" aria-hidden="true">
+              <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+            </svg>
+          </div>
+          <h1 class="text-size--heading slds-text-align--center">
+            <a [routerLink]="['/secure/imports/data-import']" class="slds-truncate  urebal-grid-large-text">Import Account</a>
+          </h1>
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <br /><br /><br /><br />
+      </div>
+    </div>
+  </article>
+
+  <article *ngIf="isAllowed('supportZipImport')" class="slds-size--3-of-12 urebal-card slds-m-around--x-small card">
+    <div class="slds-size--1-of-1">
+      <div class="slds-card__header slds-grid">
+        &nbsp;
+      </div>
+      <div class="slds-card__body slds-card__body_inner urebal-card-body">
+        <div class="slds-form-element__control">
+          <div class="slds-size--1-of-1 slds-text-align_center" style="margin-top: 0.5rem;">
+            <svg class="import-account-icon" aria-hidden="true">
+              <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+            </svg>
+          </div>
+          <h1 class="text-size--heading slds-text-align--center">
+            <a [routerLink]="['/secure/imports/data-import-support']" class="slds-truncate  urebal-grid-large-text">Import Support Zip</a>
+          </h1>
+        </div>
+      </div>
+      <div class="slds-card__footer">
+        <br /><br /><br /><br />
+      </div>
+    </div>
+  </article>
+
+</div>
+
+
+<!-- Model to show notification/confirmation -->
+<app-modal #dataImportModal id='dataImportModal'>
+  <div class="slds-modal__header">
+    <label class="slds-text-heading--medium">{{modalMessage}}</label>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--urebal" (click)="closeModal()">OK</button>
+  </div>
+</app-modal>

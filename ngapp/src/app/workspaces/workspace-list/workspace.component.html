@@ -1,0 +1,75 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-grid dataUrl="workflow/workflowList" [displayHeader]=true panelTitle="Rebalance List"
+                     [autoHeight]=false [columnReorder]=false [columnResize]=false [pageable]=true [height]="595"
+                     gridId="workspacelist" #workspacelist
+                     dataType="json"
+                     linkRendererParams='[{"click": "routeToExecute","params": ["name"]}]'
+                     linkRendererPermissions='[{"datafield": "name", "permissionName": "workspaceView"}]'
+
+                     actionItemsPermissions='[
+                        {"item": "Report" , "permissionName": "portfolioViewReports"},
+                        {"item": "Edit" , "permissionName": "workspaceModify"}
+                     ]'
+
+                     actionItems='[
+                        {"item":"Edit","click": "routeToEdit","params": ["name"]},
+                        {"item":"Report","click": "routeToReport","params": ["name"]},
+                        {"item":"Delete","click": "deleteWorkspace","params": ["name"]}
+                     ]'
+
+                     rowRendererColumns='[
+                        {"name":"name","value":"xxx","color":"blue"},
+                        {"name":"drift","value":"10","color":"orange","condition":"gt"},
+                        {"name":"drift","value":"10","color":"gray","condition":"lt"},
+                        {"name":"type","value":"xxx","color":"red","condition":"eq"}
+                     ]'
+
+                     dataColumns='[
+                        { "name": "workflowId", "type": "number" },
+                        { "name": "name", "type": "string" },
+                        { "name": "rebalanceCount", "type": "number" },
+                        { "name": "type", "type": "string" },
+                        { "name": "criteriaString", "type": "string" },
+                        { "name": "rebalanceStatus", "type": "string" },
+                        { "name": "totalMktVal", "type": "number" },
+                        { "name": "totalHouseholds", "type": "number" },
+                        { "name": "totalAccounts", "type": "number" },
+                        { "name": "asOfDate", "type": "date" }
+                      ]'
+
+                     [gridColumns]="rebalanceListGridCols()"
+                     (onLinkClick)="OnLinkActive($event)"
+        >
+        </urebal-grid>
+    </div>
+</div>
+
+
+<app-dialog-modal #WorkSpaceDeleteWarning id='WorkSpaceDeleteWarning'
+                  [modalSize]="'default'"
+                  [title]="'Delete Rebalance'"
+                  (yes)="deleteWorkspace();"
+                  [content]="'Are you sure you want to delete this Rebalance <b>' + workflowName + '</b> ?'"
+                  (no)="WorkSpaceDeleteWarning.close()">
+</app-dialog-modal>
+
+
+<app-dialog-modal #WorkSpaceDeleteOK id='WorkSpaceDeleteOK'
+                  [modalSize]="'default'"
+                  [title]="'Rebalance Deleted'"
+                  (yes)="WorkSpaceDeleteOK.close();"
+                  [yesText]="'OK'"
+                  [content]="'Rebalance <b>' + workflowName + '</b> has been deleted successfully.'"
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>
+
+
+<app-dialog-modal #WorkSpaceDeleteError id='WorkSpaceDeleteError'
+                  [modalSize]="'default'"
+                  [title]="'Delete Rebalance'"
+                  (yes)="WorkSpaceDeleteError.close();"
+                  [yesText]="'OK'"
+                  [content]="'Error deleting Rebalance <b>' + workflowName + '</b> !.'"
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>

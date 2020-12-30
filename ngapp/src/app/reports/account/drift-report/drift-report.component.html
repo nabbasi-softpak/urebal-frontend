@@ -1,0 +1,125 @@
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+
+
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+
+
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Drift</h1>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right">
+
+
+          <div class="slds-grid">
+
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="printme()" class="slds-button slds-button&#45;&#45;neutral slds-m-horizontal&#45;&#45;small" aria-haspopup="true" title="Print View">
+              Print
+            </button>
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="exportme()" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal&#45;&#45;small" aria-haspopup="true" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="driftService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="slds-size--1-of-1">
+
+
+      <!-- options -->
+      <div class="slds-p-around--small slds-p-horizontal--medium gradient-background slds-border--bottom quick-filters slds-align--absolute-center no-print">
+
+        <div class="slds-form--inline">
+
+
+
+          <div class="slds-form-element">
+            <label class="slds-form-element__label">Account Name</label>
+            <div class="slds-form-element__control">
+
+              <!--Implement autocomplete here ...  -->
+              <app-autocomplete (postSelect)="getReport($event)" [items]="portfolioList" [inputID]="'autocomplete-sharelot'" [template]="'drift'" [placeholder]="'Enter Account Name'" [defaultValue]="''"> </app-autocomplete>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!--<div class="slds-grid slds-grid&#45;&#45;vertical-align-center slds-text-align&#45;&#45;right">
+
+
+          <div class="slds-grid">
+
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="printme()" class="slds-button slds-button&#45;&#45;neutral slds-m-horizontal&#45;&#45;small" aria-haspopup="true" title="Print View">
+              Print
+            </button>
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="exportme()" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal&#45;&#45;small" aria-haspopup="true" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use xlink:href="app/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
+              </svg>
+
+            </button>
+          </div>
+
+        </div>-->
+
+      </div>
+
+      <div>
+
+      </div>
+      <div class="slds-hide container" id="printData" style="width: 100%">
+
+
+        <div  class="slds-p-around--medium myContainer" id="summary">
+
+          <div class="slds-container_center gridContainer">
+
+            <app-drift-detail #driftDetail *ngIf="portfolio.portfolioId" (returnReport)="driftDetailRes($event)" [portfolioId]="portfolio?.portfolioId" [portfolioName]='portfolio?.portfolioName'></app-drift-detail>
+
+          </div>
+
+        </div>
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+  <div *ngIf="(errMsg != '')" class="alert alert-danger slds-size--1-of-1 slds-text-align--center">
+    <div>
+      {{errMsg}}
+    </div>
+  </div>
+
+
+
+</div>

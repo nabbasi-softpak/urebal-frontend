@@ -1,0 +1,1312 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container" style="padding-bottom: 0;">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget [contentClass]="'slds-grid'" [showFooter]="true">
+            <div header>
+                <div class="blueleaf-widget-header">
+                    <div *ngIf="!isEdit">
+                        Create A New Template
+                    </div>
+                    <div *ngIf="isEdit">
+                        Edit Template
+                    </div>
+                </div>
+            </div>
+
+            <div body>
+                <!-- Template Name Section -->
+                <section class="slds-p-around--large">
+                    <div class="slds-grid slds-grid--vertical-align-center">
+                        <div class="slds-size--8-of-12">
+                            <label for="templateNameInput" class="blueleaf-form-control-label slds-m-right--small">Template Name</label>
+                            <input *ngIf="!isEdit" type="text"
+                                   id="templateNameInput"
+                                   class="slds-input slds-input--blueleaf"
+                                   [(ngModel)]="templateName"
+                                   [maxlength]="50"
+                                   placeholder="Enter Template Name" autofocus autocomplete="off">
+                            <span *ngIf="isEdit" class="blueleaf-widget-subheader"
+                                  style="text-transform: none">{{templateName}}</span>
+
+                            <div class="slds-form-element__control slds-m-horizontal--small" style="display: inline;">
+                                <label class="blueleaf-error-message"> {{templateErrorMsg}}</label>
+                                <label class="blueleaf-success-message"> {{templateSuccessMsg}}</label>
+                            </div>
+                        </div>
+
+                        <div class="slds-size--4-of-12">
+                            <div class="slds-form--inline slds-float--right">
+                                <div class="slds-form-element">
+
+                                    <div class="slds-form-element__control">
+                                        <div>
+                                            <label>
+                                                <select style="width:250px !important;"
+                                                        class="blueleaf-dropdown blueleaf-non-clipping-dropdown"
+                                                        (change)="loadRebalanceTemplate()"
+                                                        [(ngModel)]="selectedTemplate">
+                                                    <option [ngValue]="null">Copy from Existing Template
+                                                    </option>
+                                                    <ng-container *ngFor="let template of rebalanceTemplateList">
+                                                        <option *ngIf="!this.isEdit || (this.isEdit && template.templateName != templateName)"
+                                                                [ngValue]="template">
+                                                            {{template.templateName}}
+                                                        </option>
+                                                    </ng-container>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="blueleaf-widget-divider--gray slds-m-vertical--none"/>
+
+                <!-- Template Main Section -->
+                <section>
+                    <div class="slds-size--1-of-1 slds-p-around--medium">
+
+                        <!-- Template Tab Headers -->
+                        <div class="slds-grid slds-grid--vertical-stretch">
+                            <ul class="slds-tabs--default__nav urebal-tabs blueleaf-tabs" role="tablist"
+                                style="border-bottom: 2px solid #e8ecef; width: 100%;">
+                                <ng-container *ngFor="let templateTab of templateTabs;">
+                                    <li
+                                        *ngIf="templateTab.isAllowed"
+                                        [ngClass]="{
+                                            'slds-tabs--default__item': true,
+                                            'slds-active': templateTab.id === activeTemplateTabId
+                                        }"
+                                        role="presentation" [attr.data-target]="templateTab.target">
+                                        <a class="slds-tabs--default__link" role="tab" tabindex="0"
+                                           aria-selected="false" [attr.aria-controls]="templateTab.target"
+                                           (click)="changeTemplateTab(templateTab.id)">
+                                            <b>{{templateTab.title}}</b>
+                                        </a>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+
+                        <!-- Template Tab Contents -->
+                        <div>
+                            <div *ngFor="let templateTab of templateTabs">
+                                <div *ngIf="templateTab.isAllowed"
+                                     class="slds-size--1-of-1 slds-p-around--medium"
+                                     [ngClass]="activeTemplateTabId === templateTab.id ? 'slds-show' : 'slds-hide'">
+
+                                    <!-- Rebalance Settings Tab Contents -->
+                                    <div *ngIf="templateTab.id === REBALANCE_SETTINGS_TAB && rebalanceSettings"
+                                         class="slds-grid slds-grid--pull-padded-medium"
+                                    >
+                                        <!-- Rule Based Rebalancing Part -->
+                                        <div class="slds-col slds-p-horizontal--small slds-size--1-of-2">
+
+                                            <div class="section">
+                                                <div class="section-head"
+                                                     [hidden]="!isAllowed('workspaceObjectiveFunctionRebalancing')">
+                                                    <label>
+                                                        <span class="slds-radio">
+                                                            <input [checked]="!rebalanceSettings.isObjFunction"
+                                                                   (change)="rebalanceSettings.isObjFunction = !rebalanceSettings?.isObjFunction"
+                                                                   type="radio" id="radioRebalance" name="options"/>
+                                                            <label class="slds-radio__label" for="radioRebalance">
+                                                                <span class="slds-radio--faux"></span>
+                                                            </label>
+                                                        </span>
+                                                        Rule Based Rebalancing
+                                                    </label>
+                                                    <hr>
+                                                </div>
+
+                                                <!-- Rule Based Rebalancing Content -->
+                                                <fieldset class="slds-form--compound">
+                                                    <ul class="collapsible">
+                                                        <li>
+                                                            <h3 style="position:relative; text-transform: uppercase; font-size: 16px">
+                                                                Rebalance Type</h3>
+                                                            <hr class="blueleaf-widget-divider--gray slds-m-around_none slds-m-top--medium"/>
+                                                            <div class="collapsible-body" style="padding: 0;">
+                                                                <table
+                                                                    class="table-rebalance-options blueleaf-table--no-horizontal-padding"
+                                                                    *ngIf="rebalanceRuleOptions">
+                                                                    <tr *ngFor="let key of rebalanceRuleOptions; let idx = index">
+                                                                        <td *ngIf="key.hidden==false">
+                                                                            <label>
+                                                                                <span class="slds-radio blueleaf-radio">
+                                                                                    <input
+                                                                                        [disabled]="key.disabled || rebalanceSettings.isObjFunction"
+                                                                                        type="radio"
+                                                                                        name="rebalanceTypes"
+                                                                                        id="checkbox-{{idx}}"
+                                                                                        [value]='key'
+                                                                                        [(ngModel)]="selectedRebalanceRule"
+                                                                                        (change)="changeRebalanceType()">
+                                                                                    <label for="checkbox-{{idx}}"
+                                                                                           class="blueleaf-radio__label">
+                                                                                        <span
+                                                                                            class="blueleaf-radio--checkbox"></span>
+                                                                                    </label>
+                                                                                </span>
+                                                                                <span
+                                                                                    style="display: inline; vertical-align: middle;" [title]="key.title">{{key.type}}</span>
+                                                                            </label>
+                                                                        </td>
+
+                                                                        <td *ngIf="key.id  == 2">
+                                                                            <div class="slds-form-element">
+                                                                                <label for="getCTG"
+                                                                                       class="slds-form-element__label">Cash
+                                                                                    To
+                                                                                    Generate</label>
+                                                                                <span>{{ AppConfig.ENGINE_MTS_TYPE == "$" ? "$" : "" }}&nbsp;</span>
+                                                                                <input
+                                                                                    [disabled]="rebalanceSettings.isObjFunction || selectedRebalanceRule.id != 2"
+                                                                                    id="getCTG"
+                                                                                    [value]="rebalanceSettings?.cashToGenerate"
+                                                                                    InputValidation [validationType]="{
+                                                                                        'dollar-three-decimals': AppConfig.ENGINE_MTS_TYPE == '$',
+                                                                                        'percent-three-decimals': AppConfig.ENGINE_MTS_TYPE == '%'
+                                                                                    }" [empty]="'0'"
+                                                                                    (blur)="onChangeCTG()"
+                                                                                    [(ngModel)]="rebalanceSettings.cashToGenerate"
+                                                                                    type="text"
+                                                                                    class="slds-input num-align slds-input--blueleaf slds-input--blueleaf-medium">
+                                                                                <span>&nbsp;{{ AppConfig.ENGINE_MTS_TYPE == "$" ? "" : "%" }}</span>
+                                                                            </div>
+                                                                        </td>
+
+                                                                        <td *ngIf="key?.id == 5 && key.hidden===false">
+
+                                                                            <div class="slds-grid ">
+                                                                                <div class="slds-form-element">
+                                                                                    <div class="slds-form-element__control">
+                                                                                        <button (click)="openRebalanceWithinModelSleeveModal()"
+                                                                                                [disabled]="rebalanceSettings.isObjFunction ||
+                                                                                                            selectedRebalanceRule.id != 5"
+                                                                                                class="slds-button slds-button--blueleaf--neutral">
+                                                                                            Assign Sleeves
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td *ngIf="key.id === 7 && key.hidden===false">
+                                                                            <div class="slds-form-element__control">
+                                                                                <label for="getGainValue"
+                                                                                       class="slds-form-element__label"
+                                                                                       style="width: 75px">Amount
+                                                                                    ($)</label>
+                                                                                <input
+                                                                                    [disabled]="rebalanceSettings.isObjFunction|| selectedRebalanceRule.id != 7"
+                                                                                    (blur)="rebalanceSettings.gainLossToHarvest=harvestGainDollar"
+                                                                                    id="getGainValue"
+                                                                                    [(ngModel)]="harvestGainDollar"
+                                                                                    type="text"
+                                                                                    class="slds-input num-align"
+                                                                                    style="width:150px;"
+                                                                                    ur-number-format
+                                                                                    placeholder="Enter Gain Value">
+
+                                                                            </div>
+                                                                        </td>
+                                                                        <td *ngIf="key.id === 7 && key.hidden===false">
+                                                                            <span class="slds-checkbox">
+                                                                              <input type="checkbox"
+                                                                                     name="reinvestCheckBox"
+                                                                                     id="checkbox-ReInvest"
+                                                                                     [checked]="(selectedRebalanceRule.id== 7)?rebalanceSettings.isReinvest:false"
+                                                                                     (change)="rebalanceSettings.isReinvest = !rebalanceSettings?.isReinvest"
+                                                                                     [disabled]="rebalanceSettings.isObjFunction || selectedRebalanceRule.id != 7"/>
+                                                                              <label class="slds-checkbox__label"
+                                                                                     for="checkbox-ReInvest">
+                                                                                <span
+                                                                                    class="slds-checkbox--faux"></span>
+                                                                                <span class="slds-form-element__label">Reinvest Cash</span>
+                                                                              </label>
+                                                                            </span>
+                                                                        </td>
+
+                                                                        <td *ngIf="key.id === 8 && key.hidden===false">
+                                                                            <div class="slds-form-element__control">
+                                                                                <label for="getLossValue"
+                                                                                       class="slds-form-element__label"
+                                                                                       style="width: 75px">
+                                                                                    Amount ($)
+                                                                                </label>
+                                                                                <input
+                                                                                    style="width:150px; text-align: right"
+                                                                                    class="slds-input num-align ng-pristine ng-valid ng-touched"
+                                                                                    [disabled]="rebalanceSettings.isObjFunction || selectedRebalanceRule.id != 8"
+                                                                                    id="getLossValue"
+                                                                                    (blur)="rebalanceSettings.gainLossToHarvest=harvestLossDollar"
+                                                                                    [(ngModel)]="harvestLossDollar"
+                                                                                    type="text"
+                                                                                    ur-number-format
+                                                                                    placeholder="Enter Loss Value">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td *ngIf="key.id === 8 && key.hidden===false">
+                                                                            <span class="slds-checkbox">
+                                                                              <input type="checkbox"
+                                                                                     name="reinvestCheckBox"
+                                                                                     id="checkbox-ReInvest2"
+                                                                                     [checked]="(selectedRebalanceRule.id == 8) ? rebalanceSettings.isReinvest:false"
+                                                                                     (change)="rebalanceSettings.isReinvest = !rebalanceSettings?.isReinvest"
+                                                                                     [disabled]="rebalanceSettings.isObjFunction|| selectedRebalanceRule.id != 8"/>
+                                                                              <label class="slds-checkbox__label"
+                                                                                     for="checkbox-ReInvest2">
+                                                                                <span
+                                                                                    class="slds-checkbox--faux"></span>
+                                                                                <span class="slds-form-element__label">Reinvest Cash</span>
+                                                                              </label>
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+
+                                        <!-- Objective Function Based Rebalancing Part -->
+                                        <div *ngIf="isAllowed('workspaceObjectiveFunctionRebalancing')"
+                                             class="slds-col slds-p-horizontal--small slds-size--1-of-2">
+                                            <div class="section">
+                                                <div class="section-head">
+                                                    <label>
+                                                        <span class="slds-radio" *ngIf="rebalanceSettings">
+                                                            <input type="radio" id="radioObjFunc" name="options"
+                                                                   [checked]="rebalanceSettings.isObjFunction"
+                                                                   (change)="rebalanceSettings.isObjFunction = !rebalanceSettings?.isObjFunction"/>
+                                                            <label class="slds-radio__label" for="radioObjFunc">
+                                                                <span class="slds-radio--faux"></span>
+                                                            </label>
+                                                        </span>
+                                                        Objective Function Rebalancing
+                                                    </label>
+                                                    <hr />
+                                                </div>
+
+                                                <fieldset [disabled]="!rebalanceSettings.isObjFunction">
+                                                    <ul class="collapsible">
+                                                        <li>
+                                                            <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                                Security Ranking
+                                                            </h3>
+
+                                                            <div class="collapsible-body"
+                                                                 style="padding-left: 0; padding-right: 0">
+                                                                <table
+                                                                    class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <form class="slds-form--inline">
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label">
+                                                                                        Select Rank Set
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control">
+                                                                                        <select
+                                                                                            [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                            [(ngModel)]="rebalanceSettings.rankSetID"
+                                                                                            name="rankSet"
+                                                                                            class="slds-select">
+                                                                                            <option [ngValue]="''"
+                                                                                                    disabled>
+                                                                                                Select Rank Set
+                                                                                            </option>
+                                                                                            <option
+                                                                                                *ngFor="let ranking of securityRankingList"
+                                                                                                [ngValue]="ranking">
+                                                                                                {{ranking}}
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <svg
+                                                                                        class="slds-input__icon slds-icon-text-default"
+                                                                                        style="height: 20px;width: 20px"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="openRankDetailModal()">
+                                                                                        <use
+                                                                                            [attr.xlink:href]="templateService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#open_folder'">
+                                                                                        </use>
+                                                                                    </svg>
+
+                                                                                </div>
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label"
+                                                                                        for="rankScalar">
+                                                                                        Scaling Factor
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control"
+                                                                                        style="width:50px;">
+                                                                                        <input
+                                                                                            [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                            type="text" ur-percentage
+                                                                                            ur-number-format required
+                                                                                            ngControl="hour"
+                                                                                            name="rankScalar"
+                                                                                            id="rankScalar"
+                                                                                            class="slds-input num-align"
+                                                                                            placeholder=""
+                                                                                            style="width:70px; text-align: right"
+                                                                                            [(ngModel)]="rebalanceSettings.scalarRank">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+
+                                                            <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                                Portfolio Drift
+                                                            </h3>
+                                                            <div class="collapsible-body"
+                                                                 style="padding-left: 0; padding-right: 0">
+                                                                <table
+                                                                    class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <form class="slds-form--inline">
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label">
+                                                                                        Select Drift Type
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control">
+                                                                                        <select
+                                                                                            [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                            class="slds-select">
+                                                                                            <option disabled>
+                                                                                                Standard Deviation
+                                                                                            </option>
+                                                                                            <option selected>
+                                                                                                Variance
+                                                                                            </option>
+                                                                                            <option disabled>
+                                                                                                Sum of ABS WTS
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label">
+                                                                                        Scaling Factor</label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control"
+                                                                                        style="width:50px;">
+                                                                                        <input
+                                                                                            [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                            type="text" ur-percentage
+                                                                                            ur-number-format
+                                                                                            name="ScalarVariance"
+                                                                                            class="slds-input num-align"
+                                                                                            placeholder=""
+                                                                                            style="width:70px; text-align: right"
+                                                                                            [(ngModel)]="rebalanceSettings.scalarVariance">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                                Transaction Cost
+                                                            </h3>
+                                                            <div class="collapsible-body"
+                                                                 style="padding-left: 0; padding-right: 0">
+                                                                <table
+                                                                    class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <form class="slds-form--inline">
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label">
+                                                                                        Transaction Cost to Buy
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control"
+                                                                                        style="width:70px;">
+                                                                                        <input style="text-align: right"
+                                                                                               [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                               name="buyTransactionCost"
+                                                                                               type="text" ur-percentage
+                                                                                               ur-number-format
+                                                                                               class="slds-input num-align"
+                                                                                               placeholder="buy"
+                                                                                               [(ngModel)]="rebalanceSettings.buyTransactionCost">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="slds-form-element">
+                                                                                    <label
+                                                                                        class="slds-form-element__label">
+                                                                                        Transaction Cost to Sell
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="slds-form-element__control"
+                                                                                        style="width:70px;">
+                                                                                        <input style="text-align: right"
+                                                                                               [disabled]="!rebalanceSettings.isObjFunction"
+                                                                                               name="sellTransactionCost"
+                                                                                               type="text" ur-percentage
+                                                                                               ur-number-format
+                                                                                               class="slds-input num-align"
+                                                                                               placeholder="sell"
+                                                                                               [(ngModel)]="rebalanceSettings.sellTransactionCost">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="slds-form-element">
+                                                                                    <span class="slds-checkbox">
+                                                                                        <input type="checkbox"
+                                                                                               name="options"
+                                                                                               id="checkbox-153"
+                                                                                               disabled="">
+                                                                                        <label class="slds-checkbox__label" for="checkbox-153">
+                                                                                            <span class="slds-checkbox--faux"></span>
+                                                                                            <span class="slds-form-element__label">
+                                                                                                Minimize Trade Cost
+                                                                                            </span>
+                                                                                        </label>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </li>
+
+                                                        <!-- TODO: Setup Objective Function Rebalance Settings for template -->
+<!--                                                        <li>-->
+<!--                                                            <h3 class="slds-text-heading&#45;&#45;label slds-p-around&#45;&#45;small slds-theme&#45;&#45;shade box">-->
+<!--                                                                Account Tilt-->
+<!--                                                            </h3>-->
+<!--                                                            <div class="collapsible-body"-->
+<!--                                                                 style="padding-left: 0; padding-right: 0">-->
+<!--                                                                <table-->
+<!--                                                                    class="table-rebalance-options blueleaf-table&#45;&#45;no-horizontal-padding">-->
+<!--                                                                    <tr>-->
+<!--                                                                        <td>-->
+<!--                                                                            <fieldset-->
+<!--                                                                                [disabled]="!rebalanceSettings.isObjFunction"-->
+<!--                                                                                class="slds-form&#45;&#45;compound">-->
+<!--                                                                                <div class="slds-form-element__group">-->
+<!--                                                                                    <div class="slds-form-element__row">-->
+<!--                                                                                        <div-->
+<!--                                                                                            class="slds-form-element slds-size&#45;&#45;1-of-2">-->
+<!--                                                                                            <label-->
+<!--                                                                                                class="slds-form-element__label slds-size&#45;&#45;1-of-1">Select-->
+<!--                                                                                                Account</label>-->
+<!--                                                                                            <select-->
+<!--                                                                                                *ngIf="strAccounts.length > 1"-->
+<!--                                                                                                [disabled]="!rebalanceSettings.isObjFunction"-->
+<!--                                                                                                [(ngModel)]="selectTiltAccount"-->
+<!--                                                                                                name="select Account"-->
+<!--                                                                                                class="slds-select">-->
+<!--                                                                                                <option value=""-->
+<!--                                                                                                        disabled-->
+<!--                                                                                                        selected>-->
+<!--                                                                                                    Select Account-->
+<!--                                                                                                </option>-->
+<!--                                                                                                <option-->
+<!--                                                                                                    *ngFor="let accountID of strAccounts"-->
+<!--                                                                                                    value="{{accountID}}">{{accountID}}</option>-->
+<!--                                                                                            </select>-->
+<!--                                                                                            <strong><label-->
+<!--                                                                                                *ngIf="strAccounts.length == 1"-->
+<!--                                                                                                class="slds-form-element__label slds-m-top&#45;&#45;x-small">{{strAccounts[0]}}</label></strong>-->
+<!--                                                                                        </div>-->
+<!--                                                                                        <div-->
+<!--                                                                                            class="slds-form-element slds-size&#45;&#45;1-of-2">-->
+<!--                                                                                            <label-->
+<!--                                                                                                class="slds-form-element__label">-->
+<!--                                                                                                Select Tilt Parameter</label>-->
+<!--                                                                                            <div-->
+<!--                                                                                                class="slds-form-element__control slds-input-has-icon slds-input-has-icon&#45;&#45;right">-->
+<!--                                                                                                <svg-->
+<!--                                                                                                    class="slds-input__icon slds-icon-text-default"-->
+<!--                                                                                                    aria-hidden="true"-->
+<!--                                                                                                    (click)="openTiltParameterDetail()">-->
+<!--                                                                                                    <use-->
+<!--                                                                                                        [attr.xlink:href]="templateService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#open_folder'"></use>-->
+<!--                                                                                                </svg>-->
+<!--                                                                                                <app-urebal-autocomplete-->
+<!--                                                                                                    #tiltAutoComplete-->
+<!--                                                                                                    [isNgModel]="true"-->
+<!--                                                                                                    width='99%'-->
+<!--                                                                                                    inputClass="slds-input"-->
+<!--                                                                                                    placeholder="Add tilt parameter"-->
+<!--                                                                                                    source="tiltingParameterList"-->
+<!--                                                                                                    displayMember="parameterName"-->
+<!--                                                                                                    (onItemSelect)="selectParamFromList($event)"-->
+<!--                                                                                                    (onBlur)="selectParamFromList($event)"></app-urebal-autocomplete>-->
+<!--                                                                                            </div>-->
+<!--                                                                                        </div>-->
+<!--                                                                                        <div-->
+<!--                                                                                            class="slds-form-element slds-size&#45;&#45;1-of-2 slds-align-bottom">-->
+<!--                                                                                            <button-->
+<!--                                                                                                [disabled]="!rebalanceSettings.isObjFunction"-->
+<!--                                                                                                class="slds-button slds-button&#45;&#45;neutral "-->
+<!--                                                                                                (click)="addtiltParameterInList()"-->
+<!--                                                                                                aria-live="assertive"-->
+<!--                                                                                                title="Add more">-->
+<!--                                                                                                Add-->
+<!--                                                                                            </button>-->
+<!--                                                                                        </div>-->
+<!--                                                                                    </div>-->
+<!--                                                                                </div>-->
+<!--                                                                            </fieldset>-->
+<!--                                                                        </td>-->
+<!--                                                                    </tr>-->
+<!--                                                                </table>-->
+
+<!--                                                                <ng-container *ngIf="tiltParameters">-->
+<!--                                                                    <div class="collapsible-body paddingLeft20">-->
+<!--                                                                        <table-->
+<!--                                                                            class="table-rebalance-options blueleaf-table&#45;&#45;no-horizontal-padding"-->
+<!--                                                                            style="max-width:750px">-->
+<!--                                                                            <tr *ngFor="let row of tiltParameters;  let i = index">-->
+<!--                                                                                <td *ngIf="row.parameter">-->
+<!--                                                                                    <div class="slds-form&#45;&#45;inline">-->
+<!--                                                                                        <input type="text"-->
+<!--                                                                                               class="slds-input slds-size&#45;&#45;3-of-12"-->
+<!--                                                                                               [(ngModel)]="row.accountId"-->
+<!--                                                                                               disabled>-->
+<!--                                                                                        <input type="text"-->
+<!--                                                                                               class="slds-input slds-size&#45;&#45;3-of-12"-->
+<!--                                                                                               [(ngModel)]="row.parameter.parameterName"-->
+<!--                                                                                               disabled>-->
+<!--                                                                                        <label class="text">Goal</label>-->
+<!--                                                                                        <input-->
+<!--                                                                                            [disabled]="!rebalanceSettings.isObjFunction"-->
+<!--                                                                                            type="text" ur-percentage-->
+<!--                                                                                            ur-number-format-->
+<!--                                                                                            class="slds-input num-align"-->
+<!--                                                                                            [(ngModel)]="row.goal"-->
+<!--                                                                                            style="width:70px;text-align: right">-->
+<!--                                                                                        <label-->
+<!--                                                                                            class="text">Scale</label>-->
+<!--                                                                                        <input-->
+<!--                                                                                            [disabled]="!rebalanceSettings.isObjFunction"-->
+<!--                                                                                            type="text" ur-percentage-->
+<!--                                                                                            ur-number-format-->
+<!--                                                                                            class="slds-input num-align"-->
+<!--                                                                                            [(ngModel)]="row.scale"-->
+<!--                                                                                            style="width:70px;text-align: right">-->
+<!--                                                                                        <button-->
+<!--                                                                                            (click)="removeTiltParameter(i)"-->
+<!--                                                                                            class="slds-button slds-button&#45;&#45;icon-border"-->
+<!--                                                                                            aria-live="assertive"-->
+<!--                                                                                            title="Remove">-->
+<!--                                                                                            <svg-->
+<!--                                                                                                class="slds-button__icon"-->
+<!--                                                                                                aria-hidden="true">-->
+<!--                                                                                                <use-->
+<!--                                                                                                    [attr.xlink:href]="templateService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>-->
+<!--                                                                                            </svg>-->
+<!--                                                                                            <span-->
+<!--                                                                                                class="slds-assistive-text">Remove</span>-->
+<!--                                                                                        </button>-->
+<!--                                                                                    </div>-->
+<!--                                                                                </td>-->
+<!--                                                                            </tr>-->
+<!--                                                                        </table>-->
+<!--                                                                    </div>-->
+<!--                                                                </ng-container>-->
+<!--                                                            </div>-->
+<!--                                                        </li>-->
+                                                    </ul>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- General Settings Tab Contents -->
+                                    <div *ngIf="templateTab.id === GENERAL_SETTINGS_TAB && rebalanceSettings"
+                                         class="slds-grid slds-grid--pull-padded-medium">
+
+                                        <!-- First Column -->
+                                        <div class="slds-col slds-p-horizontal--medium slds-size--1-of-2">
+                                            <ul class="collapsible">
+                                                <li>
+                                                    <div class="collapsible-body" style="padding: 0;">
+                                                        <table
+                                                            class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                            <tr>
+                                                                <td style="width:240px;">
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <span class="slds-checkbox">
+                                                                                <input type="checkbox"
+                                                                                       name="reinvestCheckBox"
+                                                                                       id="checkbox-MTS"
+                                                                                       [(ngModel)]="rebalanceSettings.isMTSApply">
+                                                                                <label class="slds-checkbox__label"
+                                                                                       for="checkbox-MTS">
+                                                                                    <span
+                                                                                        class="slds-checkbox--faux"></span>
+                                                                                    <span
+                                                                                        class="slds-form-element__label">Apply Minimum Trade Size</span>
+                                                                                </label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element">
+                                                                            <label for="Value-MTS">{{ AppConfig.ENGINE_MTS_TYPE == "$" ? "$" : "" }}&nbsp;</label>
+                                                                            <input InputValidation [validationType]="{
+                                                                                     'dollar-three-decimals': AppConfig.ENGINE_MTS_TYPE == '$',
+                                                                                     'percent-three-decimals': AppConfig.ENGINE_MTS_TYPE == '%'
+                                                                                   }" [empty]="'0'"
+                                                                                   id="Value-MTS"
+                                                                                   style="width:150px; text-align: right"
+                                                                                   [(ngModel)]="rebalanceSettings.minTradeSize"
+                                                                                   [disabled]="!rebalanceSettings.isMTSApply"
+                                                                                   [value]="rebalanceSettings?.minTradeSize"
+                                                                                   (keyup)="selectedTemplate = null"
+                                                                                   class="slds-input num-align slds-input--blueleaf slds-input--blueleaf-medium">
+                                                                            <span>&nbsp;{{ AppConfig.ENGINE_MTS_TYPE == "$" ? "" : "%" }}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <span class="slds-checkbox">
+                                                                                <input id="applyRestrictions"
+                                                                                       type="checkbox" name="checkbox"
+                                                                                       [(ngModel)]="rebalanceSettings.isRestrictionApply"
+                                                                                       [checked]="rebalanceSettings?.isRestrictionApply"
+                                                                                       (change)="selectedTemplate = null"
+                                                                                       aria-describedby="toggle-restriction">
+                                                                                <label class="slds-checkbox__label"
+                                                                                       for="applyRestrictions">
+                                                                                    <span
+                                                                                        class="slds-checkbox--faux"></span>
+                                                                                    <span
+                                                                                        class="slds-form-element__label">Apply Security Restrictions</span>
+                                                                                </label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr *ngIf="isAllowed('accountModifyRestrictions')">
+                                                                <td>
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <span class="slds-checkbox">
+                                                                                <input type="checkbox" name="options"
+                                                                                       id="checkbox-152"
+                                                                                       [(ngModel)]="rebalanceSettings.isAttributesApply"
+                                                                                       [checked]="rebalanceSettings?.isAttributesApply"
+                                                                                       (change)="selectedTemplate = null"
+                                                                                >
+                                                                                <label class="slds-checkbox__label"
+                                                                                       for="checkbox-152">
+                                                                                <span
+                                                                                    class="slds-checkbox--faux"></span>
+                                                                                <span class="slds-form-element__label">Apply Attribute Restrictions</span>
+                                                                              </label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr *ngIf="isAllowed('modelViewAssetModel')">
+                                                                <td colspan="2">
+                                                                    <div class="slds-form-element">
+                                                                        <div *ngIf="rebalanceSettings"
+                                                                             class="slds-form-element__control">
+                                                                            <span class="slds-checkbox">
+                                                                                <input id="applyModelAttr"
+                                                                                       type="checkbox"
+                                                                                       name="checkbox"
+                                                                                       [(ngModel)]="rebalanceSettings.isModelAttributesApply"
+                                                                                       [disabled]="
+                                                                                        selectedRebalanceRule?.id  == 4 ||
+                                                                                        selectedRebalanceRule?.id  == 5 ||
+                                                                                        disableApplyModelAttribute"
+                                                                                       [checked]="rebalanceSettings?.isModelAttributesApply"
+                                                                                       (change)="selectedTemplate = null"
+                                                                                       aria-describedby="toggle-restriction">
+
+                                                                                <label class="slds-checkbox__label"
+                                                                                       for="applyModelAttr">
+                                                                                    <span
+                                                                                        class="slds-checkbox--faux"></span>
+                                                                                    <span
+                                                                                        class="slds-form-element__label">Apply Model Attributes</span>
+                                                                                </label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <span class="slds-checkbox">
+                                                                                <input id="applyEquivalences"
+                                                                                       type="checkbox"
+                                                                                       name="checkbox"
+                                                                                       [(ngModel)]="rebalanceSettings.isEquivalenceApply"
+                                                                                       [checked]="rebalanceSettings?.isEquivalenceApply"
+                                                                                       (change)="selectedTemplate = null"
+                                                                                       aria-describedby="toggle-restriction">
+
+                                                                                <label class="slds-checkbox__label"
+                                                                                       for="applyEquivalences">
+                                                                                    <span
+                                                                                        class="slds-checkbox--faux"></span>
+                                                                                    <span
+                                                                                        class="slds-form-element__label">Apply Equivalences</span>
+                                                                                </label>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </div>
+                                                </li>
+
+                                                <li class="table-rebalance-options">
+                                                    <div
+                                                        class="slds-grid slds-m-top--medium">
+
+                                                        <div class="slds-col slds-size--1-of-2">
+                                                            <div>
+                                                                <div class="slds-form-element">
+                                                                    <div class="slds-form-element__control">
+                                                                        <span class="slds-checkbox">
+                                                                            <input id="equivBuyRules"
+                                                                                   type="checkbox"
+                                                                                   [disabled]="!rebalanceSettings?.isEquivalenceApply"
+                                                                                   [(ngModel)]="rebalanceSettings.isEquivalenceBuyRulesApply"
+                                                                                   [checked]="rebalanceSettings?.isEquivalenceBuyRulesApply"
+                                                                                   (change)="selectedTemplate = null"
+                                                                                   aria-describedby="toggle-equiv-buy-rules">
+
+                                                                            <label
+                                                                                class="slds-checkbox__label slds-grid"
+                                                                                for="equivBuyRules">
+                                                                                <span
+                                                                                    class="slds-checkbox--faux slds-col slds-shrink-none"
+                                                                                    style="max-width: 1rem"></span>
+                                                                                <span
+                                                                                    class="slds-form-element__label slds-col">
+                                                                                    Set Equivalence breakdown rules for Buys
+                                                                                </span>
+                                                                            </label>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <table class="slds-table blueleaf-table--template"
+                                                                       style="border-collapse: unset">
+                                                                    <tbody>
+                                                                    <tr class="blueleaf-text"
+                                                                        *ngFor="let index of getObjectKeys(equivBreakdownBuyRules);">
+                                                                        <td>Rule #{{+index + 1}}</td>
+                                                                        <td>
+                                                                            <select id="equivBuyRule#-{{+index + 1}}"
+                                                                                    class="slds-select"
+                                                                                    [disabled]="!rebalanceSettings?.isEquivalenceApply ||
+                                                                                                    !rebalanceSettings?.isEquivalenceBuyRulesApply"
+                                                                                    (change)="selectedTemplate = null; equivRuleChanged('Buy', index, $event.target.value)"
+                                                                                    [ngModel]="equivBreakdownBuyRules[index]">
+                                                                                <option
+                                                                                    *ngFor="let subEquivBuyRule of equivBuyRules"
+                                                                                    [value]="subEquivBuyRule.id">
+                                                                                    {{subEquivBuyRule.name}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="slds-col slds-size--1-of-2">
+                                                            <div>
+                                                                <div class="slds-form-element">
+                                                                    <div class="slds-form-element__control">
+                                                                        <span class="slds-checkbox">
+                                                                            <input id="equivSellRules"
+                                                                                   type="checkbox"
+                                                                                   [disabled]="!rebalanceSettings?.isEquivalenceApply"
+                                                                                   [(ngModel)]="rebalanceSettings.isEquivalenceSellRulesApply"
+                                                                                   [checked]="rebalanceSettings?.isEquivalenceSellRulesApply"
+                                                                                   (change)="selectedTemplate = null"
+                                                                                   aria-describedby="toggle-equiv-sell-rules">
+
+                                                                            <label
+                                                                                class="slds-checkbox__label slds-grid"
+                                                                                for="equivSellRules">
+                                                                                <span
+                                                                                    class="slds-checkbox--faux slds-col slds-shrink-none"
+                                                                                    style="max-width: 1rem"></span>
+                                                                                <span
+                                                                                    class="slds-form-element__label slds-col">
+                                                                                    Set Equivalence breakdown rules for Sells
+                                                                                </span>
+                                                                            </label>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <table class="slds-table blueleaf-table--template"
+                                                                       style="border-collapse: unset">
+                                                                    <tbody>
+                                                                    <tr class="blueleaf-text"
+                                                                        *ngFor="let index of getObjectKeys(equivBreakdownSellRules);">
+                                                                        <td>Rule #{{+index + 1}}</td>
+                                                                        <td>
+                                                                            <select id="equivSellRule#-{{+index + 1}}"
+                                                                                    class="slds-select"
+                                                                                    [disabled]="!rebalanceSettings?.isEquivalenceApply ||
+                                                                                                    !rebalanceSettings?.isEquivalenceSellRulesApply"
+                                                                                    (change)="selectedTemplate = null; equivRuleChanged('Sell', index, $event.target.value)"
+                                                                                    [ngModel]="equivBreakdownSellRules[index]">
+                                                                                <option
+                                                                                    *ngFor="let subEquivSellRule of equivSellRules"
+                                                                                    [value]="subEquivSellRule.id">
+                                                                                    {{subEquivSellRule.name}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- Second Column -->
+                                        <div class="slds-col slds-p-horizontal--medium slds-size--1-of-2">
+                                            <h3 class="slds-m-top--medium">Rounding Preference</h3>
+                                            <hr class="blueleaf-widget-divider--gray slds-m-around_none slds-m-top--medium"/>
+
+                                            <div class="collapsible-body" style="padding-left: 0; padding-right: 0">
+                                                <table
+                                                    class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <fieldset class="slds-form--compound">
+                                                                <div class="slds-form-element__group">
+                                                                    <div class="slds-form-element__row">
+                                                                        <div
+                                                                            class="slds-form-element slds-size--1-of-2">
+                                                                            <label class="slds-form-element__label">Round
+                                                                                Lot Size</label>
+                                                                            <select
+                                                                                [disabled]="rebalanceSettings?.isSecurityTypeRounding"
+                                                                                [(ngModel)]="rebalanceSettings.roundNearestUnit"
+                                                                                id="select-RoundLotSize"
+                                                                                (change)="selectedTemplate = null"
+                                                                                class="slds-select blueleaf-dropdown">
+                                                                                <option
+                                                                                    *ngFor="let lotSize of roundLotSizeOptions">
+                                                                                    {{lotSize}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-form-element slds-size--1-of-2">
+                                                                            <label class="slds-form-element__label">Sell
+                                                                                Direction</label>
+                                                                            <select
+                                                                                [disabled]="
+                                                                                    rebalanceSettings?.isSecurityTypeRounding ||
+                                                                                    rebalanceSettings?.roundNearestUnit == 'Do not round'
+                                                                                "
+                                                                                [(ngModel)]="rebalanceSettings.roundSellDirection"
+                                                                                id="select-SellDirection"
+                                                                                (change)="selectedTemplate = null"
+                                                                                class="slds-select blueleaf-dropdown">
+                                                                                <option
+                                                                                    *ngFor="let sellDirection of directionArray">
+                                                                                    {{sellDirection}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-form-element slds-size--1-of-2">
+                                                                            <label class="slds-form-element__label">Buy
+                                                                                Direction</label>
+                                                                            <select
+                                                                                [disabled]="
+                                                                                    rebalanceSettings?.isSecurityTypeRounding ||
+                                                                                    rebalanceSettings?.roundNearestUnit == 'Do not round'
+                                                                                "
+                                                                                [(ngModel)]="rebalanceSettings.roundBuyDirection"
+                                                                                id="select-BuyDirection"
+                                                                                (change)="selectedTemplate = null"
+                                                                                class="slds-select blueleaf-dropdown">
+                                                                                <option
+                                                                                    *ngFor="let buyDirection of directionArray">
+                                                                                    {{buyDirection}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </fieldset>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="slds-grid slds-grid_vertical-align-center">
+                                                            <div class="slds-m-right--x-small">
+                                                                <span class="slds-checkbox">
+                                                                    <input id="applySecurityLevelRounding"
+                                                                           type="checkbox"
+                                                                           [(ngModel)]="rebalanceSettings.isSecurityTypeRounding"
+                                                                           [checked]="rebalanceSettings?.isSecurityTypeRounding"
+                                                                           (change)="selectedTemplate = null"
+                                                                           name="checkbox"
+                                                                           aria-describedby="toggle-restriction"
+                                                                           [ngModel]="rebalanceSettings?.isSecurityTypeRounding">
+                                                                    <label class="slds-checkbox__label"
+                                                                           for="applySecurityLevelRounding">
+                                                                        <span class="slds-checkbox--faux"
+                                                                              style="margin-right: 0.5rem;"></span>
+                                                                        <span class="slds-form-element__label">Security Level Rounding</span>
+                                                                  </label>
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <fieldset [disabled]="!rebalanceSettings?.isSecurityTypeRounding" style="max-width: 650px;">
+                                                <div class="slds-grid slds-grid--vertical">
+                                                    <div id="security-level-roundings-settings-head"
+                                                         class="slds-grid slds-col slds-size--1-of-1 blueleaf-text">
+                                                        <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                            Security Type
+                                                        </div>
+                                                        <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                            Round Lot Size
+                                                        </div>
+                                                        <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                            Sell Direction
+                                                        </div>
+                                                        <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                            Buy Direction
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="security-level-roundings-settings-body"
+                                                         class="slds-grid slds-grid--vertical slds-col slds-size--1-of-1 blueleaf-text"
+                                                         style="max-height: 200px; overflow-y: auto">
+                                                        <div class="slds-grid slds-col slds-size--1-of-1" *ngFor="let type of templateSecurityTypesList">
+                                                            <div class="slds-size--1-of-4 slds-p-around--x-small slds-align-middle slds-truncate">
+                                                                {{type.securityType}}
+                                                            </div>
+
+                                                            <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                                <select id="{{type.securityType}}-TemplateRoundLotSize"
+                                                                        [(ngModel)]="type.roundNearestUnit"
+                                                                        [disabled]="!rebalanceSettings.isSecurityTypeRounding"
+                                                                        (change)="selectedTemplate = null"
+                                                                        class="slds-select">
+                                                                    <option
+                                                                        *ngFor="let roundLotSize of roundLotSizeOptions">{{roundLotSize}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                                <select id="{{type.securityType}}-TemplateSellDirection"
+                                                                        [disabled]="type.roundNearestUnit == 'Do not round' ||
+                                                                                    !rebalanceSettings.isSecurityTypeRounding"
+                                                                        [(ngModel)]="type.roundSellDirection"
+                                                                        (change)="selectedTemplate = null"
+                                                                        class="slds-select">
+                                                                    <option *ngFor="let roundDirection of roundDirections">
+                                                                        {{roundDirection}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="slds-size--1-of-4 slds-p-around--x-small">
+                                                                <select id="{{type.securityType}}-TemplateBuyDirection"
+                                                                        [disabled]="type.roundNearestUnit == 'Do not round' ||
+                                                                                    !rebalanceSettings.isSecurityTypeRounding"
+                                                                        [(ngModel)]="type.roundBuyDirection"
+                                                                        (change)="selectedTemplate = null"
+                                                                        class="slds-select">
+                                                                    <option *ngFor="let roundDirection of roundDirections">
+                                                                        {{roundDirection}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Tax Settings Tab Contents -->
+                                    <div *ngIf="templateTab.id === TAX_SETTINGS_TAB && rebalanceSettings"
+                                         class="slds-grid slds-grid--pull-padded-medium">
+
+                                        <!-- First column -->
+                                        <div class="slds-col slds-p-horizontal--medium slds-size--1-of-2">
+                                            <fieldset class="slds-form--compound">
+                                                <ul class="collapsible">
+                                                    <li>
+                                                        <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                            Lot selling order
+                                                        </h3>
+
+                                                        <div class="collapsible-body" style="padding-left: 0; padding-right: 0">
+                                                            <table class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                                <tr
+                                                                    *ngFor="let lotKey of getObjectKeys(sellLotOrderingStrategies); let i = index">
+                                                                    <td>
+                                                                        <label>
+                                                                            <span class="slds-radio">
+                                                                                <input type="radio"
+                                                                                       name="lotOrder"
+                                                                                       id="LotRuleID-{{i}}"
+                                                                                       [value]="lotKey"
+                                                                                       [(ngModel)]="rebalanceSettings.lotOrder">
+                                                                                <label for="LotRuleID-{{i}}" class="slds-radio__label">
+                                                                                    <span class="slds-radio--faux"></span>
+                                                                                </label>
+                                                                            </span>
+                                                                            {{sellLotOrderingStrategies[lotKey]}}
+                                                                        </label>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+
+                                                    </li>
+                                                </ul>
+                                            </fieldset>
+                                        </div>
+
+                                        <!-- Second column -->
+                                        <div class="slds-col slds-p-horizontal--medium slds-size--1-of-2">
+                                            <div class="section">
+                                                <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                    Washsale Settings
+                                                </h3>
+                                                <div class="collapsible-body" style="padding-left: 0; padding-right: 0">
+                                                    <fieldset>
+                                                        <ul class="collapsible">
+                                                            <li>
+                                                                <span class="slds-checkbox">
+                                                                    <input type="checkbox"
+                                                                           name="checkbox"
+                                                                           id="washSaleCheckbox"
+                                                                           [(ngModel)]="rebalanceSettings.isWashsalesApply"
+                                                                           (change)="selectedTemplate = null"
+                                                                           [checked]="rebalanceSettings?.isWashsalesApply"
+                                                                           aria-describedby="toggle-washsales">
+                                                                    <label class="slds-checkbox__label" for="washSaleCheckbox">
+                                                                        <span class="slds-checkbox--faux" style="margin-right: 0.5rem;"></span>
+                                                                        <span class="slds-form-element__label">Apply Washsale</span>
+                                                                    </label>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </fieldset>
+                                                </div>
+                                                <div style="height: 10px"></div>
+
+                                                <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">
+                                                    Selling Strategy
+                                                </h3>
+
+                                                <div class="collapsible-body" style="padding-left: 0; padding-right: 0">
+                                                    <table class="table-rebalance-options blueleaf-table--no-horizontal-padding">
+                                                        <tr *ngFor="let strategyKey of getObjectKeys(taxSortingStrategies); let i = index">
+                                                            <td>
+                                                                <label>
+                                                                    <span class="slds-radio">
+                                                                        <input type="radio"
+                                                                               name="SellStrategyOrder"
+                                                                               id="SellStrategyOrder-{{i}}"
+                                                                               [value]="strategyKey"
+                                                                               [(ngModel)]="rebalanceSettings.sellStrategy">
+                                                                        <label for="SellStrategyOrder-{{i}}" class="slds-radio__label">
+                                                                            <span class="slds-radio--faux"></span>
+                                                                        </label>
+                                                                    </span>
+                                                                    {{taxSortingStrategies[strategyKey]}}
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <div footer>
+                <label class="blueleaf-error-message">{{errMessage}}</label>
+                <button (click)="onCancelClicked()" class="slds-button slds-button--blueleaf--neutral">Cancel</button>
+                <button [disabled]="inputValidationErr || (isEdit && !isAllowed('templateModify'))"
+                        (click)="_saveTemplate()" class="slds-button slds-button--blueleaf">
+                    Save
+                </button>
+            </div>
+
+        </urebal-widget>
+    </div>
+</div>
+
+<!-- Rebalance Within Model Sleeve Modal -->
+<app-dialog-modal
+    #rebalanceWithinModelSleeveModalRef
+    id="rebalanceWithinModelSleeveModal"
+    title="Assign Sleeves"
+    yesText="Save"
+    noText="Cancel"
+    (yes)="onBtnSaveClicked_rebWithinModalSleeveModal()"
+    (no)="onBtnCancelClicked_rebWithinModalSleeveModal()"
+>
+    <div class="slds-grid slds-grid--vertical">
+        <div class="slds-col"
+             style="text-align: left;">
+            <label class="slds-form-element__label slds-size--1-of-1">
+                Select Model
+            </label>
+            <softpak-combobox
+                #modelComboxBoxRef
+                class="blueleaf-dropdown slds-col slds-size--1-of-1"
+                [comboBoxContainerDivClassName]="'combobox-container'"
+                [comboBoxInputClassName]="'combobox-remove-padding'"
+                [width]="'100%'" [height]="'32px'"
+                [placeHolder]="'Please select model'"
+                [displayMember]="'name'"
+                (onChange)="onModelChanged()"
+            >
+            </softpak-combobox>
+
+            <div class="blueleaf-input-error-box blueleaf-text"
+                 *ngIf="rebWithinModelSleeveErrorMsg && rebWithinModelSleeveErrorMsg !== ''">
+                {{rebWithinModelSleeveErrorMsg}}
+            </div>
+        </div>
+
+        <div class="slds-col slds-m-top--medium"
+             style="text-align: left;">
+            <label
+                class="slds-form-element__label slds-size--1-of-1">
+                Sleeve
+            </label>
+            <div class="slds-col">
+                <softpak-dropdown
+                    #modelSleeveDropDownRef
+                    class="slds-select"
+                    id="modelSleeveDropDown"
+                    [width]="'100%'"
+                    [height]="'32px'"
+                    [checkboxes]="true"
+                    [displayMember]="'name'"
+                    [autoDropDownHeight]="true"
+                    [valueMember]="'id'"
+                    [disabled]="true"
+                >
+                </softpak-dropdown>
+            </div>
+        </div>
+    </div>
+</app-dialog-modal>
+
+<!-- Rank Details Modal -->
+<app-dialog-modal
+    #rankDetailsModal
+    id="rankDetailsModal"
+    *ngIf="rebalanceSettings"
+    [title]="rebalanceSettings.rankSetID"
+    yesText="Close"
+    (yes)="closeRankDetailModal()"
+    [hideSecondaryButton]="true">
+        <urebal-grid #rankDetailModalGrid
+                     [data]="rankSecurities"
+                     [displayHeader]=false
+                     [autoHeight]=true panelTitle=""
+                     [columnReorder]=false
+                     [columnResize]=false
+                     customContentClass="no-class"
+                     dataType="json"
+                     [dataColumns]="rankSetSecuritiesGridDataColumns"
+                     [gridColumns]='rankSetSecuritiesGridColumns'
+        >
+        </urebal-grid>
+</app-dialog-modal>
+
+<app-dialog-modal #templateEditConfirmationMsgModal
+                  id="templateEditConfirmationMsgModal"
+                  title="Save Template"
+                  [content]="'Changes made will be applied on all associated accounts. Do you want to save changes?'"
+                  yesText="Yes"
+                  (yes)="onBtnYesClicked_templateEditConfirmationMsgModal()"
+                  noText="No"
+                  (no)="onBtnNoClicked_templateEditConfirmationMsgModal()">
+</app-dialog-modal>
+
+
+<app-message-modal #templateSaveMsgModal id='templateSaveMsgModal'
+                  [modalSize]="'default'"
+                  title="Save Template"
+                  [content]="templateSuccessModalMsg"
+                  (ok)="onTemplateSaveMsgModalOkButtonClicked()"
+                  [okText]="'OK'">
+</app-message-modal>

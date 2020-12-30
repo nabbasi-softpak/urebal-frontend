@@ -1,0 +1,144 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget>
+            <div header>
+                <div class="blueleaf-widget-header blueleaf-widget-header-left">
+                    <div class="slds-grid slds-grid--vertical-align-center">
+
+
+                        <div class="slds-col">
+                            <div class="slds-media slds-no-space slds-grow">
+
+                                <div class="slds-media__body">
+                                    {{modelName}}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="slds-col"></div>
+
+                        <div class="slds-col slds-grid--vertical-align-center slds-grid--align-spread">
+
+
+                            <div class="slds-grid slds-grid--vertical-align-center slds-float--right">
+
+                                <div [style.display]="isPie ? 'block' : 'none'">
+                                    <!--<app-urebal-dropdown #dropdownAttributeType id="dropdownAttributeType" [displayMember]="'attributeType'" [valueMember]="'attributeType'" (onSelectionChange)="onAttributeChange($event)"></app-urebal-dropdown>-->
+                                    <select [(ngModel)]="attributeType" (change)="onAttributeChange()"
+                                            class="slds-select" selected>
+                                        <option *ngFor="let attribute of attributes;"
+                                                [ngValue]="attribute.attributeType">{{attribute.attributeType}}</option>
+                                    </select>
+                                </div>
+                                <div style="margin:0px 5px;">
+                                    <button class="slds-button slds-button--blueleaf" (click)="gotoEdit()"
+                                            *ngIf="isAllowed('modelModifySecurityModel')"
+                                    >Edit
+                                    </button>
+                                </div>
+
+                                <!-- Flattened Model Switch -->
+                                <div *ngIf="isFlattened && !isPie" style="margin:0px 5px;">
+                                    <label class="slds-checkbox--toggle slds-grid">
+                                        <span class="slds-form-element__label slds-m-bottom--none">Flattened Model</span>
+                                        <input type="checkbox" name="checkbox"
+                                               (change)="isFlattenedChanged($event.target.checked)"
+                                               aria-describedby="toggle-restriction"/>
+                                        <span id="toggle-equivalances" class="slds-checkbox--faux_container"
+                                              aria-live="assertive">
+                                         <span class="slds-checkbox--faux"></span>
+                                    </span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="blueleaf-widget-subheader">
+                    &nbsp;
+                </div>
+            </div>
+
+
+            <div body>
+                <div class="slds-size--1-of-1" id="modelTable" style="overflow: auto;"
+                     *ngIf="modelType != ModelType.Security_Model; else securityModelTemplate">
+                    <urebal-accordion-group [autoClose]="false">
+                        <div class="blueleaf-border--bottom" *ngFor="let model of gridData; let i = index">
+                            <urebal-accordion [theme]="'blueleaf'" [id]="model.id" [title]="getModelTitle(model)"
+                                              [titleClasses]="'blueleaf-widget-subheading'"
+                                              [contentClasses]="'reset-padding'" [active]="true">
+                                <urebal-grid #modelGridRefs [debug]="false"
+                                             [data]="model.elements"
+                                             [displayHeader]="this.gridHeader"
+                                             [autoHeight]="true"
+                                             [panelTitle]=""
+                                             [columnReorder]="false"
+                                             [columnResize]="false"
+                                             [dataType]="'json'"
+                                             [dataColumns]='[
+                                            { "name": "ticker", "type": "string" },
+                                            { "name": "min", "type": "number" },
+                                            { "name": "target", "type": "number" },
+                                            { "name": "max", "type": "number" },
+                                            { "name": "securityName", "type": "string" },
+                                            { "name": "sector", "type": "string" },
+                                            { "name": "size", "type": "string" },
+                                            { "name": "style", "type": "string" }
+                                        ]'
+                                             [gridColumns]="modelDetailsGridCols()">
+                                </urebal-grid>
+                            </urebal-accordion>
+                        </div>
+                    </urebal-accordion-group>
+                </div>
+                <ng-template #securityModelTemplate>
+                    <div class="slds-size--1-of-1" id="secModelTable" style="overflow: auto;">
+                        <urebal-grid [debug]="false"
+                                     [data]="gridData[0].elements"
+                                     [displayHeader]="this.gridHeader"
+                                     [autoHeight]="false"
+                                     [panelTitle]=""
+                                     [columnReorder]="false"
+                                     [columnResize]="false"
+                                     [height]="480"
+                                     [dataType]="'json'"
+                                     [dataColumns]='[
+                                            { "name": "ticker", "type": "string" },
+                                            { "name": "min", "type": "number" },
+                                            { "name": "target", "type": "number" },
+                                            { "name": "max", "type": "number" },
+                                            { "name": "securityName", "type": "string" },
+                                            { "name": "sector", "type": "string" },
+                                            { "name": "size", "type": "string" },
+                                            { "name": "style", "type": "string" }
+                                        ]'
+                                     [gridColumns]="modelDetailsGridCols()">
+                        </urebal-grid>
+                    </div>
+                </ng-template>
+            </div>
+
+        </urebal-widget>
+        <div class="slds-grid slds-wrap slds-p-around--medium piechart slds-hide box color-white">
+            <div>
+                <button *ngIf="isDrillDown" (click)="switchPanels('pie')"
+                        class="slds-button slds-button--neutral slds-align--absolute-center">Back to attribute(s)
+                </button>
+            </div>
+            <div class="slds-size--1-of-2  slds-p-around--medium slds-align--absolute-center">
+                <jqxChart #chartReference [width]='850' [height]='500' [showLegend]='true'
+                          [borderLineWidth]="0" [title]="title" [description]="description"
+                          [enableAnimations]='true' [padding]='padding' (onClick)="drillDown($event)"
+                          [source]='pieData' [legendLayout]='legendLayout'
+                          [colorScheme]='"scheme05"' [seriesGroups]='seriesGroups'>
+                </jqxChart>
+            </div>
+        </div>
+
+    </div>
+</div>

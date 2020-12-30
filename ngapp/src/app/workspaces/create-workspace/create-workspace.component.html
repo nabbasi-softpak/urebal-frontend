@@ -1,0 +1,259 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget [showHeader]="!isEdit && isStep1" [showDivider]="!isEdit && isStep1">
+            <div header>
+                <div class="blueleaf-widget-header">
+                    Create a New Rebalance
+                </div>
+            </div>
+            <div body>
+                <div class="rebalance-progress slds-align--absolute-center slds-size--1-of-2" style="width: 65%;">
+                    <div class="step active" style="padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)" (click)="backButtonPressed()">
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-search-and-filter.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Search and Filter Accounts
+                            </div>
+                        </a>
+
+                    </div>
+                    <div class="step" [class.active]="!isStep1"
+                         style="pointer-events: none;text-decoration: none; padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)">
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-select-accounts.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Select Accounts for Rebalance
+                            </div>
+                        </a>
+                    </div>
+                    <div class="step" style="padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)"
+                           style="pointer-events: none;text-decoration: none">
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-generate-trades.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Generate Trades
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+    <div class="slds-size--1-of-1 box color-white slds-m-top--medium" [hidden]="!isStep1">
+        <urebal-widget [showFooter]="true" [showHeader]="false" [showDivider]="false">
+            <div body>
+                <div class="slds-size--1-of-1">
+                    <div class="slds-clearfix">&nbsp;</div>
+
+                    <div class="slds-grid">
+                        <div class="slds-size--8-of-12">
+                            <fieldset class="slds-form--inline">
+
+                                <div class="slds-grid slds-grid--vertical-align-center">
+                                    <div>
+                                        <label *ngIf="isStep1 && !isEdit" class="rebalance-text" for="input-01">Name
+                                            this Rebalance</label>
+
+                                        <label *ngIf="!isStep1 && !isEdit"
+                                               class="slds-form-element__label slds-text-title"
+                                               for="input-01" style="font-weight: bold">{{workspaceName}}</label>
+                                        <div *ngIf="isEdit" class="text-size--heading" style="padding-right: 10px;">
+                                            Rebalance
+                                            Name:
+                                        </div>
+                                    </div>
+                                    <div class="slds-p-right--small">
+                                        <div *ngIf="isStep1 && !isEdit" class="slds-p-left--small">
+                                            <input autocomplete="off" type="text" maxlength="100" id="input-01"
+                                                   #workspaceNameInput class="slds-input slds-input--blueleaf"
+                                                   (keyup)="workspaceNameChanged()"
+                                                   [(ngModel)]="workspaceName" name="workspaceName"/>
+                                        </div>
+                                        <div *ngIf="isEdit" class="text-size--heading">
+                                            {{workspaceName}}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="blueleaf-error-message"
+                                               *ngIf="invalidWorkspaceName">{{workspaceNameErrorMessage}}</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+
+                    <app-criteria-builder #criteriaComponent
+                                          (criteriaOutput)="onRendering($event)"></app-criteria-builder>
+                </div>
+            </div>
+            <div footer>
+                <div class="slds-grid">
+                    <div>
+                        <button class="slds-button slds-button--blueleaf--neutral" (click)="cancelCriteria()">Cancel
+                        </button>
+                        <!-- routerLink='/workspaces/list' -->
+                    </div>
+                    <div class="slds-col--bump-left">
+                        <label class="blueleaf-error-message slds-m-right--small"
+                               *ngIf="invalidWorkspace">{{workspaceErrorMessage}}</label>
+                        <button class="slds-button slds-button--blueleaf" (click)="apply()">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+    <div [hidden]="isStep1" class="slds-size--1-of-1 box color-white slds-m-top--medium">
+        <urebal-widget [showFooter]="true" [showHeader]="false" [showDivider]="false">
+            <div body>
+                <div class="slds-size--1-of-1">
+                    <div class="blueleaf-modal-header"
+                         style="display: inline-block; padding-right: 32px; margin-bottom: 0px; margin-top: 0px">
+                        Rebalance
+                        Name: {{workspaceName}}</div>
+                    <span class="blueleaf-text" style="font-size: 18px">Applied Filters:</span><span
+                        class="blueleaf-text"> {{displayUserCriteria}}</span>
+                    <button class="slds-button slds-button--blueleaf slds-m-left--small" aria-live="assertive"
+                            title="Change Filters" (click)="backButtonPressed()">
+                        <span class="slds-assistive-text">Update Filter</span>
+                        Change Filters
+                    </button>
+                </div>
+
+                <div>
+
+                    <div class="slds-size--1-of-1">
+                        <div class="slds-form-element slds-m-top--medium">
+                    <span class="slds-checkbox" *ngIf="isValidCriteria()">
+                    <input id="checkbox-147" (change)="getRebalanceListByCriteria()"
+                           [checked]="criteriaBuilder.isWorkspaceExists"
+                           type="checkbox" [(ngModel)]="criteriaBuilder.isWorkspaceExists">
+                     <label class="slds-checkbox__label" for="checkbox-147">
+                       <span class="slds-checkbox--faux"></span>
+                       <span class="blueleaf-text">Exclude accounts already in another rebalance</span>
+                     </label>
+                    </span>
+                        </div>
+
+                        <urebal-grid [customContentClass]="'blueleaf-widget-custom-content-area'" #mainGridRef panelTitle="Accounts" gridId="create-workspace-report"
+                                     selectionMode="checkbox"
+                                     [displayHeader]=false [autoHeight]=false [columnReorder]=false [columnResize]=false
+                                     [columnsheight]="46"
+                                     [height]="250"
+                                     dataType="array"
+                                     (selectedRow)="selectRebalance($event)"
+                                     (unSelectedRow)="unSelectRebalance($event)"
+                                     (onPageChanged)="lazyLoadGrid.showSelectedRow()"
+                                     (onSort)="lazyLoadGrid.onGridSort($event)"
+                                     dataColumns='[
+                { "name": "rebalanceId", "type": "string" },
+                { "name": "portfolioId", "type": "string" },
+                { "name": "accountId", "type": "string" },
+                { "name": "accountNumber", "type": "string" },
+                { "name": "portfolioName", "type": "string" },
+                { "name": "drift", "type": "number" },
+                { "name": "marketValue", "type": "number" },
+                { "name": "isHousehold", "type": "boolean" },
+                { "name": "isTaxable", "type": "string" },
+                { "name": "modelName", "type": "string" },
+                { "name": "workspaceName", "type": "string" }
+            ]'
+
+                                     [gridColumns]='getAccountsGridColumns()'
+                        >
+                        </urebal-grid>
+
+                    </div>
+                </div>
+            </div>
+            <div footer>
+                <div class="slds-grid">
+                    <div>
+                        <button class="slds-button slds-button--blueleaf--neutral"
+                                (click)="navigateToRebalanceList()">View Rebalance List
+                        </button>
+                    </div>
+                    <div class="slds-col--bump-left">
+                        <label class="blueleaf-error-message" *ngIf="invalidWorkspace">{{workspaceErrorMessage}}</label>
+                        <button class="slds-button slds-button--blueleaf"
+                                [disabled]="selectedRebalanceData.length < 1" (click)="saveWorkspace()">Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+</div>
+
+<!--grid Modal-->
+<!--Modal-->
+
+<app-dialog-modal #viewCheckedProjectsModalRef
+                  [modalSize]="'large'"
+                  [title]="'Move Accounts'"
+                  (yes)="navigateToReviewWorkspace();"
+                  (no)="viewCheckedProjectsModalRef.close()">
+    <div>
+        <div>
+            <label>Existing rebalance associations are removed for accounts that are moved to a different rebalance.
+                Following rebalance associations are found for selected accounts:</label>
+            <table class="blueleaf-text blueleaf-table">
+                <thead>
+                <tr>
+                    <th>Accounts</th>
+                    <th>Rebalance Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let project of containsWorkspaceNamesArray">
+                    <td>{{project.portfolioName}}</td>
+                    <td>{{project.workspaceName}}</td>
+
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div footerMessage>
+        <p class="blueleaf-text" style="font-weight: bold; color: #007dc4;">Do you want to move above accounts to a different rebalance?</p>
+    </div>
+</app-dialog-modal>
+
+
+<!--success Modal-->
+<app-modal #saveWorkspaceRef id='successModal'>
+    <div class="slds-modal__header">
+        <label class="slds-text-heading--medium">{{workspaceSuccessMessage}}</label>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)="executeWorkspace()">OK</button>
+    </div>
+
+</app-modal>
+
+
+<app-dialog-modal
+  #defaultTemplateNotFoundModal id='defaultTemplateNotFoundModal'
+  [modalSize]="'medium'"
+  [title]="'Create Rebalance'"
+  (yes)="defaultTemplateNotFoundModal.close()"
+  [yesText]="'Close'"
+  [hideSecondaryButton]=true>
+  <div>
+    <p style="display: flex;  justify-content: center;">
+      <i [style.display]="'block'" class="material-icons"
+         style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+      {{defaultTemplateNotFoundMessage}}
+    </p>
+  </div>
+</app-dialog-modal>

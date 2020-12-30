@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Icon Generate Trades</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="40" cy="40" r="40"></circle>
+    </defs>
+    <g id="Round-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Blueleaf-Web-App-Rebalence" transform="translate(-1099.000000, -250.000000)">
+            <g id="Group-10" transform="translate(314.000000, 132.000000)">
+                <g id="Group-8-Copy" transform="translate(775.000000, 118.000000)">
+                    <g id="Icon-Generate-Trades" transform="translate(10.000000, 0.000000)">
+                        <path d="M34.02,44 L20,44 L20,48 L34.02,48 L34.02,54 L42,46 L34.02,38 L34.02,44 Z M45.98,42 L45.98,36 L60,36 L60,32 L45.98,32 L45.98,26 L38,34 L45.98,42 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,34 @@
+[
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Security Name",
+    "hidden": false
+  },
+  {
+    "text": "Size",
+    "hidden": true
+  },
+  {
+    "text": "Style",
+    "hidden": true
+  },
+  {
+    "text": "Sector",
+    "hidden": true
+  },
+  {
+    "text": "Min %",
+    "hidden": false
+  },
+  {
+    "text": "Target %",
+    "hidden": false
+  },
+  {
+    "text": "Max %",
+    "hidden": false
+  }
+]

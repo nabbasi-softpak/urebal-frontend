@@ -1,0 +1,221 @@
+<div class="slds-grid slds-m-bottom--large slds-m-top--x-small">
+    <div class="slds-size--1-of-1">
+
+        <div class="slds-grid ">
+            <table class="blueleaf-table--summary blueleaf-text blueleaf-table slds-size--4-of-4">
+                <tr>
+                    <td class="slds-theme--shade slds-text-align--center">Market<br> Value</td>
+                    <td style="text-align: center;"
+                        [innerHTML]="currentTradeSummary?.sleeveMarketValue | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade slds-text-align--center">Proposed<br> Cash ($)</td>
+                    <td style="text-align: center;"
+                        [innerHTML]="currentTradeSummary?.availableCash | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade slds-text-align--center">Proposed<br> Cash (%)</td>
+                    <td style="text-align: center;"
+                        [innerHTML]="((currentTradeSummary?.availableCash / currentTradeSummary?.sleeveMarketValue) * 100) | percent:{html: true, symbol: true}"></td>
+                    <td class="slds-theme--shade slds-text-align--center">Number of<br> Securities</td>
+                    <td style="text-align: center;">{{currentTradeSummary?.numberOfSecurities}}</td>
+                </tr>
+
+                <tr class="slds-hide">
+                    <td class="slds-theme--shade">Net Realized ST Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.realizedStGainLoss | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">YTD Net Tax Cost</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.ytdTaxCost | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">Net Realized LT Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.realizedLtGainLoss | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">YTD Net Realized LT Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.ytdRealizedLtGainLoss | dollar:{html: true}"></td>
+                </tr>
+
+                <tr class="slds-hide">
+                    <td class="slds-theme--shade">YTD Net Realized ST Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.ytdRealizedStGainLoss | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">Net Tax Cost</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.taxCost | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">Net Realized Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.realizedGainLoss | dollar:{html: true}"></td>
+                    <td class="slds-theme--shade">YTD Net Realized Gain/Loss</td>
+                    <td style="text-align: right;"
+                        [innerHTML]="currentTradeSummary?.ytdRealizedGainLoss | dollar:{html: true}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="slds-grid slds-m-bottom--small slds-grid_vertical-align-center" style="border-radius: 0px !important; border: 1px solid #e8ecef;">
+    <div class="blueleaf-search-panel" style="border-radius: 0px !important;">
+        <div class="slds-grid">
+            <div class="slds-col">
+                <div style="width: 27%; float: left; font-family: MuseoSans-500, Sans-Serif;" [hidden]="!isHousehold()">
+                    <softpak-dropdown #tradeSummaryDropdownRef [valueMember]="'accountId'" [displayMember]="'accountNumber'"
+                                      [width]="'95%'" [height]="32"
+                                      [source]="accountsDropdown" [closeDelay]="0"
+                                      (onChange)="changeTradeSummary($event)"
+                    >
+                    </softpak-dropdown>
+                </div>
+                <div style="width: 27%; float: left; font-family: MuseoSans-500, Sans-Serif;">
+                    <span class="slds-p-left--xxx-small slds-hide">Filters:</span>
+                    <softpak-dropdown #filterDropDownRef id="filterDropDown" [source]="filterData" (onSelect)="filterGrid($event)" [closeDelay]="0" [width]="'95%'"
+                                      [height]="32"
+                                      [displayMember]="'name'" [selectedIndex]="currentFilterIndex"
+                                      [valueMember]="'name'">
+                    </softpak-dropdown>
+                </div>
+                <div style="display: none; width: 18%; float: left; font-family: MuseoSans-500, Sans-Serif;">
+                    <span class="slds-p-left--xxx-small">Group by:</span>
+                    <softpak-dropdown [source]="groupByData" (onSelect)="groupByGrid($event)" [width]="'95%'"
+                                      [displayMember]="'name'" [selectedIndex]="-1" [closeDelay]="0"
+                                      [valueMember]="'datafield'">
+                    </softpak-dropdown>
+                </div>
+                <div style="width: 27%; max-width: 300px; float: left; font-family: MuseoSans-500, Sans-Serif;">
+                    <span class="slds-p-left--xxx-small slds-hide">Show Columns:</span>
+                    <softpak-dropdown #showColumnDropdownRef id="showHideColumnsDropDown" [checkboxes]=true [width]="'95%'"
+                                      [height]="32"
+                                      (onSelect)="showHideColumns($event)"
+                                      [closeDelay]="0"
+                                      [placeHolder]="'Select column(s) to show/hide:'"
+                                      [displayMember]="'display'"
+                                      [valueMember]="'value'">
+                    </softpak-dropdown>
+                </div>
+
+            </div>
+        </div>
+        <div class="slds-grid slds-m-top--small">
+            <div class="slds-form--inline slds-size_2-of-4">
+                <div class="slds-form-element" style="">
+                    <div class="slds-form-element__control" *ngIf="!tradesApproved">
+                        <button class="slds-button slds-button--blueleaf" *ngIf="isAllowed('portfolioEditTrades')"
+                                [disabled]="!allowSave()" (click)="saveShareLotReport()">Save Changes
+                        </button>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control" *ngIf="!tradesApproved">
+                        <button *ngIf="isAllowed('portfolioEditTrades')" class="slds-button slds-button--blueleaf--neutral"
+                                [disabled]="!workspaceService.isDataChanged" (click)="getResetConfirmation()">Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-form--inline slds-size_3-of-4 slds-text-align_right">
+                <div class="slds-form-element" style="margin-right: 10px;">
+                    <div class="slds-form-element__control">
+                        <button [disabled]="workspaceService.isDataChanged" *ngIf="isAllowed('portfolioExportTrades')"
+                                class="slds-button slds-button--blueleaf" (click)="exportToExcel()">Export Data
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="isAllowed('portfolioApproveTrades')" class="slds-form-element" style="margin-right: 0px;">
+                    <div class="slds-form-element__control" *ngIf="!tradesApproved">
+                        <button class="slds-button slds-button--blueleaf" (click)="approveTrades()"
+                                [disabled]="tradesApproved" title="Approve">Approve Trades
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="isAllowed('portfolioExportTrades') && tradesApproved" class="slds-form-element" style="margin-right: 0px;">
+                    <div class="slds-form-element__control">
+                        <button class="slds-button slds-button--blueleaf--neutral" (click)="chooseTradeFileFormatModal()"
+                                [disabled]="!tradesApproved" title="Send to File">Generate Trade File
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="isAllowed('portfolioPushTrades') && tradesApproved" class="slds-form-element"
+                     style="margin-right: -14px; display: none">
+                    <div class="slds-form-element__control">
+                        <button id="sendToOMS" class="slds-button slds-button--blueleaf" (click)="pushOnToms()"
+                                [disabled]="!tradesApproved" title="Send to OMS">Send to OMS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slds-grid slds-m-bottom--small">
+    <div class="slds-col">
+        <div id="tradesErrorMessage">
+            <div>
+                <label class="slds-text-title-- text-color-default error-message">{{tradesErrorMessage}}</label>
+            </div>
+        </div>
+        <div id="approveTradeMessage" style="float: right;">
+            <div>
+                <label class="slds-text-title-- text-color-default error-message">{{tradeExportErrorMessage}}</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--1-of-1">
+        <softpak-grid #tradeGridRef [source]="gridAdapter" [columns]="gridColumns" [editable]="true"
+                      [selectionmode]="'singlecell'" [height]="'556'" [width]="'100%'"
+                      [columnsreorder]="true" [sortable]="true" [groupable]="true" [showgroupsheader]="false"
+                      [showgroupaggregates]="true" [enabletooltips]="true"
+                      [columnsresize]="true" [autoloadstate]="false" [autosavestate]="false"
+                      (onColumnreordered)="tradeOverrideColumnReordered($event)"
+                      [pageable]="true" [pagesize]=50
+                      [pagesizeoptions]="[10, 15, 17, 20, 50, 75, 100]"
+                      [pagermode]="'simple'"
+                      [rowdetails]="true"
+                      [initrowdetails]="initrowdetails"
+                      [rowdetailstemplate]="rowdetailstemplate"
+        >
+        </softpak-grid>
+    </div>
+</div>
+
+
+<app-dialog-modal #dialogModalRef [title]="'Confirmation'"
+                  (yes)="resetChanges()" (no)="closeModal()"
+                  [noText]="'No'" [yesText]="'Yes'" id='modalComponent'>
+</app-dialog-modal>
+
+<app-dialog-modal #messageModalRef id="messageModal"
+                  [title]="'Information'"
+                  [hideSecondaryButton]="true"
+                  (yes)="messageModal.close()"
+                  [yesText]="'OK'">
+</app-dialog-modal>
+
+
+<!-- Load on export trade button to choose custodian -->
+
+<app-dialog-modal #tradeFileFormatModalComponent id='tradeFileFormatModalComponent'
+                  [title]="'Trade File'"
+                  (yes)="exportTrades()"
+                  (no)="tradeFileFormatModalComponent.close()"
+                  [noText]="'Cancel'"
+                  [yesText]="'Save'">
+    <div *ngIf="isAllowed('portfolioExportTrades')" class="slds-form-element slds-align--absolute-center">
+        <label class="blueleaf-text slds-m-right--small">Select Trade File Format:</label>
+        <div class="slds-form-element__control blueleaf-text">
+            <softpak-dropdown #tradeFileFormatDropDownRef class="blueleaf-text"
+                              id="tradeFileFormatDropDown"
+                              width="250px"
+                              [source]="tradeFileFormatList"
+                              [placeHolder]="''"
+                              [displayMember]="'display'"
+                              [valueMember]="'value'"
+                              (onSelect)="selectTradeFileFormat($event)"
+                              [selectedIndex]="0">
+            </softpak-dropdown>
+        </div>
+    </div>
+    <div footerMessage>
+        <span class="blueleaf-error-message">{{tradeExportModalErrorMessage}}</span>
+    </div>
+</app-dialog-modal>
+

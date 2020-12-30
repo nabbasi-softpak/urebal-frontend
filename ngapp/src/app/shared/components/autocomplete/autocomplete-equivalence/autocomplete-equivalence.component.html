@@ -1,0 +1,9 @@
+<softpak-combobox #InputRef
+                  class="blueleaf-dropdown" [comboBoxContainerDivClassName]="'combobox-container'"
+                  [comboBoxInputClassName]="'combobox-remove-padding'" id="form-combo-box"
+                  [width]="'100%'" [height]="'32px'"
+                  [placeHolder]="'Please select equivalence'" (onSelect)="onChange($event)"
+                  [valueMember]="'equivalenceId'" [displayMember]="'equivalenceName'" [showArrow]="true"
+                  [minLength]="1" [multiSelect]="false" [dropDownHeight]="'250px'" [selectedIndex]="-1"
+                  [searchMode]="'containsignorecase'">
+</softpak-combobox>

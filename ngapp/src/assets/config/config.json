@@ -1,0 +1,8 @@
+{
+  "SERVICES_URL": "https://ur-build:8080/serviceweb/services/",
+  "OIDC_REFRESH_URL": "http://localhost:8080/serviceweb/services/user/refreshSSO",
+  "DEFAULT_OIDC_CLIENT_NAME":  "google",
+  "OAUTH_SUPPORTED_PROVIDER": ["google", "microsoft", "blueleaf"],
+  "OIDC_MODE": false,
+  "APP_VERSION": "1.0.32"
+}

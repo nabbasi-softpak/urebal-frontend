@@ -1,0 +1,28 @@
+[
+  {
+    "text": "Ticker",
+    "hidden" : false
+    
+  },
+  {
+    "text": "Security Name",
+    "hidden" : false
+  },
+  {
+    "text": "Shares",
+    "hidden" : false
+  },
+  {
+    "text": "Tradable",
+    "hidden" : false
+  },
+  {
+    "text": "Basis Price",
+    "hidden" : true
+
+  },
+  {
+    "text": "Purchase Date",
+    "hidden" : true
+  }
+]

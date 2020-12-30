@@ -1,0 +1,21 @@
+<div class="slds-container" *ngIf="show">
+  <div class="slds-grid slds-wrap">
+    <urebal-topbar></urebal-topbar>
+  </div>
+</div>
+
+<div class="slds-container" *ngIf="show">
+  <div class="gray-scale">
+    <div class="box-left-404">
+      <span>{{pageContent.code}}</span>
+    </div>
+    <div class="box-left-text">
+      <p id="heading">
+        <img style="width:40px" src="{{urebalService.getAppContext()}}/assets/images/exclamation-mark.png"> {{pageContent.heading}}
+      </p>
+      <p style="font-size: 13px; color: black;position: relative; margin-top: 5px;">{{pageContent.description}}</p>
+      <p style="font-size: 13px; margin-top: 20px;position: relative;">Click
+        <a (click)="goToHome()" style="text-decoration: underline;color: black;">here</a> to return to our home page.</p>
+    </div>
+  </div>
+</div>

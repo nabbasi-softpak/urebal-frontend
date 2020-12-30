@@ -1,0 +1,163 @@
+<div id="attributeModelCards" *ngIf="!isSecurityModel">
+    <div class="ur-collapsible slds-size--1-of-1 slds-p-around--medium  box"
+         *ngFor="let attribute of selectedAttributes;let i = index">
+        <div id="{{i}}"
+             class="slds-grid slds-grid--align-spread slds-size--1-of-1 slds-grid--vertical-align-center collapsible-header">
+            <div class="slds-grid slds-size--3-of-4">
+                <h5 class="slds-text-heading--small"
+                    style="width: 40%; word-wrap: break-word;">{{attribute.attributeName}}</h5>
+                <div class="slds-form-element" style="margin-left:15px;">
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                        <input type="text" style="text-align: right" class="slds-input" placeholder="Target"
+                               ur-percentage ur-number-format [(ngModel)]="attribute.attributeTarget"
+                               (blur)="changeAttributeTarget(attribute)"/>
+                        <span class="slds-form-element__addon">%</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a class="slds-button slds-text-color--default" aria-haspopup="true"
+                   (click)="deleteAttribute(attribute)" title="Remove"
+                   *ngIf="attribute.attributeName != 'CASH ATTRIBUTE'">
+                    <svg class="slds-button__icon" aria-hidden="true">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'"></use>
+                    </svg>
+                </a>
+                <a class="slds-button slds-text-color--default" aria-haspopup="true" (click)="modelAttributeCollapse(i)"
+                   *ngIf="attribute.attributeName != 'CASH ATTRIBUTE'">
+                    <svg class="slds-button__icon  chevronUp" aria-hidden="true">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronup'"></use>
+                    </svg>
+                    <svg class="slds-button__icon chevronDown" style="display:none" aria-hidden="true">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevrondown'"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="slds-clearfix">&nbsp;</div>
+        <div [class.ur-is-open]="i < 1" [class.ur-is-active]="i < 1" [class.urebal-collapsible-body-hide]="i > 0"
+             class="slds-grid slds-size--1-of-1 collapsible-body slds-theme--shade ur-is-open"
+             *ngIf="attribute.attributeName != 'CASH ATTRIBUTE'">
+            <div class="slds-grid slds-grid--vertical-stretch slds-size--1-of-1">
+                <div class="slds-large-size--1-of-1 slds-p-around--medium">
+                    <div class="slds-filters">
+                        <div class="slds-filter--row slds-form-element__control slds-form--inline">
+                            <!--<app-urebal-autocomplete id="attribute_{{attribute.attributeId}}" width='99%' inputClass="slds-input" placeholder="Enter Security ID" source="{{attribute.attributeSecurities}}"
+                                                     displayMember="securityID" (onItemSelect)="selectAttributeSecurity($event,attribute)"></app-urebal-autocomplete>-->
+                            <div class="slds-form-element">
+                                <app-autocomplete [focusAfterSelection]="true"
+                                                  (postSelect)="selectAttributeSecurity($event,attribute)"
+                                                  [emptyOnSelection]="true" [template]="'security'"
+                                                  [inputID]="'attribute_'+attribute.attributeId"
+                                                  [placeholder]="'Enter Ticker'"
+                                                  [items]="attribute.attributeSecurities"
+                                                  [defaultValue]="''"></app-autocomplete>
+                            </div>
+                            <div class="slds-form-element">
+                                <security-advanced-search [attributeType]="attribute.attributeType"
+                                                          [attribute]="attribute.attributeName"
+                                                          (securitiesSelect)="onSecuritiesSelect($event,attribute)"></security-advanced-search>
+                            </div>
+                            <div>
+                                <label class="slds-form-element__label slds-text-title-- slds-p-top--small error-message"
+                                       id="{{attribute.attributeId}}_securityExist" style="display: none">Security
+                                    already exists</label>
+                            </div>
+                            <div class="slds-clearfix">&nbsp;</div>
+                        </div>
+
+                        <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical"
+                             id="{{attribute.attributeId}}-block">
+                            <div class="slds-filter--row slds-p-bottom--large" id="{{security.ticker}}-block"
+                                 *ngFor="let security of attribute.modelElements;">
+                                <div class="slds-clearfix">&nbsp;</div>
+
+
+                                <!--here-->
+                                <div class="iconAlignment">
+                                    <div class="iconAlignment slds-truncate slds-m-right--small" style="width: 37%;">
+                                        <h3 class="slds-text-heading--small slds-m-right--x-small">{{security.ticker}}</h3>
+                                        <span class="slds-m-right--x-small">-</span>
+                                        <span class="slds-truncate" style="font-size: 11px"
+                                              title="{{security.tickerName}}">{{security.tickerName}}</span>
+                                    </div>
+                                    <div style="font-size: 11px" class="slds-m-left--medium">
+                                        <span title="{{security.size}}  {{security.style}}  {{security.sector}}">{{security.size}}  {{security.style}}  {{security.sector}}</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="slds-form--inline slds-grid">
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label">Target %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input target-input"
+                                                   [(ngModel)]="security.target" name="security.target" ur-percentage
+                                                   ur-number-format
+                                                   (blur)="changeSecurityDetails('target',security,attribute)">
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label">Min %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input"
+                                                   [(ngModel)]="security.min" name="security.min" ur-percentage
+                                                   ur-number-format
+                                                   (blur)="changeSecurityDetails('min',security,attribute)">
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label">Max %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input"
+                                                   [(ngModel)]="security.max" name="security.max" ur-percentage
+                                                   ur-number-format
+                                                   (blur)="changeSecurityDetails('max',security,attribute)">
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label slds-m-around_none">Abs Target %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input"
+                                                   [(ngModel)]="security.absTarget" name="security.absTarget" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label">Abs Min %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input"
+                                                   [(ngModel)]="security.absMin" name="security.absMin" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--2-of-12">
+                                        <label class="slds-form-element__label">Abs Max %</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" style="text-align: right" class="slds-input"
+                                                   [(ngModel)]="security.absMax" name="security.absMax" disabled/>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 20px;">
+                                        <div class="slds-form-element__control">
+                                            <button class="slds-button slds-button--icon-border" aria-live="assertive"
+                                                    (click)="removeSecurity(security,attribute)" title="Remove">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Remove</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="slds-clearfix">&nbsp;</div>
+                                </div>
+                                <div>
+                                    <label class="slds-form-element__label slds-text-title-- error-message"
+                                           *ngIf="security.invalid">{{security.error}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

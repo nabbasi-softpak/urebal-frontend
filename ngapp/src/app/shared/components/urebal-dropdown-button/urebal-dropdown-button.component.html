@@ -1,0 +1,39 @@
+<div class="urebal-dropdown-button">
+    <div class="slds-form-element">
+        <!-- Un-splitted dropdown button -->
+        <div *ngIf="!splittedButton"
+             class="slds-button-group">
+            <button
+                class="slds-button slds-button_icon slds-button--blueleaf urebal-dropdown-splitted-button"
+                aria-haspopup="true" title="{{title}}"
+                (click)="toggleDropdown()">
+
+                <span style="padding-right: 1rem; vertical-align: middle;">{{title}}</span>
+                <img id="imgToggleMenu" [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-down.svg'"
+                     class="slds-input__icon slds-m-right--xxx-small"
+                     aria-hidden="true" />
+            </button>
+        </div>
+
+        <!-- Splitted dropdown button -->
+        <div class="slds-button-group" role="group" *ngIf="splittedButton">
+            <button class="slds-button slds-button--blueleaf" (click)="btnPrimaryClicked($event)" title="{{title}}">{{title}}</button>
+            <button id="btnToggleMenu" class="slds-button slds-button_icon slds-button_icon--blueleaf"
+                    aria-haspopup="true" title="More Actions"
+                    (click)="toggleDropdown()">
+                <img id="imgHouseholdToggleMenu" [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-down.svg'"
+                     class="slds-input__icon"
+                     aria-hidden="true">
+            </button>
+        </div>
+    </div>
+
+    <ul class="urebal-dropdown-button-menu" [ngClass]="{'active': isActive}" aria-hidden="true" aria-label="submenu">
+        <li *ngFor="let dropdownLink of dropdownLinks">
+            <a *ngIf="dropdownLink.isAllowed" role="menuitem" tabindex="0" (click)="onDropDownMenuButtonClicked(dropdownLink)" title="{{dropdownLink.title}}">
+                {{dropdownLink.title}}
+            </a>
+        </li>
+    </ul>
+
+</div>

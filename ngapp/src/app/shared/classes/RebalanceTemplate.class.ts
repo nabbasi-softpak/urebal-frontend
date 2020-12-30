@@ -1,0 +1,34 @@
+export class RebalanceTemplateObject
+{
+  asOfDate:Date;
+  modificationDate:Date;
+  templateId:number;
+  templateName:string;
+  lotOrder:string;
+  rebalanceType:number;
+  roundSellDirection:string;
+  roundBuyDirection:string;
+  roundNearestUnit:any;
+  isSecurityTypeRounding:boolean;
+  isWashsaleApply:boolean;
+  isEquivalenceApply:boolean;
+  isRestrictionApply:boolean;
+  isModelAttributesApply:boolean;
+  cashToGenerate:number;
+  minTradeSize:number;
+  model:any;
+  subModel:any;
+  gainLossToHarvest:number;
+  equivalenceSellSplitRules:string;
+  equivalenceBuySplitRules:string;
+  isObjFunction:boolean;
+  isReinvest:boolean;
+  scalarRank:number;
+  scalarVariance:number;
+  buyTransactionCost:number;
+  sellTransactionCost:number;
+  rankSetID:string;
+  isMTSApply:boolean;
+  isAttributesApply:boolean;
+  sellStrategy:string;
+}

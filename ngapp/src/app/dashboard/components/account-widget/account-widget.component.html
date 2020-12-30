@@ -1,0 +1,19 @@
+<urebal-widget>
+    <div header>
+        <div class="blueleaf-widget-header">
+            Top Accounts
+        </div>
+        <div class="blueleaf-widget-subheader">
+            By Market Value
+        </div>
+    </div>
+
+    <div body>
+        <softpak-grid #accountWidgetGridRef
+                      [columns]=accountWidgetGridCols
+                      [source]=accountWidgetGridAdapter
+                      [height]="'368px'"
+        >
+        </softpak-grid>
+    </div>
+</urebal-widget>

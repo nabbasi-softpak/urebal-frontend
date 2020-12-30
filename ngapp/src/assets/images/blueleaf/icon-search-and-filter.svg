@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Icon Search and Filter</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Round-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Blueleaf-Web-App-Rebalence" transform="translate(-544.000000, -250.000000)">
+            <g id="Group-10" transform="translate(314.000000, 132.000000)">
+                <g id="Icon-Search-and-Filter" transform="translate(230.000000, 118.000000)">
+                    <g id="Group-17" transform="translate(23.000000, 23.000000)" fill="#FFFFFF">
+                        <path d="M15,14 L20.7777778,14 C21.3300625,14 21.7777778,14.4477153 21.7777778,15 L21.7777778,31.2118559 C21.7777778,31.6207605 21.5288268,31.9884693 21.1491685,32.1403326 L15.3713907,34.4514437 C14.8586072,34.6565571 14.2766367,34.4071412 14.0715233,33.8943577 C14.0242752,33.7762374 14,33.6501865 14,33.522967 L14,15 C14,14.4477153 14.4477153,14 15,14 Z" id="Rectangle"></path>
+                        <polygon id="Triangle" transform="translate(17.500000, 12.833333) rotate(180.000000) translate(-17.500000, -12.833333) " points="17.5 0 35 25.6666667 0 25.6666667"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

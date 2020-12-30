@@ -1,0 +1,41 @@
+export class ShareLotData{
+
+  id:number;
+  accountId:string = "";
+  action:string = "";
+  basisPrice:number = null;
+  price:number = null;
+  purchaseDate:Date = null;
+  taxRate:number = null;
+  shareLotId:string = "";
+  workflowId:number = null;
+  roundGainLossValue:number;
+  initValue:number;
+  initPercent:number;
+  initShares:number;
+  optValue:number;
+  optPctWt:number;
+  roundOptPctWt:number;
+  proposedShares:number;
+  roundOptShares:number;
+  roundOptValue:number;
+  roundTaxCostValue:number;
+  roundTradeValue:number;
+  roundTradePercent:number;
+  roundTradeShares:number;
+  taxCostValue:number;
+  ticker:string;
+  tradeValue:number;
+  tradePercent:number;
+  tradeShares:number;
+  roundOptPctWtClone:number;
+  roundOptSharesClone:number;
+  roundTradeSharesClone:number;
+  roundTradeValueClone:number;
+  restrictedMaxPct:number = null;
+  restrictedMinPct:number = null;
+  adjustedMinPct:number = null;
+  adjustedMaxPct:number = null;
+  adjustedTargetPct:number = null;
+  children:any = [];
+}

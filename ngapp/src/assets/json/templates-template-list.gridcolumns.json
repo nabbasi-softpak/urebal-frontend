@@ -1,0 +1,22 @@
+[
+    {
+        "text": "Template ID",
+        "hidden": true
+    },
+    {
+        "text": "Template Name",
+        "hidden": false
+    },
+    {
+        "text": "Accounts",
+        "hidden": false
+    },
+    {
+        "text": "Rebalance Rule",
+        "hidden": false
+    },
+    {
+        "text": "Action",
+        "hidden": false
+    }
+]

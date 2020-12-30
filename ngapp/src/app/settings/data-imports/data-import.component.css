@@ -1,0 +1,63 @@
+.urebal-card {
+  /*padding: 0; */
+  background: #ffffff;
+  border: 1px solid #E2E2E2;
+  border-radius: 3px;
+  background-clip: padding-box;
+  margin: 1rem !important;
+  box-shadow: 3px 3px 5px #dfdfdf;
+}
+
+.urebal-card-header {
+  border-bottom: 1px solid #E3E2E2;
+  padding-bottom: 0.75rem;
+  font-weight: bold;
+}
+
+.urebal-card-body {
+  height: 150px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.urebal-margin-top {
+  margin-top: 0.5rem;
+}
+
+.urebal-word-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.import-account-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 2.5rem 0 1.5rem 0;
+  fill: #DBDBDB;
+}
+
+.urebal-grid-large-text {
+  /*font-weight: bold;*/
+  color: inherit;
+  font-size: 1.4rem;
+}
+
+.upload-message {
+  color: #54698d;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #e0e4eb; /* #d8dde6 */
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #e0e4eb;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #e0e4eb;
+}

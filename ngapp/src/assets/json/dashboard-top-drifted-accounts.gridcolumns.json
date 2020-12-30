@@ -1,0 +1,22 @@
+[
+  {
+    "text": "Type",
+    "hidden" : true
+  },
+  {
+    "text": "Account<br/> Name",
+    "hidden" : false
+  },
+  {
+    "text": "Model",
+    "hidden" : false
+  },
+  {
+    "text": "Drift<br/> Status",
+    "hidden" : false
+  },
+  {
+    "text": "Drift %",
+    "hidden" : false
+  }
+]

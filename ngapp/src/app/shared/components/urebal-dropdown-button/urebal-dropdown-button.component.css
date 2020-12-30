@@ -1,0 +1,54 @@
+
+.urebal-dropdown-button {
+    display: inline-block;
+    position: relative;
+}
+
+.urebal-dropdown-splitted-button{
+    border-radius: 0.25rem !important;
+    padding: 4px 0 3px 32px;
+}
+
+.urebal-dropdown-splitted-button:focus {
+    color: white;
+}
+
+.urebal-dropdown-button-menu {
+    cursor: pointer;
+    width: max-content;
+    border-radius: 0 !important;
+    position: absolute;
+    right: 0;
+    z-index: 99;
+    border: 1px solid #007dc4;
+    text-align: center;
+    font-size: 0.75rem;
+    background: #fdfdfd;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+    margin-top: 1px;
+    display: none;
+}
+
+.urebal-dropdown-button-menu a {
+    text-decoration: none;
+    padding: 0.45rem 1.25rem;
+    display: block;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+    outline: none;
+}
+
+.urebal-dropdown-button-menu a:last-child {
+    border-bottom: 0;
+}
+
+.urebal-dropdown-button-menu a:hover {
+    background-color: #f2f2f2;
+}
+
+.urebal-dropdown-button-menu a:focus {
+    background-color: #f2f2f2;
+}
+
+.active {
+    display: block;
+}

@@ -1,0 +1,108 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+<div class="color-white">
+  <div class="slds-grid slds-grid--vertical-align-center slds-p-around--large slds-border--bottom">
+
+
+  <div class="slds-col">
+    <div class="slds-media slds-no-space slds-grow">
+
+      <div class="slds-media__body slds-text-align--center">
+
+
+        <img src="{{urebalService.getAppContext()}}/assets/images/data-wizard-icon.png">
+
+        <div class="slds-p-around--large">
+          <h1 class="slds-text-heading--large slds-m-right--small slds-align-middle slds-truncate">Import your data into Universal Rebalancer </h1>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+  <div class="slds-size--1-of-1" style="background-color:#f3f3f3">
+
+    <div class="slds-p-around--medium slds-align--absolute-center">
+
+
+      <div class="data-wizard-progress">
+
+        <div class="indicator-line">
+          <div class="indicator-progress" [style.width.%]="progressIndicationVal"></div>
+
+        </div>
+
+        <div class="content">
+
+          <div id="uploadFileStep" class="step active ">
+            <div class="slds-icon_container slds-icon-action-email slds-icon_container--circle">
+              <svg aria-hidden="true" class="slds-icon slds-icon--small">
+                <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#upload'"></use>
+              </svg>
+            </div>
+
+            <span class="label">Upload File</span>
+
+          </div>
+
+          <div id="mapFieldStep" class="step">
+
+            <div  class="slds-icon_container slds-icon-action-email slds-icon_container--circle">
+              <svg aria-hidden="true" class="slds-icon slds-icon--small">
+                <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#layout'"></use>
+              </svg>
+            </div>
+            <span class="label">Map Fields</span>
+
+          </div>
+
+
+          <div id="verifyDataStep" class="step">
+            <div class="slds-icon_container slds-icon-action-email slds-icon_container--circle">
+              <svg aria-hidden="true" class="slds-icon slds-icon--small">
+                <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#new_task'"></use>
+              </svg>
+            </div>
+            <span class="label">Verify Data</span>
+
+          </div>
+
+          <div id="reviewFinishStep" class="step">
+
+            <div class="slds-icon_container slds-icon-action-email slds-icon_container--circle">
+              <svg aria-hidden="true" class="slds-icon slds-icon--small">
+                <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#check'"></use>
+              </svg>
+            </div>
+
+            <span class="label">Review and Finish</span>
+
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+  <div class="slds-p-around--large slds-border--top"></div>
+
+
+
+<!--output-->
+  <app-upload-file #uploadFileComp (uploadedFilesArray)="getUploadedFiles($event)" (openAccordion)="openMapFieldAccordion()" (mappedData)="getMappedData($event)"  (columnStrings)="getColumnStrs($event)"   (progressIndicator)="progressIndicatorValue($event)"></app-upload-file>
+<!--input-->
+  <!-- AOT Commented -->
+  <!--<app-map-fields #mapFieldComp  [uploadedFiles]="uploadedFiles" [mappedData]="mappedData" [colStrings]="columnStrings" (successData)="getSuccessData($event)" (warningData)="getWarningData($event)" (animateAccordion)="animateAccordion($event)" (emptyDataOnBack)="emptyMappedData()" (errorData)="getErrorData($event)"  (progressIndicator)="progressIndicatorValue($event)"></app-map-fields>-->
+  <app-map-fields #mapFieldComp  [uploadedFiles]="uploadedFiles" [mappedData]="mappedData" (successData)="getSuccessData($event)" (warningData)="getWarningData($event)" (animateAccordion)="animateAccordion($event)" (emptyDataOnBack)="emptyMappedData()" (errorData)="getErrorData($event)"  (progressIndicator)="progressIndicatorValue($event)"></app-map-fields>
+
+  <app-verify-data (openAccordion)="openReviewFinishAccordion()" [successData] ="successData" [errorData]="errorData" [warningData]="warningData" (progressIndicator)="progressIndicatorValue($event)"></app-verify-data>
+
+  <app-review-finish #reviewFinishComp  [mappedData]="mappedData" (animateAccordion)="animateAccordion($event)" (progressIndicator)="progressIndicatorValue($event)"></app-review-finish>
+
+</div>
+  </div>
+</div>

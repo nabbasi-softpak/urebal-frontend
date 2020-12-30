@@ -1,0 +1,90 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Rebalance Summary </h1>
+            </div>
+          </div>
+        </div>
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right">
+          <div class="slds-grid">
+            <button id="printButton" [disabled]="(disableBtns)" (click)="printReport()" class="slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true" title="Print View">
+              Print
+            </button>
+            <button (click)="exportReport()" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="workflowService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-size--1-of-1 slds-align--absolute-center color-white " >
+      <div class="slds-grid slds-wrap" style="width: 55%">
+        <div class="slds-col slds-size_2-of-2 slds-p-around--medium">
+          <span class="text-color-grey--c4c6c7">Rebalance ID: </span> <span> {{workspaceId}} </span>
+          <div class="slds-p-around--xx-small"></div>
+          <span class="text-color-grey--c4c6c7">Rebalance Name: </span> <span>{{workspaceName}}</span>
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-border--top slds-p-around--medium">
+          <span class="text-color-grey--c4c6c7">Total Market Value: </span><span class="text-color-price">{{ marketValue | currency:'USD':'symbol':'4.0-0'}}</span>
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-border--top slds-p-around--medium">
+          <span class="text-color-grey--c4c6c7">Total Accounts: </span> <span>{{ totalAccounts }}</span>
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-border--top slds-p-around--medium">
+          <span class="text-color-grey--c4c6c7">No. of Households: </span><span>{{ totalHouseholds }}</span>
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-border--top slds-p-around--medium">
+          <span class="text-color-grey--c4c6c7"> Rebalance Status:  </span><span>{{ rebalanceStatus }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="printData" style="width: 100%">
+        <urebal-grid dataUrl="workflow/workflowList"  [displayHeader]=true (selectedRow)="gridOnRowSelect($event)"
+                 [autoHeight]=false [columnReorder]=false [columnResize]=false
+                 gridId="workspacelist" #workspacelist [height]="612"
+                 dataType="json"
+                 dataColumns='[
+                { "name": "workflowId", "type": "string" },
+                { "name": "name", "type": "string" },
+                { "name": "rebalanceCount", "type": "number" },
+                { "name": "type", "type": "string" },
+                { "name": "criteriaString", "type": "string" },
+                { "name": "rebalanceStatus", "type": "string" },
+                { "name": "totalMktVal", "type": "number" },
+                { "name": "totalHouseholds", "type": "number" },
+                { "name": "totalAccounts", "type": "number" },
+                { "name": "asOfDate", "type": "date" }
+            ]'
+
+                 gridColumns='[
+                {
+                    "text": "Rebalance ID", "align": "center", "cellsalign":"right", "datafield": "workflowId", "width": "10%"
+                },
+                {
+                    "text": "Rebalance Name", "align": "center", "datafield": "name","cellsrenderer":"cellsRenderer", "width": "25%"
+                },
+                {
+                    "text": "Total Accounts", "align": "center", "cellsalign":"right", "datafield": "totalAccounts", "cellsformat": "n","cellsrenderer":"cellsRenderer", "width": "15%"
+                },
+                 {
+                    "text": "No. of Households", "align": "center", "cellsalign":"right", "datafield": "totalHouseholds", "cellsformat": "n","cellsrenderer":"cellsRenderer", "width": "15%"
+                },
+                {
+                    "text": "Total Market Value (USD)", "align": "center", "cellsalign":"right", "datafield": "totalMktVal", "cellsformat": "C0","cellsrenderer":"cellsRenderer", "width": "15%"
+                },
+                {
+                    "text": "Rebalance Status", "align": "center", "cellsalign":"left", "datafield": "rebalanceStatus", "cellsrenderer":"cellsRenderer", "width": "20%"
+                }
+            ]'>
+      </urebal-grid>
+    </div>
+  </div>
+</div>

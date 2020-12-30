@@ -1,0 +1,178 @@
+<div class="slds-grid slds-m-top--x-large">
+    <div class="slds-col slds-size--3-of-4">
+        <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+                <span class="rebalance-text"
+                >Filter accounts to include in the rebalance</span>
+                <div class="slds-form-element slds-m-top--large">
+                    <span class="slds-checkbox">
+                    <input id="checkbox-146" [checked]="isWorkspaceExists" type="checkbox" [(ngModel)]="isWorkspaceExists">
+                     <label class="slds-checkbox__label" for="checkbox-146">
+                       <span class="slds-checkbox--faux"></span>
+                       <span class="blueleaf-text">Exclude accounts already in another rebalance</span>
+                     </label>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--5-of-6">
+        <div class="slds-form--inline slds-float--right">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label error-message" *ngIf="invalidCriteria">Filter does not
+                    exist </label>
+                <label class="slds-form-element__label success-message"> {{modalSaveCriteriaSuccess}}</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr style="background-color: #e8ecef !important; border: 1px solid #e8ecef !important; border-radius: 2px !important;">
+
+<div class="slds-grid slds-grid--vertical-stretch">
+    <div class="slds-large-size--6-of-12 slds-p-right--medium slds-m-right--medium" style="border-right: 2px solid #e8ecef !important; border-radius: 2px !important;">
+        <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical">
+            <div class="slds-filters">
+                <div class="slds-filters__header slds-grid">
+                    <p class="slds-align-middle slds-size--1-of-2 blueleaf-text" style="font-size: 18px">Add filters</p>
+                    <div class="slds-form-element__control slds-size--2-of-4">
+                        <div>
+                            <select id="select-01" class="blueleaf-dropdown" (change)="loadPresetCriteria()"
+                                    [(ngModel)]="presetCriteriaSelect">
+                                <option [ngValue]="null" disabled hidden>Saved filters</option>
+                                <option *ngFor="let criteria of criteriaList"
+                                        [ngValue]="criteria"> {{criteria.templateName}} </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-filters__body">
+                    <ol class="slds-list--vertical slds-list--vertical-space">
+                        <li class="slds-item slds-hint-parent" id="accName" (click)="onclick('accName')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Account Name</p>
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent slds-hide" id="household" (click)="onclick('household')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Household</p>
+
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent" id="mktVal" (click)="onclick('mktVal')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Market Value</p>
+
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent slds-hide" id="taxable" (click)="onclick('taxable')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Tax Status</p>
+
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent" id="model" (click)="onclick('model')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Model Name</p>
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent" id="drift" (click)="onclick('drift')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Drift</p>
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="slds-item slds-hint-parent" id="driftStatus" (click)="onclick('driftStatus')">
+                            <div class="slds-filters__item slds-grid slds-grid--vertical-align-center">
+                                <a class="slds-grow slds-has-blur-focus rebalance-filter-text">
+                                    <p>Search by Drift Status</p>
+                                </a>
+                                <button class="slds-button slds-button--icon" title="add">
+                                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-large-size--6-of-12 slds-m-left--medium"
+         style="position:relative;border-radius: 4px; border: dashed 2px #007dc4;padding: 1rem;">
+        <div class="slds-form--stacked slds-scrollable--y slds-grid slds-grid--vertical" style="height: 240px;">
+            <div class="slds-filters">
+                <div id="criteriaBodyDiv" #criteriaBodyDiv>
+                </div>
+            </div>
+
+            <div style="position:absolute; bottom:10px; right:20px;">
+                <button class="slds-button slds-button--blueleaf--neutral" [disabled]="componentRefArray.length < 1"
+                        (click)="openSaveModal()">Save filter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<app-dialog-modal #criteriaRef id='CriteriaModal'
+                  [modalSize]="'default'"
+                  [title]="'Save Filter'"
+                  [yesText]="'Save'"
+                  (yes)="saveCriteria();"
+                  [noText]="'Close'"
+                  (no)="addCriteriaRef.close()">
+    <div class="slds-text-align--left">
+        <input type="text" class="slds-input slds-input--blueleaf" style="width: 100%"
+               placeholder="Please Enter Filter Name" [(ngModel)]="saveCriteriaName"/>
+        <label class="slds-form-element__label blueleaf-text slds-m-top--small"><span
+                class="blueleaf-widget-subheading">Filter:</span> {{criteriaString}}</label>
+    </div>
+    <div footerMessage>
+        <label class="blueleaf-error-message slds-float_left"> {{modalSaveCriteriaError}}</label>
+    </div>
+</app-dialog-modal>

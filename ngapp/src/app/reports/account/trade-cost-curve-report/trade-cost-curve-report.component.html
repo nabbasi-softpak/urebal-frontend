@@ -1,0 +1,131 @@
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Trade Cost Curve </h1>
+            </div>
+          </div>
+        </div>
+
+        <div id="printControls" class="slds-hide slds-grid slds-grid--vertical-align-center slds-text-align--right">
+          <div class="slds-grid">
+            <button class="slds-button slds-button&#45;&#45;neutral slds-m-horizontal&#45;&#45;small" aria-haspopup="true" (click)="printChartAndGrid()" title="Print View">
+              Print
+            </button>
+            <button class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal&#45;&#45;small" aria-haspopup="true" (click)="exportToCsv()" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="workspaceService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-size--1-of-1">
+      <!-- options -->
+      <div class="slds-p-around--small slds-p-horizontal--medium gradient-background slds-border--bottom quick-filters slds-align--absolute-center no-print">
+        <div class="slds-form--inline">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label">Account Name</label>
+            <div class="slds-form-element__control">
+              <!--Implement autocomplete here ...  -->
+              <app-autocomplete (postSelect)="getReport($event)" [items]="portfolioList" [inputID]="'autocomplete-sharelot'" [template]="'portfolio'" [placeholder]="'Enter Account Name'" [defaultValue]="''"> </app-autocomplete>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-hide container" id="printData" style="width: 100%">
+        <div  class="slds-p-around--medium myContainer" id="summary">
+          <div class="slds-container_center gridContainer">
+            <div class="slds-size--1-of-1 slds-align--absolute-center color-white ">
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_2-of-2">
+                  <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <tr>
+                      <td style="width: 25%;">Account Name:</td>
+                      <td style="width: 25%;">{{portfolio.portfolioName}}</td>
+                      <td style="width: 25%;">Type:</td>
+                      <td style="width: 25%;">{{portfolio.houseHold ? 'Household' : 'Single'}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width: 25%;">Step Size:</td>
+                      <td style="width: 25%;"><input class="slds-input" style="text-align: right;" type="number" placeholder="0.1 to 10" id="tolerenceBand" (keyup.enter)="rebalanceAccount(tolerenceBand.value,numberOfSteps.value)" #tolerenceBand></td>
+                      <td style="width: 25%;">Number of steps:</td>
+                      <td style="width: 25%;"><input class="slds-input" style="text-align: right;" type="number" placeholder="2 to 10" id="numberOfSteps" (keyup.enter)="rebalanceAccount(tolerenceBand.value,numberOfSteps.value)" #numberOfSteps></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" style="text-align: right;">
+                        <button class="slds-button slds-button--urebal" (click)="rebalanceAccount(tolerenceBand.value,numberOfSteps.value,$event)">Run</button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Chart and Grid Components -->
+            <div id="reportSection" class="slds-hide" style="margin-top: 10px;">
+              <div style="width: 100%; display: flex; justify-content: center;">
+                <jqxChart #scatterChart
+                          [width]="850" [height]="500"
+                          [title]="'Trade Cost Curve Report'"
+                          [description]="''"
+                          [showLegend]="true" [enableAnimations]="true" [padding]="padding"
+                          [titlePadding]="titlePadding" [xAxis]="xAxis"
+                          [valueAxis]="valueAxis" [seriesGroups]="seriesGroups" [colorScheme]="'scheme01'">
+                </jqxChart>
+              </div>
+              <br>
+              <div style="width: 100%;">
+                <urebal-grid #tradeCostCurveReport panelTitle="Trade Cost Curve Report"  [displayHeader]=false [debug]=false gridId="tradeCostCurveReport" [autoHeight]=true [columnReorder]=false [columnResize]=false
+                   dataType="json"
+                   negativeValueColumns='[{"column":"shorttermRoundedLoss"},{"column":"totalTurnOver"}]'
+                   dataColumns='[
+                        { "name": "toleranceDifference", "type": "string" },
+                        { "name": "shorttermRoundedLoss", "type": "number" },
+                        { "name": "shorttermRoundedGain", "type": "number" },
+                        { "name": "longtermRoundedLoss", "type": "number" },
+                        { "name": "longtermRoundedGain", "type": "number" },
+                        { "name": "taxCostDuringRebalance", "type": "number" },
+                        { "name": "totalBuyShares", "type": "number" },
+                        { "name": "totalSellShares", "type": "number" },
+                        { "name": "totalTurnOver", "type": "number" }
+                    ]'
+                     gridColumns='[
+                        { "text": "Tolerance Band","cellsalign":"right", "align": "center", "width": "25%", "cellsrenderer":"cellsRenderer" ,"datafield": "toleranceDifference","cellsformat":"d2"},
+                        { "text": "Buy Shares","cellsalign":"right", "align": "center", "width": "25%","cellsrenderer":"cellsRenderer" ,"datafield": "totalBuyShares","cellsformat":"d2"},
+                        { "text": "Sell Shares","cellsalign":"right", "align": "center", "width": "25%","cellsrenderer":"cellsRenderer" ,"datafield": "totalSellShares","cellsformat":"d2"},
+                        { "text": "Portfolio Turnover", "cellsalign":"right", "align": "center", "width": "25%","cellsrenderer":"cellsRenderer" ,"datafield" : "totalTurnOver","cellsformat":"d2"}
+                    ]'
+                >
+                </urebal-grid>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+  <div *ngIf="(errMsg != '')" class="alert alert-danger slds-size--1-of-1 slds-text-align--center">
+    <div>
+      {{errMsg}}
+    </div>
+  </div>
+
+
+
+</div>

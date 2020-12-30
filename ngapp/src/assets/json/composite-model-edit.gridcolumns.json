@@ -1,0 +1,46 @@
+[
+  {
+    "text": "",
+    "hidden": false
+  },
+  {
+    "text": "Name",
+    "hidden": false
+  },
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Security Type",
+    "hidden": false
+  },
+  {
+    "text": "PAC",
+    "hidden": true
+  },
+  {
+    "text": "Target %",
+    "hidden": false
+  },
+  {
+    "text": "Min %",
+    "hidden": false
+  },
+  {
+    "text": "Max %",
+    "hidden": false
+  },
+  {
+    "text": "",
+    "hidden": false
+  },
+  {
+    "text": "Invalid",
+    "hidden": true
+  },
+  {
+    "text": "Validation Message",
+    "hidden": true
+  }
+]

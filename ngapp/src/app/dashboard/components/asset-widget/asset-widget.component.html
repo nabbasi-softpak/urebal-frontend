@@ -1,0 +1,55 @@
+<h3 class="text-size--heading widget-h3" style="padding-top: 0.5rem; padding-left: 1rem; font-size: 1.4em;" >Asset Allocation
+  <div class="slds-dropdown-trigger slds-dropdown-trigger--click widget-settings-icon">
+    <button class="slds-button slds-button--icon-container" aria-haspopup="true" title="Customize">
+      <i class="material-icons">
+        settings
+      </i>
+    </button>
+  </div>
+</h3>
+<div class="slds-clearfix">&nbsp;</div>
+<div class="slds-align--absolute-center">
+  <div class="slds-select_container">
+    <select [(ngModel)]="modelId" class="slds-select">
+      <option *ngFor="let model of models;" [ngValue]="model.modelId">{{model.modelName}}</option>
+    </select>
+  </div>
+  <div class="slds-clearfix">&nbsp;</div>
+  <div class="slds-select_container">
+    <select [(ngModel)]="attributeType" class="slds-select">
+      <option *ngFor="let attribute of attributes;" [ngValue]="attribute.attributeType">{{attribute.attributeType}}</option>
+    </select>
+  </div>
+  <br>
+  <div class="slds-clearfix">&nbsp;</div>
+  <div class="slds-button-group chart-switch" role="group">
+    <button class="slds-button slds-button--neutral" id="pie" data-type="pie" (click)="switchPanels('pie')">Pie Chart</button>
+    <button class="slds-button slds-button--neutral" id="bar" data-type="bar" (click)="switchPanels('bar')">Bar Chart</button>
+  </div>
+
+</div>
+<div class="slds-col slds-align--absolute-center slds-p-left--x-small">
+  <div class="slds-align--absolute-center slds-text-body_small slds-p-left--xx-large" style="color: #F95932">{{loadingMsg}}</div>
+</div>
+<div class="slds-grid slds-wrap slds-p-around--medium piechart slds-hide box color-white">
+  <div class="slds-size--1-of-2  slds-p-around--medium slds-align--absolute-center">
+    <jqxChart #pieChartReference [width]='400' [height]='235' [showLegend]='true'
+              [borderLineWidth]="0" [title]="title" [description]="description"
+              [enableAnimations]='true' [padding]='pieChartpadding' (onClick)="drillDown($event)"
+              [source]='chartData' [legendLayout]='legendLayout'
+              [colorScheme]='"scheme05"'[seriesGroups]='pieChartSeriesGroups'>
+    </jqxChart>
+  </div>
+</div>
+
+<div  class="slds-grid slds-wrap slds-p-around--medium barchart slds-hide box color-white">
+  <div class="slds-size--1-of-2  slds-p-around--medium slds-align--absolute-center">
+    <jqxChart #barChartReference
+              [width]="400" [height]="235"
+              [title]="modelName" [description]="description"
+              [enableAnimations]="true" [showLegend]="true" [padding]="barChartPadding" (onClick)="drillDown($event)"
+              [titlePadding]="titlePadding" [xAxis]="xAxis"
+              [valueAxis]="valueAxis" [source]='chartData'  [seriesGroups]="barChartSeriesGroups" [colorScheme]="'scheme05'">
+    </jqxChart>
+  </div>
+</div>

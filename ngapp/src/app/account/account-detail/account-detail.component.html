@@ -1,0 +1,703 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <div *ngIf="error != ''"
+             class="slds-size--1-of-1 box slds-p-around--medium slds-m-around--x-small color-white">{{error}}</div>
+        <urebal-widget [showFooter]="true">
+            <div header>
+                <div class="blueleaf-widget-header">
+                    <div>
+                        {{isHouseHold ? 'Household' : 'Account'}} Profile
+                    </div>
+                </div>
+            </div>
+            <div body>
+                <div class="slds-grid">
+
+                    <!-- Side Panel -->
+                    <!-- Note: Deliberately keeping sidebar collapse button on the DOM for now so that
+                               jQuery could apply click event on it, when Household Profile is
+                               opened in Modal mode -->
+                    <div [hidden]="!isHouseHold" class="slds-size--2-of-12 tiny-sidebar" style="width: 1%;">
+                        <!-- collapsible button -->
+                        <div [style.visibility]="isEditHousehold ? 'hidden' : 'visible'"
+                             class="btn-collapse-sidepanel slds-float--right" style="transform: rotate(180deg);">
+                            <a href="javascript:void(0)">
+                                <span class="slds-icon_container">
+                                  <svg class="slds-icon slds-icon-text-default slds-icon--x-small" aria-hidden="true">
+                                    <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#left'"></use>
+                                  </svg>
+                                </span>
+                            </a>
+                        </div>
+
+                        <!-- collapsible sidepanel -->
+                        <div class="collapsed-sidebar slds-p-around--small slds-hide">
+                            <div *ngIf="isHouseHold">
+
+                                <div *ngIf="isAllowed('portfolioModifyHousehold')"
+                                     class="slds-size--1-of-1 slds-border--bottom slds-p-around--x-small slds-m-bottom--small">
+
+                                    <button *ngIf="!isEditHousehold" class="slds-button slds-button--blueleaf"
+                                            (click)="editButtonClicked()">Edit
+                                    </button>
+
+                                    <!-- autocomplete for list of account container-->
+                                    <div class="slds-grid">
+                                        <div class="slds-col" *ngIf="isEditHousehold">
+                                            <div class="slds-form-element__row">
+                                                <div class="slds-form-element">
+                                                    <div class="slds-form-element__control">
+                                                        <!--<input type="text" id="account" class="slds-input" placeholder="Add account to household" />-->
+                                                        <app-autocomplete (postSelect)="addAccountToList($event)"
+                                                                          [items]="portfolioList"
+                                                                          [inputID]="'autocomplete-accountname'"
+                                                                          title="Enter account name to add in household."
+                                                                          [template]="'portfolio'"
+                                                                          [placeholder]="'Enter account name to add in household.'"
+                                                                          [defaultValue]="''"></app-autocomplete>
+                                                        <div style="padding-left: 0.5rem;"
+                                                             *ngIf="errMsg && isEditHousehold"
+                                                             class="slds-text-color--error">{{errMsg}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end autocomplete for list of account container-->
+                                </div>
+
+                                <label id="accountListHeader"
+                                       class="slds-text-heading--label-normal slds-text-title--caps slds-p-vertical--large">Accounts
+                                    in Household</label>
+
+                                <div class="slds-p-vertical--small" style="max-height: 570px; overflow-y: auto">
+                                    <ul class="slds-has-dividers--bottom-space accounts-selection">
+                                        <!--<div class="slds-grid">-->
+                                        <!--<div class="slds-size&#45;&#45;1-of-1 slds-p-around&#45;&#45;small slds-p-left&#45;&#45;none">-->
+                                        <!--<input type="text" class="slds-input" placeholder="Account name" (keyup)="filterAccount($event)" required/>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+
+                                        <li class="slds-item menuitem" [class.list-active]="i==0"
+                                            *ngFor="let account of accountListSearch; let i=index">
+                                            <div class="slds-media__body">
+                                                <a *ngIf="!isEditHousehold" href="javascript:void(0);">
+                                                    <h3 class="slds-truncate" id="accountNameLink{{i}}"
+                                                        (click)="changeAccount($event,account.id)"
+                                                        title="{{account.accountName}}">{{account.accountName}}</h3>
+                                                </a>
+                                                <span *ngIf="isEditHousehold" id="accountNameText{{i}}">
+                                                    <h3 class="slds-truncate" style="max-width: 55%"
+                                                        title="{{account.accountName}}">{{account.accountName}}</h3>
+                                                </span>
+                                                <span *ngIf="isEditHousehold" id="dataState{{i}}"
+                                                      style="position: absolute; right: 50px; top: 5px;"></span>
+                                                <a *ngIf="isEditHousehold" id="btnMarkForDeletion{{i}}"
+                                                   href="javascript:void(0);" (click)="markAccountforDeletion(i)"
+                                                   class="slds-text-link--reset account-delete-icon">
+                                                      <span class="slds-button slds-button--icons">
+                                                        <svg aria-hidden="true" class="slds-icon slds-icon-text-default icon-size-small">
+                                                          <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#clear'"></use>
+                                                        </svg>
+                                                      </span>
+                                                </a>
+                                                <a *ngIf="isEditHousehold" href="javascript:void(0);"
+                                                   id="btnUndoDeletion{{i}}" (click)="undoDeletion(i)"
+                                                   style="position: absolute; right: 10px; top: 5px;display:none">Undo</a>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div *ngIf="isEditHousehold" class="slds-m-vertical--xx-small">
+                                    <strong>Account(s):</strong>
+                                    <span class="slds-text-color--error"
+                                          style="font-style: italic;">to be removed: {{tobeRemovedCount}}</span>
+                                    <span class="slds-p-left--xx-small slds-p-right--xx-small">-</span>
+                                    <br>
+                                    <span style="color: green; font-style: italic; padding-left: 74px">to be added: {{tobeAddedCount}}</span>
+                                </div>
+                                <!-- household management Save/Cancel container-->
+                                <div *ngIf="isEditHousehold" class="slds-text-align--right">
+                                    <button class="slds-button slds-button--neutral"
+                                            (click)="cancelHouseholdChanges();">Cancel
+                                    </button>
+                                    <button [disabled]="!householdInitialStateChanged"
+                                            class="slds-button slds-button--urebal" (click)="confirmSaveChanges()">
+                                        Save
+                                    </button>
+                                </div>
+                                <!-- end household management Save/Cancel container  -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Report Section -->
+                    <div *ngIf="error == ''" class="slds-size--1-of-1 mainPanel">
+                        <!-- Report Section -->
+                        <div class="slds-size--1-of-1" style="position:relative;">
+                            <div *ngIf="isEditHousehold" class="ui-block-overlay"></div>
+
+                            <!-- here -->
+                            <div class="slds-align--absolute-center ">
+                                <div class="slds-grid slds-wrap slds-size--1-of-1">
+
+                                    <div *ngIf="accountSummaryErrMsg"
+                                         class="slds-col slds-size_1-of-1 slds-text-color--error">
+                                        {{accountSummaryErrMsg}}
+                                    </div>
+
+                                    <ng-container *ngIf="isHouseHold">
+                                        <div class="slds-grid slds-p-top--medium slds-size_1-of-1 slds-border--top">
+                                            <div class="slds-col slds-size--3-of-8 slds-m-right--medium">
+                                                <table class="info-table blueleaf-table--m-top-tr-xx-small">
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right; width:50%;">Household Name:
+                                                        </td>
+                                                        <td class="slds-p-left--medium"><span
+                                                                class="adjust-right-floated-span-content"
+                                                                title="{{portfolioName}}">{{portfolioName}}</span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right;">Model Name:</td>
+                                                        <td class="slds-p-left--medium"><span
+                                                                *ngIf="modelName!='--'"
+                                                                class="adjust-right-floated-span-content text-bold"
+                                                                title={{modelName}}><a
+                                                                (click)="openModelDetails(modelName)">{{modelName}}</a></span>
+                                                            <span *ngIf="(!loadAsModal &&  modelName=='--')"
+                                                                  class="adjust-right-floated-span-content"
+                                                                  title={{modelName}}>{{modelName}}</span></td>
+                                                    </tr>
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right">No of Holdings:</td>
+                                                        <td class="slds-p-left--medium">{{holdingsNum}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="slds-col slds-size--2-of-8 slds-m-right--medium">
+                                                <table class="info-table blueleaf-table--m-top-tr-xx-small">
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right; width:50%;">Total Market
+                                                            Value:
+                                                        </td>
+                                                        <td style="text-align: right"><span
+                                                                class="text-color-price">{{totalMktVal  | currency:'USD':'symbol'}}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right;">Available Cash:
+                                                        </td>
+                                                        <td style="text-align: right"><span
+                                                            class="text-color-price">{{ freeCash | currency:'USD':'symbol'}}</span>
+                                                            <span>({{ freeCashPercentage }}%)</span></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="slds-col slds-size--3-of-8">
+                                                <table class="info-table blueleaf-table--m-top-tr-xx-small">
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right; width:50%;">Drift Last Run:
+                                                        </td>
+                                                        <td title="{{ drift?.driftDate | date: DATETIME_FORMAT}}"
+                                                            class="slds-p-left--medium">{{(drift?.driftDate | date: DATETIME_FORMAT) || '--'}}</td>
+                                                    </tr>
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right">Drift Status:</td>
+                                                        <td class="slds-p-left--medium"><span
+                                                                [style.color]="driftDetails?.driftStatus === 'Error' || driftDetails?.driftStatus === 'Unassigned' || driftDetails?.driftStatus === 'Model Unassigned' || driftDetails?.driftStatus === 'New Account' || driftDetails?.driftStatus === 'New Household' ? 'red' : 'black' ">{{ driftDetails?.driftStatus }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="blueleaf-text">
+                                                        <td style="text-align: right">Total Securities Drifted:</td>
+                                                        <td class="slds-p-left--medium"><span *ngIf="isHouseHold"
+                                                                                              [style.color]="(drift?.totalSecuritiesDrifted==null || drift?.totalSecuritiesDrifted==0) ?'black':'red'">{{  drift?.totalSecuritiesDrifted == null ? '--' : drift?.totalSecuritiesDrifted  }}</span>
+                                                            <span *ngIf="!isHouseHold"
+                                                                  [style.color]="(drift?.totalSecuritiesDrifted==null || drift?.totalSecuritiesDrifted==0) ?'black':'red'">{{ drift?.totalSecuritiesDrifted == null ? '--' : drift?.totalSecuritiesDrifted  }}</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="isHouseHold">
+                                        <hr class="blueleaf-widget-divider--gray slds-m-around--medium slds-size--1-of-1">
+                                    </ng-container>
+
+                                    <!-- Single Account Summary -->
+                                    <div class="slds-grid slds-size_1-of-1">
+                                        <div class="slds-col slds-m-right--medium" [ngClass]="{'slds-size--3-of-8': isHouseHold, 'slds-size--1-of-3': !isHouseHold}">
+                                            <table class="info-table blueleaf-table--m-top-tr-xx-small">
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right; width:50%;">
+                                                        Account Number:
+                                                    </td>
+                                                    <td class="slds-p-left--medium"><span
+                                                            class="adjust-right-floated-span-content blueleaf-text"
+                                                            title={{accountSummary?.accountid}}>{{accountSummary?.accountNumber}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right">Account Name:
+                                                    </td>
+                                                    <td class="slds-p-left--medium"><span
+                                                            class="adjust-right-floated-span-content blueleaf-text"
+                                                            title={{accountSummary?.accountName}}>{{accountSummary?.accountName}}</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr *ngIf="!isHouseHold">
+                                                    <td class="blueleaf-text" style="text-align: right">Model Name:</td>
+                                                    <td class="slds-p-left--medium"><span *ngIf="modelName!='--'"
+                                                                                          class="adjust-right-floated-span-content text-bold blueleaf-text"
+                                                                                          title={{modelName}}>
+                                                        <span *ngIf="haveModelPermission(this.modelId, modelTypeNum); else showModelName">
+                                                            <a [routerLink]="['/secure/model/detail/', modelId]">{{modelName}}</a>
+                                                        </span>
+                                                        <ng-template #showModelName>{{ modelName }}</ng-template>
+
+                                                        </span>
+                                                        <span *ngIf="(modelName=='--')"
+                                                              class="adjust-right-floated-span-content blueleaf-text"
+                                                              title={{modelName}}>{{modelName}}</span></td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+
+
+                                        <div class="slds-m-right--medium" [ngClass]="{'slds-size--2-of-8': isHouseHold, 'slds-size--1-of-4': !isHouseHold}">
+                                            <table class="info-table">
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right; width:50%;">
+                                                        Market Value:
+                                                    </td>
+                                                    <td style="text-align: right"><span
+                                                            class="text-color-price blueleaf-text"
+                                                            style="color: #4caf50 !important;">{{accountSummary?.marketValue | currency:'USD':'symbol'}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right;">Cash:</td>
+                                                    <td style="text-align: right"><span
+                                                            class="text-color-price blueleaf-text"
+                                                            style="color: #4caf50 !important;">{{ accountSummary?.freeCash | currency:'USD':'symbol'}}</span>
+                                                        <span>({{ accountSummary?.freeCashPercentage }}%)</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                        <div [ngClass]="{'slds-size--3-of-8': isHouseHold, 'slds-size--1-of-4 slds-m-right--medium': !isHouseHold}">
+                                            <table class="info-table">
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right" [style.width]="isHouseHold ? '50%' : 'auto'">Tax-Status:</td>
+                                                    <td class="slds-p-left--medium blueleaf-text"> {{ accountSummary?.taxStatus || "N/A" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="blueleaf-text" style="text-align: right; width:40%;">
+                                                        Holdings:
+                                                    </td>
+                                                    <td class="slds-p-left--medium blueleaf-text">{{ positions?.distinctPositionsCount == null ? '--' : positions.distinctPositionsCount}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                        <ng-container *ngIf="!isHouseHold">
+                                                <div class="slds-col slds-size--2-of-4">
+                                                <table class="info-table">
+                                                    <tr>
+                                                        <td class="blueleaf-text" style="text-align: right; width:50%;">
+                                                            Drift Last Run:
+                                                        </td>
+                                                        <td title="{{ drift?.driftDate | date: DATETIME_FORMAT}}"
+                                                            class="slds-p-left--medium blueleaf-text">{{(drift?.driftDate | date: DATETIME_FORMAT) || '--'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="blueleaf-text" style="text-align: right">Drift
+                                                            Status:
+                                                        </td>
+                                                        <td class="slds-p-left--medium blueleaf-text"
+                                                            style="font-weight: bold !important;"><span
+                                                                [style.color]="driftDetails?.driftStatus === 'Error' || driftDetails?.driftStatus === 'Unassigned' || driftDetails?.driftStatus === 'Model Unassigned' || driftDetails?.driftStatus === 'New Account' || driftDetails?.driftStatus === 'New Household' ? 'red' : 'black' ">{{ driftDetails?.driftStatus }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="blueleaf-text" style="text-align: right">Total
+                                                            Securities Drifted:
+                                                        </td>
+                                                        <td class="slds-p-left--medium blueleaf-text"><span
+                                                                *ngIf="!isHouseHold"
+                                                                [style.color]="(drift?.totalSecuritiesDrifted==null || drift?.totalSecuritiesDrifted==0) ?'black':'red'">{{ drift?.totalSecuritiesDrifted == null ? '--' : drift?.totalSecuritiesDrifted  }}</span>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+
+                                    <!-- <div class="slds-col slds-size_1-of-3 slds-border&#45;&#45;top slds-p-around&#45;&#45;medium">
+                                       <span class="settings-text-color-gray">No. of Holdings: </span>      <span class="slds-truncate slds-text-align&#45;&#45;right ">{{holdingsNum}}</span>
+                                       <br>
+                                       <span class="settings-text-color-gray">Total Securities Drifted: </span><span class="text-color-red slds-text-align&#45;&#45;right ">{{ totalSecuritiesDrifted }}</span>
+                                     </div>-->
+
+                                </div>
+                            </div>
+                            <!-- Container   -->
+                            <div class="slds-p-top--x-large">
+
+                                <!-- Tabs -->
+                                <ul class="report-tabs" style="padding: 0 2rem;">
+                                    <li *ngIf="isAllowed('accountOverview') && isHouseHold"
+                                        [class.active]="selectedIndex === 'overview'" data-target="overview"
+                                        (click)="handleTabsClick($event)">
+                                        <a href="javascript:void(0);" data-target="overview">
+                                            <h3>
+                                                <span data-target="overview"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold">Overview</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="overview"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-body--small teslds-text-align ng-star-inserted">&nbsp;</span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'drift'" data-target="drift"
+                                        (click)="handleTabsClick($event)">
+                                        <a href="javascript:void(0);" data-target="drift">
+                                            <h3>
+                                                <span data-target="drift"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold">Drift</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="drift"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-body--small teslds-text-align ng-star-inserted">&nbsp;</span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'positions'" data-target="positions"
+                                        (click)="handleTabsClick($event)">
+                                        <a href="javascript:void(0);" data-target="positions">
+                                            <h3>
+                                                <span data-target="positions" title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold">Positions</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="positions"
+                                                  title="{{accountSummary?.accountName}}"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-body--small teslds-text-align">
+                          {{accountSummary?.accountName}}&nbsp;
+                        </span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'tax-settings'" data-target="tax-settings"
+                                        (click)="handleTabsClick($event)"
+                                        *ngIf="isAllowed('accountModifyTaxSettings')">
+                                        <a href="javascript:void(0);" data-target="tax-settings">
+                                            <h3>
+                                                <span title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold"
+                                                      data-target="tax-settings">Tax Settings</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="tax-settings"
+                                                  title="{{accountSummary?.accountName}}"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-align slds-text-body--small ">{{accountSummary?.accountName}}&nbsp;</span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'restrictions'" data-target="restrictions"
+                                        (click)="handleTabsClick($event)">
+                                        <a href="javascript:void(0);" data-target="restrictions">
+                                            <h3>
+                                                <span title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold"
+                                                      data-target="restrictions">Restrictions</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="restrictions"
+                                                  title="{{accountSummary?.accountName}}"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-align slds-text-body--small">{{accountSummary?.accountName}}&nbsp;</span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'att-restrictions'"
+                                        data-target="att-restrictions" (click)="handleTabsClick($event)"
+                                        *ngIf="isAllowed('accountModifyRestrictions')">
+                                        <a href="javascript:void(0);" data-target="att-restrictions">
+                                            <h3>
+                                                <span title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold"
+                                                      data-target="att-restrictions">Attribute Restrictions</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="att-restrictions"
+                                                  title="{{accountSummary?.accountName}}"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-align slds-text-body--small ">{{accountSummary?.accountName}}&nbsp;</span>
+                                        </a>
+                                    </li>
+                                    <li [class.active]="selectedIndex === 'washsales'" data-target="washsales"
+                                        (click)="handleTabsClick($event)"
+                                        *ngIf="isAllowed('accountUploadWashsales')">
+                                        <a href="javascript:void(0);" data-target="washsales">
+                                            <h3>
+                                                <span title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold"
+                                                      data-target="washsales">Washsales</span>
+                                            </h3>
+                                            <span *ngIf="isHouseHold" data-target="washsales"
+                                                  class="slds-truncate truncate-tabheader--w100 slds-text-align slds-text-body--small"
+                                                  title="{{accountSummary?.accountName}}">{{accountSummary?.accountName}}&nbsp;</span>
+                                        </a>
+                                    </li>
+
+                                  <li [class.active]="selectedIndex === 'equivalences'" data-target="equivalences"
+                                      (click)="handleTabsClick($event)"
+                                      *ngIf="isAllowed('equivalenceList')">
+                                    <a href="javascript:void(0);" data-target="equivalences">
+                                      <h3>
+                                                <span title="{{accountSummary?.accountName}}"
+                                                      class="slds-truncate truncate-tabheader--w100 slds-text-align text-bold"
+                                                      data-target="equivalences">Equivalences</span>
+                                      </h3>
+                                      <span *ngIf="isHouseHold" data-target="equivalences"
+                                            class="slds-truncate truncate-tabheader--w100 slds-text-align slds-text-body--small"
+                                            title="{{accountSummary?.accountName}}">{{accountSummary?.accountName}}&nbsp;</span>
+                                    </a>
+                                  </li>
+                                </ul>
+
+                                <!-- Overview Container -->
+
+                                <div [ngClass]="selectedIndex === 'overview' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="overview">
+
+                                    <app-overview
+                                        #overviewTab
+                                        *ngIf="selectedIndex === 'overview'"
+                                        [model]="model"
+                                        [isHouseHold]="isHouseHold"
+                                        [accountList]="accountListSearch"
+                                        [householdName]="portfolioName"
+                                        [portfolioId]="portfolioId"
+                                        class="slds-size--1-of-1 slds-p-around--medium"></app-overview>
+
+                                </div>
+
+                                <!-- Drift Container -->
+
+                                <div [ngClass]="selectedIndex === 'drift' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="drift">
+                                    <app-drift (successMsg)="updateSuccessMessage($event)"
+                                               class="slds-size--1-of-1"></app-drift>
+
+                                </div>
+
+                                <!-- Positions Container -->
+
+                                <div [ngClass]="selectedIndex === 'positions' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="positions">
+                                    <app-positions (successMsg)="updateSuccessMessage($event)"
+                                                   class="slds-size--1-of-1"></app-positions>
+
+                                </div>
+
+
+                                <!-- Tax Settings Container -->
+
+                                <div [ngClass]="selectedIndex === 'tax-settings' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="tax-settings">
+                                    <app-tax-settings (successMsg)="updateSuccessMessage($event)"
+                                                      (applyChange)="isApplicableCondition.taxsettings = $event"
+                                                      class="slds-size--1-of-1"></app-tax-settings>
+                                </div>
+
+
+                                <!-- Restrictions Report -->
+                                <div [ngClass]="selectedIndex === 'restrictions' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="restrictions">
+                                    <app-restrictions (successMsg)="updateSuccessMessage($event)"
+                                                      (applyChange)="isApplicableCondition.restrictions = $event"
+                                                      class="slds-size--1-of-1 slds-p-around--medium"></app-restrictions>
+                                </div>
+
+                                <!-- Attribute Restrictions Report -->
+                                <div [ngClass]="selectedIndex === 'att-restrictions' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="att-restrictions">
+                                    <app-attribute-restriction (successMsg)="updateSuccessMessage($event)"
+                                                               (applyChange)="isApplicableCondition.attributeRestrictions = $event"
+                                                               class="slds-size--1-of-1"></app-attribute-restriction>
+                                </div>
+
+                                <!-- Washsales Report -->
+                                <div [ngClass]="selectedIndex === 'washsales' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                     id="washsales">
+                                    <app-washsales class="slds-size--1-of-1"></app-washsales>
+                                </div>
+
+                              <!-- Equivalences -->
+                              <div [ngClass]="selectedIndex === 'equivalences' ? 'slds-grid is-open tab-detail' : 'slds-grid slds-hide tab-detail'"
+                                   id="equivalences">
+                                  <app-equivalences class="slds-size--1-of-1"></app-equivalences>
+                              </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div footer>
+                <button [disabled]="isEditHousehold" class="slds-button slds-button--blueleaf--neutral actionButton"
+                        (click)="cancelBtnPressed()">Cancel
+                </button>
+                <!--<button class="slds-button slds-button&#45;&#45;urebal" [disabled]="applyButtonCondition()" (click)="apply()">Save</button>-->
+                <button [disabled]="isEditHousehold" class="slds-button slds-button--blueleaf actionButton"
+                        (click)="_apply()">
+                    Save
+                </button>
+                <label *ngIf="noChangesErr != ''" class="blueleaf-error-message slds-m-top--xx-small"
+                       style="float:  left;">{{noChangesErr}}</label>
+                <label *ngIf="successMsg != ''" class="blueleaf-success-message slds-m-top--xx-small"
+                       style="float:  left;">{{successMsg}}</label>
+            </div>
+        </urebal-widget>
+    </div>
+</div>
+
+
+<app-dialog-modal #removeSecurityModalRef id='cancelAccountSettings'
+                  [modalSize]="'default'"
+                  [title]="'Remove Security'"
+                  [content]="'All Changes made will be lost! Are you sure you want to continue?'"
+                  (yes)="cancelAccSetting_YesBtnPressed('cancelAccountSettings')"
+                  (no)="closeModal('cancelAccountSettings')">
+</app-dialog-modal>
+
+<!--
+<app-modal containerSize="" id='cancelAccountSettings'>
+    &lt;!&ndash;<div class="slds-modal__header">&ndash;&gt;
+
+    &lt;!&ndash;<h3 id="header44" class="slds-text-heading&#45;&#45;medium">{{responseObject?.name}}</h3>&ndash;&gt;
+    &lt;!&ndash;</div>&ndash;&gt;
+    <div class="slds-modal__content slds-text-align&#45;&#45;center slds-p-around&#45;&#45;medium">
+        <p>All Changes made will be lost! Are you sure you want to continue?</p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button&#45;&#45;urebal" (click)="closeModal('cancelAccountSettings')">NO</button>
+        <button class="slds-button slds-button&#45;&#45;urebal"
+                (click)="cancelAccSetting_YesBtnPressed('cancelAccountSettings')">YES
+        </button>
+    </div>
+
+</app-modal>
+-->
+
+<app-modal id='saveAccountSettings'>
+    <!--<div class="slds-modal__header">-->
+
+    <!--<h3 id="header44" class="slds-text-heading&#45;&#45;medium">{{responseObject?.name}}</h3>-->
+    <!--</div>-->
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>Account Settings Saved Successfully</p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)="closeModal('saveAccountSettings')">OK</button>
+    </div>
+
+</app-modal>
+
+<!-- Confirmation dialog for Save Changes in household -->
+<app-modal id="saveHouseholdChangesModal">
+    <div class="slds-modal__header">
+        <h3 id="header43" class="slds-text-heading--medium slds-text-color--error">WARNING!</h3>
+    </div>
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p><strong>Please note: </strong> {{warningMsg}}</p>
+        <p>Are you sure you want to continue?</p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)="closeModal('saveHouseholdChangesModal')">NO
+        </button>
+        <button class="slds-button slds-button--urebal"
+                (click)="closeModal('saveHouseholdChangesModal');saveHouseholdChanges();">YES
+        </button>
+    </div>
+</app-modal>
+
+<app-dialog-modal id='cancelHouseholdChangesModel' title="WARNING!"
+                  (yes)="restoreHouseholdInitialState();closeModal('cancelHouseholdChangesModel');"
+                  (no)="closeModal('cancelHouseholdChangesModel')">
+    <strong>Please note: </strong>All Changes made would be lost!<br/> Are you sure you want to continue?
+</app-dialog-modal>
+
+<!-- Confirmation dialog for Cancel Changes in household -->
+<app-modal id="invalidHouseholdChangesModel">
+    <div class="slds-modal__header">
+        <h3 id="header444" class="slds-text-heading--medium slds-text-color--error">ERROR!</h3>
+    </div>
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>
+            <strong>Please note: </strong>
+            The changes you have made will result in single account household. <br>
+            Please either add another account to keep this household or remove the remaining account as well to
+            dissolve
+            this household.
+        </p>
+
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)="closeModal('invalidHouseholdChangesModel')">OK
+        </button>
+    </div>
+</app-modal>
+
+<!-- Confirmation dialog for Cancel Changes in household -->
+<app-modal id="successHouseholdChangesModel">
+    <div class="slds-modal__header">
+        <h3 id="header444_" class="slds-text-heading--medium">Success</h3>
+    </div>
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>
+            Household updated successfully.
+        </p>
+
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal"
+                (click)="closeModal('successHouseholdChangesModel');refreshHousehold();">OK
+        </button>
+    </div>
+</app-modal>
+
+
+<!-- Confirmation dialog for Cancel Changes in household -->
+<app-modal id="dissolveHouseholdChangesModel">
+    <div class="slds-modal__header">
+        <h3 id="header444_1" class="slds-text-heading--medium">Success</h3>
+    </div>
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>
+            All accounts from the household have been removed, press OK to move back
+            to {{loadAsModal ? 'Rebalance Screen' : 'Account List'}}.
+        </p>
+
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal"
+                (click)="closeModal('dissolveHouseholdChangesModel');dissolveHouseholdChangesModelOKPressed();">OK
+        </button>
+    </div>
+</app-modal>
+
+
+<!-- Confirmation dialog for Cancel Changes in household -->
+<app-modal id="householdPostServiceErrorModal">
+    <div class="slds-modal__header">
+        <h3 id="header44_4_1" class="slds-text-heading--medium slds-text-color--error">ERROR!</h3>
+    </div>
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>
+            {{householdPostServiceError}}
+        </p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)="closeModal('householdPostServiceErrorModal')">OK
+        </button>
+    </div>
+</app-modal>

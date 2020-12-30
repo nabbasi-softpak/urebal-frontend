@@ -1,0 +1,115 @@
+<div class="slds-size--1-of-1 box">
+  <div class="no-print">
+    <div class="slds-grid slds-grid--vertical-align-center">
+      <div class="slds-col">
+        <div class="slds-media slds-no-space slds-grow">
+          <div class="slds-media__body">
+            <table class="slds-table slds-table_cell-buffer">
+              <tr style="border: 1px solid lightgrey; border-radius: 5px;">
+                <td>
+                  <span class="blueleaf-widget-subheading">Report - Trade Reasoning </span>
+                </td>
+                <td class="slds-text-align--right">
+                  <button [style.visibility]="!isDataFound ?  'hidden' : 'visible'" class="slds-button slds-button--blueleaf--neutral" (click)="resetZooming()">Reset Filters</button>
+                  <button [disabled]="this.isDataFound" class="slds-button slds-button--blueleaf" (click)="getWorkspaceSwapReport()">Generate Report</button>
+                </td>
+              </tr>
+              <tr *ngIf="errMsg && errMsg !=''" >
+                <td colspan="2" class="slds-text-align--right">
+                  <span class="blueleaf-error-message" >{{errMsg}}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print slds-m-top--medium">
+    <div class="slds-grid slds-grid--vertical-align-center">
+      <div class="slds-col">
+        <div class="slds-media slds-no-space slds-grow">
+          <div class="slds-media__body">
+            <table class="slds-table slds-table_cell-buffer">
+              <tr style="border: 1px solid lightgrey; border-radius: 5px;">
+                <td>
+                  <span class="blueleaf-widget-subheading">Report - Rebalance Inputs</span>
+                </td>
+                <td class="slds-text-align--right">
+                  <button [disabled]="!isSupportZipEnabled" class="slds-button slds-button--blueleaf" (click)="generateSupportZipInputs()">Generate Report</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div (mouseleave)="hideToolTip($event)" [hidden]="!isDataFound"  class="slds-size--1-of-1 reports">
+    <div  class="slds-p-around--medium myContainer" id="summary">
+
+
+      <!-- Chart Components -->
+      <div id="reportSection"  style="margin-top: 5px;">
+        <div style="width: 100%;">
+          <jqxChart #scatterSecSwapChart
+                    [width]='"100%"'
+                    [height]="350"
+                    [title]="'Buy/Sell Information'"
+                    [enableCrosshairs]="true"
+                    [description]="''"
+                    [showLegend]="true" [enableAnimations]="true" [padding]="padding"
+                    [titlePadding]="titlePadding" [xAxis]="xAxisSec"
+                    [valueAxis]="valueAxis" [seriesGroups]="seriesGroupsSec" [colorScheme]="'scheme05'">
+          </jqxChart>
+        </div>
+        <!-- Chart Components -->
+        <div style="width: 100%; display: none">
+          <jqxChart #scatterChartTax
+                    [width]='"100%"'
+                    [height]="250"
+                    [title]="'Gain/Loss Information'"
+                    (onRangeSelectionChanging)="changeCharts($event)"
+                    [enableCrosshairs]="true"
+                    [description]="''"
+                    [showLegend]="true" [enableAnimations]="true" [padding]="padding"
+                    [titlePadding]="titlePaddingTax" [xAxis]="xAxisTax"
+                    [valueAxis]="valueAxisTax" [seriesGroups]="seriesGroupsTax" [colorScheme]="'scheme03'">
+          </jqxChart>
+        </div>
+        <br>
+        <!-- row detail grid container -->
+        <div  style="width: 100%;">
+          <jqxGrid #SwapReportGrid (onRowselect)="myGridOnRowSelect($event)" (onRowdoubleclick)="resetZooming()"
+                   [pagesize]=5 [theme]='"blueleaf"'
+                   [columnsheight]="46"
+                   [width]='"100%"' [height]="400" [source]="dataAdapter" [columns]="columns"
+                   [rowdetails]="true" [initrowdetails]="initrowdetails"
+                   [rowdetailstemplate]="rowdetailstemplate"
+                   [enabletooltips]="true"
+                   [sortable]= "true"
+                   [filterable]="true"
+                   [altrows]="true"
+                   [pageable]="true"
+                   [pagermode]="'simple'"
+                   [autoheight]="true"
+                   [showsortmenuitems]="false"
+          >
+          </jqxGrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<app-dialog-modal #errorModalRef id='errorModal'
+                  [modalSize]="'default'"
+                  [title]="'Error'"
+                  (yes)="closeErrorModal()"
+                  [yesText]="'OK'"
+                  [content]=modalErrorMsg
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>

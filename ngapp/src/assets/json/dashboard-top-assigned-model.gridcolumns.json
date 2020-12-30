@@ -1,0 +1,26 @@
+[
+  {
+    "text": "Type",
+    "hidden": true
+  },
+  {
+    "text": "Model",
+    "hidden": false
+  },
+  {
+    "text": "Accounts",
+    "hidden": false
+  },
+  {
+    "text": "Securities",
+    "hidden": false
+  },
+  {
+    "text": "Cash<br/> Target %",
+    "hidden": false
+  },
+  {
+    "text": "Market<br/> Value $",
+    "hidden": false
+  }
+]

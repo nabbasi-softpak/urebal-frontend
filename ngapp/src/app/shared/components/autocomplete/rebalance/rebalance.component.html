@@ -1,0 +1,21 @@
+<li *ngFor="let item of items">
+  <a (click)="selectItem(item)">
+
+    <div  class="slds-grid slds-grid--align-spread" title="{{item.name}}">
+<!--      <div style="display:  flex;flex-direction: row;align-items:  center;">
+        <img *ngIf="!item.houseHold" src="{{urebalService.getAppContext()}}/assets/images/single.png" style="width: 18px;height: 18px;/* margin-right: 5px; */">
+        <img *ngIf="item.houseHold" src="{{urebalService.getAppContext()}}/assets/images/household.png" style="width: 18px;height: 18px;/* margin-right: 5px; */">
+      </div>-->
+      <div  class="slds-col" style="width: 45%">
+        <span class="ticker-title slds-truncate" >{{item.name}}</span>
+        <span class="slds-text-color--weak">No. of Accounts: {{item.totalAccounts}}</span>
+        <br/>
+        <span class="slds-text-color--weak">No. of Households: {{item.totalHouseholds}}</span>
+      </div>
+
+      <div  class="slds-col" style="width: 45%">
+        <span class="text-color-price">Total Market Value: {{item.totalMktVal | currency:'USD':'symbol' }}</span>
+      </div>
+    </div>
+  </a>
+</li>

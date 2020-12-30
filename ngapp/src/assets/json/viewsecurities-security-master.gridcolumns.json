@@ -1,0 +1,47 @@
+[
+  {
+    "text": "Ticker",
+    "hidden": false
+
+  },
+  {
+    "text": "Security Name",
+    "hidden": false
+  },
+  {
+    "text": "Ticker",
+    "hidden": true
+  },
+  {
+    "text": "Price $",
+    "hidden": false
+  },
+  {
+    "text": "CUSIP",
+    "hidden": false
+  },
+  {
+    "text": "Primary Asset Class",
+    "hidden": true
+  },
+  {
+    "text": "Type",
+    "hidden": false
+  },
+  {
+    "text": "Sector",
+    "hidden": true
+  },
+  {
+    "text": "Size",
+    "hidden": true
+  },
+  {
+    "text": "Style",
+    "hidden": true
+  },
+  {
+    "text": "Price Updated On",
+    "hidden": false
+  }
+]

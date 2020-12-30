@@ -1,0 +1,95 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Attribute Model Summary </h1>
+            </div>
+          </div>
+        </div>
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right">
+          <div class="slds-grid">
+            <button id="printButton" [disabled] = "(disableBtns)"  (click)="printReport()" class="slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true" title="Print View">
+              Print
+            </button>
+            <button  (click)="exportReport()" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="modelService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-container_center slds-size--1-of-1 color-white " style="padding-right: 3rem;padding-left: 3rem;">
+      <table  class="slds-table slds-table_cell-buffer slds-no-row-hover">
+        <tr style="height: 20px"></tr>
+        <tr class="slds-col--padded-medium">
+          <td class="slds-col--padded-medium">
+            <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+              <span class="text-color-dark--grey">Number of Models: </span>
+              <span class="slds-col--padded-medium" style="font-size:0.8rem;"> {{totalModels}} </span>
+            </div>
+          </td>
+          <td class="slds-col--padded-medium">
+            <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+              <span class="text-color-dark--grey">Total Assigned Models: </span>
+              <span class="slds-col--padded-medium " style="font-size:0.8rem;">{{totalAssigned}}</span>
+            </div>
+          </td>
+
+          <td class="slds-col--padded-medium">
+            <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+              <span class="text-color-dark--grey">Total Unassigned Models: </span>
+              <span class="slds-col--padded-medium" style="font-size:0.8rem;">{{ totalUnAssigned}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr style="height: 20px"></tr>
+      </table>
+    </div>
+
+    <!-- A test comment -->
+    <div class="container" id="printData" style="width: 100%">
+      <div class="slds-container_center gridContainer">
+        <urebal-grid panelTitle="Attribute Model List" [displayHeader]=false [autoHeight]=true [columnReorder]=false [columnResize]=false
+                     dataType="json"
+                     (selectedRow) = "selectModel($event)"
+                     gridId="model-list"
+                     pageSize=18
+                     dataColumns='[
+                { "name": "modelId", "type": "string" },
+                { "name": "modelName", "type": "string" },
+                { "name": "elementsCount", "type": "number" },
+                { "name": "cashTargetPctWt", "type": "number" },
+                { "name": "assignedAccountsCount", "type": "number" }
+            ]'
+
+                     gridColumns='[
+                {
+                    "text": "Model ID", "width": "10%", "datafield": "modelId", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "Model Name", "width": "40%", "datafield": "modelName", "align": "center", "cellsalign":"left"
+                },
+                {
+                    "text": "Securities", "width": "10%", "align": "center", "cellsalign":"right", "datafield": "elementsCount"
+                },
+                {
+                    "text": "Cash Target %", "width": "20%", "align": "center", "cellsalign":"right", "datafield": "cashTargetPctWt","cellsformat":"d2"
+                },
+                {
+                    "text": "Assigned Account", "width": "20%", "datafield": "assignedAccountsCount", "align": "center", "cellsalign":"right"
+                }
+
+            ]'
+        >
+        </urebal-grid>
+      </div>
+    </div>
+  </div>
+</div>

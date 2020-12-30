@@ -1,0 +1,30 @@
+[
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Security Name",
+    "hidden": false
+  },
+  {
+    "text": "Type",
+    "hidden": false
+  },
+  {
+    "text": "PAC",
+    "hidden": true
+  },
+  {
+    "text": "Target %",
+    "hidden": false
+  },
+  {
+    "text": "Min %",
+    "hidden": false
+  },
+  {
+    "text": "Max %",
+    "hidden": false
+  }
+]

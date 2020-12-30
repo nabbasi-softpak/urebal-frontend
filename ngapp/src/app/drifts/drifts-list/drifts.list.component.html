@@ -1,0 +1,629 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget>
+            <div header>
+                <div class="blueleaf-widget-header">
+                    <!-- Grid Header -->
+                    <div id="grid-header-securityMaster">
+                        <div class="slds-grid slds-grid--vertical-align-center">
+                            <div class="slds-col">
+                                <div class="slds-media slds-no-space slds-grow">
+                                    <div class="slds-media__body">
+                                        Account List
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div body>
+                <div>
+                    <div class="slds-grid">
+                        <div class="blueleaf-search-panel">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-3 slds-m-right--medium">
+                                    <input autocomplete="off" class="slds-input blueleaf-search-panel-input"
+                                           id="text-input-01"
+                                           placeholder="Search by Account" type="text" [(ngModel)]="selectedAccountName"
+                                           (keyup)="triggerFilter()">
+                                </div>
+                                <div class="slds-col slds-size_1-of-3 slds-m-right--medium">
+                                    <input autocomplete="off" class="slds-input blueleaf-search-panel-input"
+                                           id="text-input-03"
+                                           placeholder="Search by Rebalance" type="text"
+                                           [(ngModel)]="selectedRebalanceName" (keyup)="triggerFilter()">
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <input autocomplete="off" class="slds-input blueleaf-search-panel-input"
+                                           id="text-input-02"
+                                           placeholder="Search by Model" type="text" [(ngModel)]="selectedModelName"
+                                           (keyup)="triggerFilter()">
+                                </div>
+                                <div class="slds-col slds-size_1-of-3 slds-m-left--medium">
+                                    <softpak-dropdown #driftStatusDropDownList id="driftStatusDropDownList" class="blueleaf-dropdown"
+                                                      [height]="36"
+                                                      [width]="'100%'"
+                                                      (onSelect)="onChangeDriftStatus()"
+                                                      [source]="driftStatues"
+                                                      [selectedIndex]="0"
+                                                      [popupZIndex]="2000"
+                                    >
+                                    </softpak-dropdown>
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-m-top--medium">
+                                <div class="slds-col slds-size_7-of-12" style="display: flex; align-items: center;">
+
+                                    <urebal-dropdown-button
+                                        *ngIf="isAllowed('portfolioModifyRebalanceSettings')"
+                                        title="Bulk Actions"
+                                        [splittedButton]="false"
+                                        [dropdownLinks]="btnBulkActionsDropdownLinks"
+                                        class="slds-m-right--medium">
+                                    </urebal-dropdown-button>
+
+                                    <urebal-dropdown-button
+                                        *ngIf="isAllowed('workspaceCreate')"
+                                        title="Rebalance"
+                                        [splittedButton]="true"
+                                        [dropdownLinks]="btnRebalanceDropdownLinks"
+                                        (onBtnPrimaryClicked)="askRebalanceName()"
+                                        class="slds-m-right--medium">
+                                    </urebal-dropdown-button>
+
+                                    <urebal-dropdown-button
+                                        *ngIf="isAllowed('portfolioCreateHousehold')"
+                                        title="Household"
+                                        [splittedButton]="true"
+                                        [dropdownLinks]="btnHouseholdDropdownLinks"
+                                        (onBtnPrimaryClicked)="askPorftolioName()">
+                                    </urebal-dropdown-button>
+
+                                </div>
+                                <div class="slds-col slds-size_5-of-12 slds-grid_vertical-align-center">
+
+                                    <!-- Referesh button -->
+                                    <button class="slds-button slds-m-top--x-small slds-button_icon slds-float--right"
+                                            aria-haspopup="true" (click)="refreshData()">
+                                        <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-reload.svg'">
+                                    </button>
+
+                                    <!-- Run Drift -->
+                                    <span *ngIf="AppConfig.ENABLE_SELECTED_DRIFT_EXECUTION == false; else selectedAccount">
+                                        <!-- Run Drift All -->
+                                        <button class="slds-button slds-button--blueleaf slds-m-right--medium slds-float--right slds-m-left--xxx-small"
+                                                aria-haspopup="true"
+                                                (click)="handleDriftAction(DriftExecutionType.RUN_ALL)"
+                                                [ngClass]="{'button-loader': isDriftRunning()}"
+                                                [disabled]="isDriftRunning()" *ngIf="isAllowed('portfolioRunDrift')">
+                                            <span class="loader" *ngIf="isDriftRunning()"></span>
+                                            <span class="vertical-middle">Run Drift</span>
+                                        </button>
+                                    </span>
+                                    <ng-template #selectedAccount>
+                                        <!-- Run Drift Selected -->
+                                        <div class="slds-button-group drift-group-button" role="group">
+                                            <button class="slds-button slds-button--blueleaf slds-m-right--medium slds-float--right slds-m-left--xxx-small"
+                                                    aria-haspopup="true"
+                                                    (click)="handleDriftAction(DriftExecutionType.RUN_SELECTED)"
+                                                    [ngClass]="{'button-loader': isDriftRunning()}"
+                                                    [disabled]="isDriftRunning()">
+                                                <span class="loader" *ngIf="isDriftRunning()"></span>
+                                                <span class="vertical-middle">Run Drift</span>
+                                            </button>
+                                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-button_last"
+                                                 [ngClass]="{'slds-is-closed': !showDriftDropdown, 'slds-is-open': showDriftDropdown}"
+                                            >
+                                                <button class="slds-button slds-button--blueleaf slds-button_icon slds-button_icon-border-filled reset-padding slds-p-right_xxx-small" aria-haspopup="true"
+                                                        [disabled]="isDriftRunning()" (click)="showDriftDropdown = !showDriftDropdown"
+                                                        title="Show More">
+                                                <span class="vertical-middle">
+                                                    <i class="material-icons">arrow_drop_down</i>
+                                                </span>
+                                                </button>
+                                                <div class="slds-dropdown slds-dropdown_right slds-dropdown_actions">
+                                                    <ul class="slds-dropdown__list" role="menu">
+                                                        <li class="slds-dropdown__item" role="presentation">
+                                                            <a href="javascript:void(0);" role="menuitem" tabindex="0" (click)="handleDriftAction(DriftExecutionType.RUN_ALL)">
+                                                                <span class="slds-truncate" title="Overflow Item One">Run Drift on All Accounts</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+
+
+                                    <!-- Drift last run -->
+                                    <span *ngIf="driftDate != null" class="slds-m-right--medium slds-m-top--x-small slds-align-middle slds-float--right blueleaf-text">
+
+                                        <ng-container *ngIf="!isDriftRunning() && driftDate; else updatingStatus">
+                                             Drift last run at: {{ driftDate | date: DATETIME_FORMAT}}
+                                        </ng-container>
+                                        <ng-template #updatingStatus>
+                                            <ng-container *ngIf="driftDate.length == 0; else driftRunning">
+                                                Updating drift status...
+                                            </ng-container>
+                                        </ng-template>
+                                        <ng-template #driftRunning>
+                                            Drift running...
+                                        </ng-template>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12 slds-hide">
+                            <span style="font-weight: bold">Applied Filters:</span><span> {{filterConditions}}</span>
+                            <button *ngIf="filterConditions!=''" class="slds-button" aria-live="assertive"
+                                    title="Clear Filters"
+                                    (click)="clearFilteringBtnOnClick()"
+                                    style="margin-left: 10px; text-decoration: underline;">
+                                <span class="slds-assistive-text">Update Filter</span>
+                                Clear Filters
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- Grid container -->
+                <div class="uGrid slds-m-top--medium" id="lazyDriftList">
+                    <jqxGrid #lazyLoadedGrid id="driftsGrid" [width]="'100%'" [height]="'466'" [auto-create]=true
+                             [columnsheight]="46"
+                             [columns]="columns" [source]="dataAdapter"
+                             [theme]='"blueleaf"' [autoheight]=false
+                             [enabletooltips]="true" [sortable]="true"
+                             [altrows]="true" [pageable]="true" [pagesize]=50
+                             [pagesizeoptions]="[10, 15, 17, 20, 50, 75, 100]"
+                             [virtualmode]="true" [rendergridrows]="renderGridRows"
+                             [filterable]="true" [showfilterrow]="false"
+                             [selectionmode]="'checkbox'"
+                             (onSort)="gridOnSort($event)" (onFilter)="onFilter()" [cellhover]="cellHover"
+                             (onRowselect)="rowSelectGrid($event)" (onRowunselect)="rowUnSelectGrid($event)"
+                             (onPagechanged)="pageChanged($event)"
+                             [ready]="ready" [autoshowfiltericon]="true"
+                             [updatefilterconditions]="updatefilterconditions"
+                             [showfiltermenuitems]="false"
+                             [pagermode]="'simple'" [columnsmenu]="false"
+
+                    >
+                    </jqxGrid>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+</div>
+
+<jqxTooltip #driftDetailTooltip
+            [name]="'driftDetails'"
+            [position]="'right'"
+            [content]="''">
+</jqxTooltip>
+
+<!-- General Messsage Modal -->
+<app-dialog-modal id="messageModal"
+                  [modalSize]="'small'"
+                  [title]="messageModalTitle"
+                  (yes)="closeModal('messageModal')"
+                  [yesText]="'OK'"
+                  [content]="messageModalContent"
+                  [hideSecondaryButton]=true>
+
+</app-dialog-modal>
+
+<!-- Modals -->
+<app-modal id="stopLinkModal" modalSize="small">
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p>{{statusDescription}}</p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--urebal" (click)=closeModal()>OK</button>
+    </div>
+</app-modal>
+
+<app-dialog-modal id="askPortfolioNameModal"
+                  [modalSize]="'medium'"
+                  [title]="'Create New Household'"
+                  [yesText]="'Create Household'"
+                  (yes)="createHousehold()"
+                  [noText]="'Close'"
+                  (no)="closeModal('askPortfolioNameModal')">
+    <div style="text-align: left;">
+        <input id="houseHoldName" autocomplete="off" [(ngModel)]="portfolioName"
+               class="slds-input slds-input--blueleaf"
+               [disabled]="disableContentAfterSave" [maxLength]=50 placeholder="Enter Household Name"
+               type="text" style="width: 100%;">
+        <div *ngIf="errMsg" class="blueleaf-input-error-box blueleaf-text">{{errMsg}}</div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: left;">
+        <label style="font-weight: bold;" class="blueleaf-text">Accounts To Add</label>
+
+    <!-- List of Accounts -->
+    <div style="margin-top: 16px;">
+            <ul>
+                <li id="list_createHH{{i}}" *ngFor="let portfolio of selectedRowsModal; let i=index">
+                    <!-- List Separator -->
+                    <div class="blueleaf-list-separator"></div>
+
+                    <!-- List Body -->
+                    <div style="padding: 16px 0; position: relative;">
+                        <a href="javascript:void(0);" class="blueleaf-text"
+                           style="text-align: left; text-decoration: none; color: #007dc4;">
+                            <h3 id="AccountNameText_createHH{{i}}"
+                                title="{{portfolio.portfolioName}}">{{portfolio.portfolioName}}</h3>
+                        </a>
+                        <a id="btnMarkForDeletion_createHH{{i}}" href="javascript:void(0);"
+                           (click)="removeSelection(i,'_createHH')"
+                           style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); padding: 4px">
+                            <img aria-hidden="true"
+                                 [attr.src]="accountService.getAppContext() + '/assets/images/blueleaf/clear.svg'"
+                                 style="opacity: 0.5;">
+                        </a>
+                        <div id="btnUndoDeletion_createHH{{i}}"
+                             style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); text-decoration: none; display: none;">
+                            <span class="blueleaf-text" style="color: #d0021b; margin-right: 16px; font-style: italic;">remove</span>
+                            <a href="javascript:void(0);"
+                               (click)="undoDeletion(i,'_createHH')">
+                                <span>Undo</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="blueleaf-input-error-box blueleaf-text" style="width:100%;">
+            Note: Account level rebalance settings will be removed.
+        </div>
+    </div>
+
+    <div footerMessage>
+        <label *ngIf="serverMessages" class="blueleaf-success-message">{{serverMessages}}</label>
+        <label *ngIf="!serverMessages" class="blueleaf-error-message">{{serverMessages}}</label>
+    </div>
+</app-dialog-modal>
+
+<app-dialog-modal id="askRebalanceNameModal"
+                  [modalSize]="'medium'"
+                  [title]="'Create New Rebalance'"
+                  [yesText]="'Create'"
+                  (yes)="createRebalance()"
+                  [noText]="'Cancel'"
+                  (no)="closeModal('askRebalanceNameModal')">
+
+    <div style="text-align: left;">
+        <input autocomplete="off" id="askRebalanceName" [disabled]="disableContentAfterSave" [(ngModel)]="rebalanceName"
+               [maxLength]=50 class="slds-input slds-input--blueleaf"
+               placeholder="Enter Rebalance Name" (blur)="getWorkspace()" type="text" style="width: 100%;">
+
+        <div *ngIf="errMsg" class="blueleaf-input-error-box blueleaf-text">{{errMsg}}</div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: left;">
+        <label style="font-weight: bold;" class="blueleaf-text">Accounts To Add</label>
+
+        <!-- List of Accounts -->
+        <div style="margin-top: 16px;">
+            <ul>
+                <li id="listcreateRB{{i}}" *ngFor="let portfolio of selectedRowsModal; let i=index">
+                    <!-- List Separator -->
+                    <div class="blueleaf-list-separator"></div>
+
+                    <!-- List Body -->
+                    <div style="padding: 16px 0; position: relative;">
+                        <a href="javascript:void(0);" class="blueleaf-text"
+                           style="text-align: left; text-decoration: none; color: #007dc4;">
+                            <h3 class="" id="accountNameTextcreateRB{{i}}"
+                                title="{{portfolio.portfolioName}}">
+                                {{portfolio.portfolioName}}</h3>
+                        </a>
+
+                        <a id="btnMarkForDeletioncreateRB{{i}}" href="javascript:void(0);"
+                           (click)="removeSelection(i,'createRB')"
+                           style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); padding: 4px">
+                            <img aria-hidden="true"
+                                 [attr.src]="accountService.getAppContext() + '/assets/images/blueleaf/clear.svg'"
+                                 style="opacity: 0.5;">
+                        </a>
+
+                        <div id="btnUndoDeletioncreateRB{{i}}"
+                             style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); text-decoration: none; display: none;">
+                            <span class="blueleaf-text" style="color: #d0021b; margin-right: 16px; font-style: italic;">remove</span>
+                            <a href="javascript:void(0);"
+                               (click)="undoDeletion(i,'createRB')">
+                                <span>Undo</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div footerMessage>
+        <label *ngIf="serverResponseSuccess" class="blueleaf-success-message">{{serverMessages}}</label>
+        <label *ngIf="!serverResponseSuccess" class="blueleaf-error-message">{{serverMessages}}</label>
+    </div>
+</app-dialog-modal>
+
+<!-- Add to Household-->
+<app-dialog-modal id="addToHousehold"
+                  [modalSize]="'medium'"
+                  [title]="'Add To Household'"
+                  [yesText]="'Add To Household'"
+                  (yes)="addSelectedAccountsToHousehold()"
+                  [noText]="'Close'"
+                  (no)="closeModal('addToHousehold')">
+    <div style="text-align: left;">
+        <app-autocomplete (postSelect)="addAccountToList($event)" id="autocompletehouseholdName" [items]="householdList"
+                          [inputID]="'autocomplete-householdName'" [template]="'portfolio'"
+                          [placeholder]="'Enter Household Name'" [defaultValue]="''"></app-autocomplete>
+        <div *ngIf="errMsg" class="blueleaf-input-error-box blueleaf-text">{{errMsg}}</div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: left;">
+        <label style="font-weight: bold;" class="blueleaf-text">Accounts To Add</label>
+
+        <!-- List of Accounts -->
+        <div style="margin-top: 16px;">
+            <ul>
+                <li id="list{{i}}" *ngFor="let portfolio of selectedRowsModal; let i=index">
+                    <!-- List Separator -->
+                    <div class="blueleaf-list-separator"></div>
+
+                    <!-- List Body -->
+                    <div style="padding: 16px 0; position: relative;">
+                        <a href="javascript:void(0);" class="blueleaf-text"
+                           style="text-align: left; text-decoration: none; color: #007dc4;">
+                            <h3 id="accountNameText_addToHH{{i}}"
+                                title="{{portfolio.portfolioName}}">{{portfolio.portfolioName}}</h3>
+                        </a>
+                        <a id="btnMarkForDeletion_addToHH{{i}}" href="javascript:void(0);"
+                           (click)="removeSelection(i,'_addToHH')"
+                           style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); padding: 4px">
+                            <img aria-hidden="true"
+                                 [attr.src]="accountService.getAppContext() + '/assets/images/blueleaf/clear.svg'"
+                                 style="opacity: 0.5;">
+                        </a>
+                        <div id="btnUndoDeletion_addToHH{{i}}"
+                             style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); text-decoration: none; display: none;">
+                            <span class="blueleaf-text" style="color: #d0021b; margin-right: 16px; font-style: italic;">remove</span>
+                            <a href="javascript:void(0);"
+                               (click)="undoDeletion(i,'_addToHH')">
+                                <span>Undo</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="blueleaf-input-error-box blueleaf-text" style="width:100%;">
+            Note: Account level rebalance settings will be removed.
+        </div>
+    </div>
+
+    <div footerMessage>
+        <label *ngIf="serverMessages" class="blueleaf-success-message">{{serverMessages}}</label>
+        <label *ngIf="!serverMessages" class="blueleaf-error-message">{{serverMessages}}</label>
+    </div>
+</app-dialog-modal>
+
+<!-- Add to Rebalance-->
+<app-dialog-modal id="addToRebalanceModal"
+                  [modalSize]="'medium'"
+                  [title]="'Add To Rebalance'"
+                  (yes)="addAccountsToRebalance()"
+                  [yesText]="'Add To Rebalance'"
+                  (no)="closeModal('addToRebalanceModal')"
+                  [noText]="'Cancel'">
+
+    <div style="text-align: left;">
+        <!-- TODO: Fix auto-complete suggestions which are not being shown below the input field  -->
+        <!--    <app-autocomplete (postSelect)="rebalanceSelected($event)" [items]="rebalanceList"-->
+        <!--                      [inputID]="'autocomplete-rebalanceName'" [template]="'rebalance'"-->
+        <!--                      [placeholder]="'Please Enter Rebalance Name'" [defaultValue]="''" style="width: 100%;">-->
+        <!--    </app-autocomplete>-->
+
+        <jqxInput #rebalanceNameInput id="autocomplete-rebalanceName" class="slds-input slds-input--blueleaf"
+                  [width]="'100%'" [height]="32" [source]="rebalanceNamesList"
+                  [minLength]="1" [placeHolder]="'Enter Rebalance Name'" [theme]="'blueleaf'"
+                  (onSelect)="rebalanceNameSelected($event)">
+
+        </jqxInput>
+
+        <div *ngIf="errMsg" class="blueleaf-input-error-box blueleaf-text">{{errMsg}}</div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: left;">
+        <label style="font-weight: bold;" class="blueleaf-text">Accounts To Add</label>
+
+        <!-- List of Accounts -->
+        <div style="margin-top: 16px;">
+            <ul>
+                <li id="listaddToRB{{i}}" *ngFor="let portfolio of selectedRowsModal; let i=index">
+                    <!-- List Separator -->
+                    <div class="blueleaf-list-separator"></div>
+
+                    <!-- List Body -->
+                    <div style="padding: 16px 0; position: relative;">
+                        <a href="javascript:void(0);" class="blueleaf-text"
+                           style="text-align: left; text-decoration: none; color: #007dc4;">
+                            <h3 class="" id="accountNameTextaddToRB{{i}}"
+                                title="{{portfolio.portfolioName}}">
+                                {{portfolio.portfolioName}}</h3>
+                        </a>
+
+                        <a id="btnMarkForDeletionaddToRB{{i}}" href="javascript:void(0);"
+                           (click)="removeSelection(i,'addToRB')"
+                           style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); padding: 4px">
+                            <img aria-hidden="true"
+                                 [attr.src]="accountService.getAppContext() + '/assets/images/blueleaf/clear.svg'"
+                                 style="opacity: 0.5;">
+                        </a>
+
+                        <div id="btnUndoDeletionaddToRB{{i}}"
+                             style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); text-decoration: none; display: none;">
+                            <span class="blueleaf-text" style="color: #d0021b; margin-right: 16px; font-style: italic;">remove</span>
+                            <a href="javascript:void(0);"
+                               (click)="undoDeletion(i,'addToRB')">
+                                <span>Undo</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</app-dialog-modal>
+
+<!-- Assign model to account(s)-->
+<app-dialog-modal id="assignAccountModal"
+                  [modalSize]="'large'"
+                  [title]="'Model Assignment'"
+                  (yes)="assignModelToAccounts()"
+                  [yesText]="'Save'"
+                  (no)="restorePreselectedAccounts(); closeModal('assignAccountModal')"
+                  [noText]="'Cancel'">
+
+    <div style="text-align: left;">
+        <div class="slds-grid">
+            <div class="slds-col slds-size--7-of-12">
+                <softpak-combobox class="blueleaf-dropdown"
+                                  [comboBoxInputClassName]="'combobox-remove-padding'"
+                                  [comboBoxContainerDivClassName]="'combobox-container'"
+                                  id="form-combo-box" #modelComboxBoxRef
+                                  [width]="'90%'" [height]="'32px'"
+                                  (onChange)="modelOnChange()"
+                                  [placeHolder]="'Please select model'"
+                                  [displayMember]="'modelName'"
+                ></softpak-combobox>
+            </div>
+            <div class="slds-col slds-size--5-of-12 slds-m-left--small">
+                <a href="javascript:void(0)" (click)="openModelDetails()"
+                   *ngIf="this.selectedModel && haveModelPermission(this.selectedModel['modelId'], this.selectedModel['modelTypeNum'])">
+                    <span class="slds-p-left--xx-small slds-align-middle" title="View Model">View Model</span>
+                </a>
+            </div>
+        </div>
+        <div *ngIf="errModelMsg" class="blueleaf-input-error-box blueleaf-text">{{errModelMsg}}</div>
+
+        <table class="blueleaf-text blueleaf-table" style="margin-top: 24px;">
+            <thead>
+            <tr>
+                <th width="50%"><strong>Accounts</strong></th>
+                <th style="width:50%;"><strong>Model</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of this.selectedRows">
+                <td>{{item.portfolioName}}</td>
+                <td>{{item.modelName ? item.modelName : '--'}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</app-dialog-modal>
+
+<app-dialog-modal id="existingAssociationsWarning"
+                  [modalSize]="'large'"
+                  [title]="'Move Accounts'"
+                  (yes)="onExistingAssociationWarningModalYesClicked()"
+                  [yesText]="'Yes'"
+                  (no)="closeModal('existingAssociationsWarning')"
+                  [noText]="'No'">
+
+    <div style="text-align: left;">
+        <label>
+            Existing rebalance associations are removed
+            for accounts that are moved to a different rebalance. Following rebalance associations are found for
+            selected accounts:
+        </label>
+
+        <table class="blueleaf-text blueleaf-table" style="margin-top: 32px;">
+            <thead>
+            <tr>
+                <th width="50%"><strong>Accounts</strong></th>
+                <th style="width:50%;"><strong>Rebalance Name</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of accountsWithRebalanceAssociations">
+                <td>{{project.portfolioName}}</td>
+                <td>{{project.workspaceName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div footerMessage>
+        <p class="blueleaf-text" style="font-weight: bold; color: #007dc4;">Do you want to move above accounts to a
+            different rebalance?</p>
+    </div>
+</app-dialog-modal>
+
+<app-dialog-modal id="existingModelWarning"
+                  [modalSize]="'large'"
+                  [title]="'Model Assignment'"
+                  (yes)="closeModal('existingModelWarning'); gotoModelAssigment();"
+                  [yesText]="'Yes'"
+                  (no)="restorePreselectedAccounts(); closeModal('existingModelWarning')"
+                  [noText]="'No'">
+
+    <div style="text-align: left;">
+        <label>
+            Existing model assignments will be updated for the following selected accounts:
+        </label>
+
+        <table class="blueleaf-text blueleaf-table" style="margin-top: 32px;">
+            <thead>
+            <tr>
+                <th width="50%"><strong>Accounts</strong></th>
+                <th style="width:50%;"><strong>Model</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of this.selectedRows">
+                <td>{{item.portfolioName}}</td>
+                <td>{{item.modelName ? item.modelName : '--'}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div footerMessage>
+        <p class="blueleaf-text" style="font-weight: bold; color: #007dc4;">Do you want to update model assignment for the the selected accounts?</p>
+    </div>
+</app-dialog-modal>
+
+<app-dialog-modal #modelAssignAllModalRef id='modelAssignAllModalRef'
+                  [modalSize]="'default'"
+                  [title]="'Assign Model'"
+                  [content]="'Do you want to assign model to all the accounts?'"
+                  (yes)="modelAssignAllModalRef.close(); assignModelToAllAccounts()"
+                  (no)="modelAssignAllModalRef.close()">
+</app-dialog-modal>
+
+<app-apply-equivalence-modal #applyEquivalenceModalRef (onClose)="applyEquivalenceModalClose($event)"></app-apply-equivalence-modal>
+
+<app-dialog-modal
+  #defaultTemplateNotFoundModal id='defaultTemplateNotFoundModal'
+  [modalSize]="'medium'"
+  [title]=noDefaultSettingsTitle
+  (yes)="defaultTemplateNotFoundModal.close()"
+  [yesText]="'Close'"
+  [hideSecondaryButton]=true>
+  <!--[content]="defaultTemplateNotFoundMessage"-->
+  <div>
+    <p style="display: flex;  justify-content: center;">
+      <i [style.display]="'block'" class="material-icons"
+         style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+      {{defaultTemplateNotFoundMessage}}
+    </p>
+  </div>
+</app-dialog-modal>

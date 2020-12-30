@@ -1,0 +1,163 @@
+<div id="mapFields" class="slds-grid slds-grid--align-center slds-hide">
+
+  <div class="slds-size--1-of-2 slds-p-around--medium ">
+
+    <h1 class="slds-page-header__title slds-truncate">Map Fields</h1>
+    <p class="slds-p-vertical--medium">uRebal uses mappings to match the input data columns from your .CSV file to be imported to the destination uRebal fields.</p>
+    <div class="slds-m-bottom--small">
+      <label class="slds-text-color--error">{{errorMessage}}</label>
+    </div>
+    <div  data-accordion-group="">
+
+      <div id="accordionid{{index}}"  *ngFor="let file of mappedData; let index = index;" class="accordion"  data-accordion="">
+        <div  (click)="accordionAnimate(index)" data-control="">
+          <strong>{{file.filetype}}</strong>
+        </div>
+        <div id="divHeightid{{index}}" data-content="" style="transition: max-height 400ms ease; max-height: 0px;">
+          <table class="slds-table slds-table_bordered">
+            <thead>
+            <tr>
+              <th width="30%"><strong>uRebal Field</strong></th>
+              <th style="width:5%"></th>
+              <th><strong>CSV Fields</strong></th>
+              <th *ngIf="file.containsHeader === false">
+                <strong>Preview</strong>
+              </th>
+              <th style="width:10%"><strong>Advanced Rules</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let mappedRow of file.urebalFields; let index = index">
+              <td >{{mappedRow}} <span  class="slds-button__icon slds-button__icon&#45;&#45;left icon-error" aria-hidden="true" *ngIf="file.colVals[index] === 'false'">*</span>
+              </td>
+              <td align="right"><img src="{{urebalService.getAppContext()}}/assets/images/field_map_arrow.png" width="22"></td>
+              <td>
+                <select (change)="onChangeCSVFields($event.target.value,file,mappedRow)" class="slds-select slds-size--2-of-4">
+                  <option selected >Do not import</option>
+                  <ng-container *ngFor="let col of file.cols | keys">
+                    <option *ngIf="file.containsHeader == false" value="{{col}}">{{col}}</option>
+                    <option *ngIf="file.containsHeader == true" value="{{col}}">{{file.cols[col]}}</option>
+                  </ng-container>
+                </select>
+
+              </td>
+              <td *ngIf="file.containsHeader === false">
+               <strong>{{file.preview[index]}}</strong>
+              </td>
+              <td style="text-align: center;">
+                <div *ngIf="mappedRow !== 'Account ID'">
+                  <input [disabled]="(file.preview[index] == '' || file.preview[index] == undefined)" type="checkbox"
+                         (change)="onCheckedAdvanceRules($event.target.checked,file,file.data[index])">
+                </div>
+              </td>
+            </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <!--here-->
+
+      </div>
+
+
+    </div>
+    <!--<p *ngIf="(i==0)" class=""></p>-->
+    <ng-container>
+    <h1 *ngIf="showRules" class="slds-page-header__title slds-truncate  slds-p-top--xx-large">Advanced Rules</h1>
+    </ng-container>
+
+    <div *ngFor="let file of mappedData; let i=index" id="advanceRules{{i}}" class="slds-grid slds-grid--align-center slds-hide">
+
+      <div  class="slds-size--1-of-1">
+
+        <div *ngIf="(file.rules.length > 0)" id="rulesAccordionid{{i}}"   class="accordion" data-accordion="">
+          <div  (click)="rulesAccordion(i)" data-control=""> <strong>{{file.filetype}}</strong></div>
+          <div id="rulesDivHeightid{{i}}" data-content="" style="transition: max-height 400ms ease; max-height: 0px;">
+            <table class="slds-table slds-table_bordered">
+              <thead>
+              <tr>
+                <th width="30%"><strong>Field</strong></th>
+                <th><strong>Rule set</strong></th>
+              </tr>
+              </thead>
+              <tbody >
+
+              <ng-container *ngFor="let mappedCol of file.mappedColumns">
+                <ng-container *ngFor="let addedrule of file.rules">
+                <tr *ngIf="mappedCol.dbColumn == addedrule">
+                  <td><strong>{{file.urebalFields[file.urebal_Fields.indexOf(addedrule)]}}</strong></td>
+
+                  <td>
+                    <table>
+                      <tbody>
+                      <tr >
+                        <td>
+                          <select  class="slds-select">
+                            <option selected="">Replace</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input [(ngModel)]="mappedCol.replace[0].search"  class="slds-input slds-size--2-of-4" placeholder="Search" type="text">
+                          <input [(ngModel)]="mappedCol.replace[0].replace"  class="slds-input slds-size--2-of-4" placeholder="Replace" type="text">
+                        </td>
+                      </tr>
+                      <!--Transform-->
+                      <tr>
+                        <td>
+                          <select class="slds-select">
+                            <option selected="">Transform</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select [(ngModel)]="mappedCol.transform.changeCase" class="slds-select slds-size--2-of-2">
+                            <option value="Uppercase">Uppercase</option>
+                            <option value="Lowercase">Lowercase</option>
+                            <option value="Capitalize">Capitalize</option>
+                          </select>
+                        </td>
+                      </tr>
+                      </tbody></table>
+
+                  </td>
+                </tr>
+                </ng-container>
+              </ng-container>
+
+
+
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
+
+    </div>
+    <div id="mapNext"  class="slds-p-around--medium slds-align--absolute-center slds-hide">
+      <button (click)="backBtn()" class="slds-button slds-button--neutral">
+        <div class="slds-icon_container">
+          <svg aria-hidden="true" class="slds-icon--x-small slds-button__icon">
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'"></use>
+          </svg>
+        </div>
+        Back</button>
+      <button (click)="nextButtonPressed()"  class="slds-button slds-button--urebal">Next</button>
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+

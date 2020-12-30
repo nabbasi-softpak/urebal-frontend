@@ -1,0 +1,50 @@
+[
+  {
+    "text": "Type",
+    "hidden": true
+  },
+  {
+    "text": "Account<br/> Number",
+    "hidden": false
+  },
+  {
+    "text": "Account<br/> Name",
+    "hidden": false
+  },
+  {
+    "text": "Rebalance<br/> Name",
+    "hidden": false
+  },
+  {
+    "text": "Tax<br/> Status",
+    "hidden": true
+  },
+  {
+    "text": "Drift<br/> Status",
+    "hidden": false
+  },
+  {
+    "text": "Drift %",
+    "hidden": false
+  },
+  {
+    "text": "Model",
+    "hidden": false
+  },
+  {
+    "text": "Market<br/> Value $",
+    "hidden": false
+  },
+  {
+    "text": "Cash $",
+    "hidden": false
+  },
+  {
+    "text": "Cash<br/> Drift",
+    "hidden": false
+  },
+  {
+    "text": "Last<br/> Rebalanced",
+    "hidden": false
+  }
+]

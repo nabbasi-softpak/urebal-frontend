@@ -1,0 +1,5 @@
+.jqx-grid-statusbar-blueleaf .jqx-grid-cell-blueleaf {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    width: unset !important;
+}

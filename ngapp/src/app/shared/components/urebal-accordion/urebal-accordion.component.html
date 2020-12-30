@@ -1,0 +1,25 @@
+<div class="{{theme}}-accordion-head" [class.active]="active">
+  <div style="padding-top: 3px;">
+    <div (click)="onClick($event)" [ngClass]="{'slds-p-around--small': theme === 'blueleaf'}" class="blueleaf-text">
+        <i style="float: left; margin-right: 10px;" class="material-icons" style="color: #54698d;"
+           *ngIf="icon">{{ icon }}</i>
+        <span style="vertical-align: 6px; margin-left: 5px;" class="{{titleClasses}}">{{ title }} <span *ngIf="length">({{ length }}
+            )</span></span>
+
+    </div>
+    <span *ngFor="let item of actions">
+      <i *ngIf="item.isAllowed" style="margin-right: 10px;" title="{{item.name}}" (click)="item.action(id)"
+         class="{{item.classes}} material-icons">{{item.icon}}</i>
+    </span>
+    <span>
+        <i style="position: absolute; float: right; top: 12px; right: 20px;" (click)="onClick($event)"
+       class="material-icons {{theme}}-accordion-handler">expand_more</i>
+    </span>
+  </div>
+</div>
+<div class="{{theme}}-accordion-body {{contentClasses}}" [class.active]="active">
+    <ng-container *ngIf="contentTemplate && (cache ? loaded : active)">
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+    </ng-container>
+    <ng-content></ng-content>
+</div>

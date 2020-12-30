@@ -1,0 +1,85 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+  <div class="slds-size--1-of-1 box color-white">
+    <urebal-widget [showFooter]="true">
+      <div header>
+  <div class="blueleaf-widget-header">
+    <!-- Grid Header -->
+    <div id="grid-header-securityMaster">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              Audit Trail
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div body>
+        <div>
+          <div class="slds-grid">
+            <div class="blueleaf-search-panel">
+              <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4 slds-m-right--medium">
+                  <input autocomplete="off" class="slds-input blueleaf-search-panel-input"
+                         id="text-input-01"
+                         placeholder="Search by Name" type="text"
+                  [(ngModel)]="selectedName" (keyup)='keyUp.next($event.target.value)'/>
+                         <!--(keyup)="triggerFilter()"-->
+
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-m-right--medium">
+                  <input autocomplete="off" class="slds-input blueleaf-search-panel-input"
+                         id="text-input-02"
+                         placeholder="Search by Entity" type="text"
+                  [(ngModel)]="selectedEntityName"
+                         (keyup)="triggerFilter()">
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-m-right--medium">
+                  <softpak-dropdown #actionsDropdownList id="actionsDropdownList" class="blueleaf-dropdown"
+                                    [height]="36"
+                                    [width]="'100%'"
+                                    [source]="actions"
+                                    [selectedIndex]="0"
+                                    (onSelect)="onActionChanged()"
+                  >
+                  </softpak-dropdown>
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-m-left--medium">
+
+                  <jqxDateTimeInput #dateTimeInput (onChange)="dateOnChange()"
+
+                                    [width]="250" [height]="30" [selectionMode]="'range'"
+                                    [clearString]="'Clear'">
+                  </jqxDateTimeInput>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uGrid slds-m-top--medium" id="lazyAuditTrail">
+          <jqxGrid #lazyLoadedGrid id="auditTrailGrid" [width]="'100%'" [height]="'466'" [auto-create]=true
+                   [columnsheight]="46"
+                   [columns]="auditTrailGridCols" [source]="auditTrailGridAdapter"
+                   [theme]='"blueleaf"' [autoheight]=false
+                   [enabletooltips]="true" [sortable]="true"
+                   [altrows]="true" [pageable]="true" [pagesize]=50
+                   [pagesizeoptions]="[10, 15, 17, 20, 50, 75, 100]" [showsortmenuitems]="false"
+                   [virtualmode]="true" [rendergridrows]="renderGridRows"
+                   [filterable]="true" [showfilterrow]="false"
+                   (onSort)="gridOnSort($event)" (onFilter)="onFilter()"
+                   (onPagechanged)="pageChanged($event)"
+                   [pagermode]="'simple'" [columnsmenu]="false"
+
+
+          >
+          </jqxGrid>
+        </div>
+      </div>
+    </urebal-widget>
+  </div>
+
+</div>

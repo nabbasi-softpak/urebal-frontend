@@ -1,0 +1,346 @@
+<div  class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div *ngIf="!isValid"  class="slds-size--1-of-1 box color-white">
+        <urebal-widget [showHeader]="false" [showDivider]="false">
+            <div body>
+                <div class="rebalance-progress slds-align--absolute-center slds-size--1-of-2" style="width: 65%;">
+                    <div class="step active" style="padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)"
+                           style="pointer-events: none;text-decoration: none">
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-search-and-filter.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Search and Filter Accounts
+                            </div>
+                        </a>
+
+                    </div>
+                    <div class="step active" style="padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)" *ngIf="!isAllowed('workspaceModify')" (click)=gotoForbidden()>
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-select-accounts.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Select Accounts for Rebalance
+                            </div>
+                        </a>
+                      <a class="slds-text-link--reset" href="javascript:void(0)" *ngIf="isAllowed('workspaceModify')" (click)="gotoEdit()">
+                        <div class="step-icon" style="width: 80px;height: 80px;">
+                          <img style="width: 80px; height: 80px"
+                               [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-select-accounts.svg'"/>
+                        </div>
+                        <div class="step-label">
+                          Select Accounts for Rebalance
+                        </div>
+                      </a>
+                    </div>
+                    <div class="step active" style="padding: 2px">
+                        <a class="slds-text-link--reset" href="javascript:void(0)"
+                           style="pointer-events: none;text-decoration: none">
+                            <div class="step-icon" style="width: 80px;height: 80px;">
+                                <img style="width: 80px; height: 80px"
+                                     [attr.src]="workspaceService.getAppContext() + '/assets/images/blueleaf/icon-generate-trades.svg'"/>
+                            </div>
+                            <div class="step-label">
+                                Generate Trades
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+    <div ngClass="slideUp" id="workspaceDiv" class="slds-size--1-of-1 " >
+        <div class="box color-white slds-m-top--medium">
+            <urebal-widget [showFooter]="true" [showHeader]="false" [showDivider]="false">
+                <div body>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size--1-of-1">
+                            <div class="blueleaf-modal-header" style="display: inline-block; padding-right: 32px; margin-bottom: 0px; margin-top: 0px">Rebalance
+                                Name: {{workspaceName}}</div>
+                            <div class="slds-m-top--small slds-m-bottom--small">
+                                <h1 class="slds-text-heading--small blueleaf-text">Select Accounts to Rebalance or Apply setting Templates</h1>
+                            </div>
+                            <div class="slds-grid slds-grid--vertical-align-center">
+                                <div class="slds-form--inline">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element" *ngIf="isAllowed('portfolioModifyRebalanceSettings')">
+                                            <div class="slds-form-element__control" style="width:420px">
+                                                <app-urebal-dropdown id="settingsTemplate" width='420px' displayMember="templateName"
+                                                                     valueMember="templateName"
+                                                                     placeholder="Select a Template"
+                                                                     (onSelect)="selectRebalanceTemplate($event)"></app-urebal-dropdown>
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element" *ngIf="isAllowed('portfolioModifyRebalanceSettings')">
+                                            <div class="slds-button-group" role="group" style="position: relative !important;">
+                                                <button class="slds-button slds-button--blueleaf--neutral" aria-haspopup="true"
+                                                        (click)="applyRebalanceTemplate()"
+                                                        title="Apply Template">
+                                                    <svg class="slds-button__icon" aria-hidden="true">
+                                                        <use
+                                                                [attr.xlink:href]="workspaceService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#clone'"></use>
+                                                    </svg>
+                                                    Apply Template
+                                                </button>
+                                                <button id="btnTemplateToggleMenu" class="slds-button slds-button_icon slds-button_icon--blueleaf--neutral"
+                                                        aria-haspopup="true" title="More Actions"
+                                                        (click)="toggleTemplateMenu()">
+                                                    <img id="imgTemplateToggleMenu" [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-right.svg'"
+                                                         class="slds-input__icon" style="transform: rotate(90deg)"
+                                                         aria-hidden="true">
+                                                </button>
+                                            </div>
+                                            <div id="divTemplateToggleMenu" class="blueleaf-dropdown-button-menu slds-hide"
+                                                 style="width: 205px !important;"
+                                                 (click)="toggleTemplateMenu(); checkTemplateSelected()">
+                                                <a href="javascript:void(0);" role="menuitem" tabindex="0">
+                                                    <span title="Apply to All Accounts">Apply to All Accounts</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element" *ngIf="isAllowed('templateCreate')">
+                                            <button class="slds-button slds-button--blueleaf--neutral" aria-haspopup="true"
+                                                    (click)="openCreateTemplate()"
+                                                    title="Create Template">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use
+                                                            [attr.xlink:href]="workspaceService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                                                </svg>
+                                                Create Template
+                                            </button>
+                                        </div>
+                                        <div class="slds-form-element" style="padding-top: 5px;">
+                                            <label class="blueleaf-error-message">{{applyTemplateError}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AOT Commented -->
+                            <!--<urebal-grid #mainGridRef gridId="execute-grid-report" panelTitle="Accounts" [displayHeader]=false (formSubmit$)="openSettings($event)" selectionMode="checkbox"  [autoHeight]=true [columnReorder]=false [columnResize]=true-->
+                            <urebal-grid [customContentClass]="'blueleaf-widget-custom-content-area'" #mainGridRef gridId="execute-grid-report" panelTitle="Accounts" [displayHeader]=false
+                                         selectionMode="checkbox" [autoHeight]=false [columnReorder]=false [columnResize]=true
+                                         dataType="array"
+                                         (selectedRow)="selectRebalance($event)"
+                                         (unSelectedRow)="unSelectRebalance($event)"
+                                         (onPageChanged)="lazyLoadGrid.showSelectedRow()"
+                                         (onSort)="lazyLoadGrid.onGridSort($event)"
+                                         [pageSize]="5"
+                                         [height]="250"
+                                         [columnsheight]="46"
+                                         [linkRendererParams]='[
+
+
+                        {
+                            "click": "openAccountSettings",
+                            "params": [
+                                "portfolioId",
+                                "portfolioName",
+                                "isHousehold"
+                            ]
+                        },
+                         {
+                            "click": "openModelDetail",
+                            "params": [
+                                "modelId",
+                                "modelName",
+                                "modelType",
+                                "attributeType",
+                                "isPartialModel",
+                                "isModelActive",
+                                "asOfDate"
+                            ]
+                        }
+                  ]'
+                                         [dataColumns]='[
+                        { "name": "rebalanceId", "type": "number" },
+                        { "name": "portfolioId", "type": "string" },
+                        { "name": "accountId", "type": "string" },
+                        { "name": "accountNumber", "type": "link" },
+                        { "name": "rebalanceTypeString", "type": "link" },
+                        { "name": "portfolioName", "type": "string" },
+                        { "name": "drift", "type": "number" },
+                        { "name": "marketValue", "type": "number" },
+                        { "name": "isHousehold", "type": "boolean" },
+                        { "name": "isApprovedValue", "type": "string" },
+                        { "name": "lastRunDate", "type": "date"},
+                        { "name": "isTaxable", "type": "string" },
+                        { "name": "modelName", "type": "string" },
+                        { "name": "modelId", "type": "number" },
+                        { "name": "modelType", "type": "number" },
+                        { "name": "isPartialModel", "type": "boolean" },
+                        { "name": "isModelActive", "type": "boolean" },
+                        { "name": "asOfDate", "type": "number" },
+                        { "name": "attributeType", "type": "string" },
+                        { "name": "accountSettings", "type": "string"},
+                        { "name": "templateId", "type": "number"},
+                        { "name": "templateName", "type": "string"}
+                   ]'
+
+                                         [linkRendererPermissions]='[
+                        {"datafield": "accountNumber", "permissionName": "accountViewData"},
+                        {
+                          "datafield": "modelName",
+                          "checkParamPermission": true,
+                          "paramName": "modelType",
+                          "paramValuePermissions": [
+                              {"paramValue": "1", "permissionName": "modelViewSecurityModel"},
+                              {"paramValue": "4", "permissionName": "modelViewModelOfModel"},
+                              {"paramValue": "3", "permissionName": "modelViewAssetModel"}
+                          ]
+                        }
+                    ]'
+
+                                         [gridColumns]='getRebalanceAccountsGridColumns()'
+
+                                         (onLinkClick)="OnLinkActive($event)"
+                            >
+                            </urebal-grid>
+
+                        </div>
+                    </div>
+                </div>
+                <div footer>
+                    <div class="slds-grid">
+                        <div>
+                            <button class="slds-button slds-button--blueleaf--neutral" (click)="navigateToWorkspaceList()">
+                                View
+                                Rebalance List
+                            </button>
+                        </div>
+                        <div class="slds-m-left--medium">
+                            <button *ngIf="isAllowed('portfolioViewReports')"
+                                    class="slds-button slds-button--blueleaf--neutral"
+                                    (click)="viewReports()">View Reports
+                            </button>
+                        </div>
+                        <div class="slds-col--bump-left">
+                            <div class="slds-button-group" role="group" style="position: relative !important;">
+                                <button class="slds-button slds-button--blueleaf"
+                                        (click)="validateWorkspace()">Rebalance Selected Accounts
+                                </button>
+                                <button id="toggleMenuButton" class="slds-button slds-button_icon slds-button_icon--blueleaf"
+                                        aria-haspopup="true" title="More Actions"
+                                         (click)="toggleRebalanceMenu()">
+                                    <img id="toggleMenuImage" [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-down.svg'"
+                                         class="slds-input__icon"
+                                         aria-hidden="true">
+                                </button>
+                            </div>
+                            <div id="rebalanceMenu" class="blueleaf-dropdown-button-menu slds-hide"
+                                 style="width: 265px !important;"
+                                 (click)="toggleRebalanceMenu(); rebalaceAllModalRef.open()">
+                                <a href="javascript:void(0);" role="menuitem" tabindex="0">
+                                    <span title="Rebalance All Accounts">Rebalance All Accounts</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </urebal-widget>
+        </div>
+    </div>
+</div>
+
+<app-expandable-settings #exPandRef [getElementID]="'workspaceDiv'">
+    <app-rebalance-settings #rebalanceSettingsRef
+                            (onClose)="expand1.closeSettingsDrawer(); onSettingsClose($event);"></app-rebalance-settings>
+</app-expandable-settings>
+
+
+<!-- Modal component to load modal functioanlity and design for content with in it -->
+<app-modal id="{{modalId}}" [modalSize]="'large'" [containerSize]="'large'" class="slds-modal__container_large">
+    <app-account-detail #accountSettingsRef [loadAsModal]="true"
+                        (closeModalModeEmitter)="closeAccountDetailModal($event);"
+                        (onClose)="closeModal(modalId);accountSettingsOnClose();"></app-account-detail>
+</app-modal>
+
+<app-dialog-modal #WorkspaceExecutionRef id='workspaceExecute'
+                  [modalSize]="'default'"
+                  [title]="'Rebalance Status'"
+                  [hideSecondaryButton]="!(selectedRebalanceData.length != 0)"
+                  [noText]="'Close'"
+                  [yesText]="selectedRebalanceData.length != 0 ? 'View Reports' : 'Close'"
+                  (yes)="selectedRebalanceData.length != 0 ? viewReports() : WorkspaceExecutionRef.close(); workspaceModalClose()"
+                  (no)="WorkspaceExecutionRef.close(); workspaceModalClose();">
+    <div>
+        <p style="display: flex;  justify-content: center;">
+            <i [style.display]="invalidWorkspace ? 'none' : 'block'" class="material-icons"
+               style="margin-right: 5px; font-size: 30px;color: #5cc692;">check_circle</i>
+            <i [style.display]="!invalidWorkspace ? 'none' : 'block'" class="material-icons"
+               style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+            {{workspaceMessage}}
+        </p>
+    </div>
+</app-dialog-modal>
+
+<app-dialog-modal
+    #defaultTemplateNotFoundModal id='defaultTemplateNotFoundModal'
+    [modalSize]="'medium'"
+    [title]="'Rebalance Status'"
+    (yes)="defaultTemplateNotFoundModal.close()"
+    [yesText]="'Close'"
+    [hideSecondaryButton]=true>
+    <div>
+        <p style="display: flex;  justify-content: center;">
+            <i [style.display]="'block'" class="material-icons"
+               style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+            {{defaultTemplateNotFoundMessage}}
+        </p>
+    </div>
+</app-dialog-modal>
+
+
+<app-modal #approvalStatusModal id="approvalStatusModal">
+    <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+        <p><strong>Please note: </strong> One or more selected accounts contain approved trades, proceeding forward will
+            overwrite approved trades for those accounts.</p>
+        <p>Are you sure you want to continue?</p>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--neutral" (click)="approvalStatusModal.close();">NO</button>
+        <button class="slds-button slds-button--urebal" (click)="executeWorkspace()">YES</button>
+    </div>
+</app-modal>
+
+<app-modal id="modelElements">
+    <app-model-elements #modelElementsRef [model]="modelDetail"
+                        (onClose)="closeModal('modelElements')"></app-model-elements>
+</app-modal>
+
+
+<app-dialog-modal #rebalaceAllModalRef id='rebalaceAllModalRef'
+                  [modalSize]="'default'"
+                  [title]="'Rebalance Status'"
+                  [content]="'Do you want to execute rebalance for all the accounts?'"
+                  (yes)="executeAllWorkspace()"
+                  (no)="rebalaceAllModalRef.close()">
+</app-dialog-modal>
+
+<app-dialog-modal #templateApplyAllModalRef id='templateApplyAllModalRef'
+                  [modalSize]="'default'"
+                  [title]="'Apply Template'"
+                  [content]="'Do you want to apply selected template to all the accounts?'"
+                  (yes)="applyReblanceTemplateToAllAccounts()"
+                  (no)="templateApplyAllModalRef.close()">
+</app-dialog-modal>
+
+
+<app-dialog-modal
+  #defaultTemplateNotFoundModal1 id='defaultTemplateNotFoundModal1'
+  [modalSize]="'medium'"
+  [title]="'Create Template'"
+  (yes)="defaultTemplateNotFoundModal1.close()"
+  [yesText]="'Close'"
+  [hideSecondaryButton]=true>
+  <div>
+    <p style="display: flex;  justify-content: center;">
+      <i [style.display]="'block'" class="material-icons"
+         style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+      {{defaultTemplateNotFoundMessage1}}
+    </p>
+  </div>
+</app-dialog-modal>

@@ -1,0 +1,89 @@
+<div id="verifyData" class="slds-grid slds-grid--align-center slds-hide">
+
+  <div class="slds-size--1-of-2 slds-p-around--medium">
+
+    <h1 class="slds-page-header__title slds-truncate">Verify Data</h1>
+    <p class="slds-p-vertical--medium"></p>
+
+
+    <div *ngIf="successData.length > 0"  class="success">
+      <div class="icon">
+        <span class="slds-icon_container"><svg class="slds-icon slds-icon--small" aria-hidden="true"><use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#approval'"></use></svg></span>
+
+      </div>
+      <div class="message">
+        <p>All records passed the validation process.</p>
+      </div>
+    </div>
+
+
+    <div *ngIf="warningData.length > 0" class="warning">
+      <div class="icon">
+        <span class="slds-icon_container"><svg class="slds-icon slds-icon--small" aria-hidden="true"><use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#info'"></use></svg></span>
+
+      </div>
+      <div class="message">
+        <p>{{warningData.length}} records passed the validation process with warnings. <a (click)="openModal(warningData,'Warnings')" >Click here for details</a>.</p>
+      </div>
+    </div>
+
+
+    <div *ngIf="errorData.length > 0" class="error">
+      <div class="icon">
+        <span class="slds-icon_container"><svg class="slds-icon slds-icon--small" aria-hidden="true"><use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#ban'"></use></svg></span>
+
+      </div>
+      <div class="message">
+        <p>{{errorData.length}} records failed the validation process. <a (click)="openModal(errorData,'Errors')">Click here for details</a>.</p>
+      </div>
+    </div>
+
+
+
+    <div class="slds-p-around--medium slds-align--absolute-center">
+      <button (click)="cancelBtnPressed()" class="slds-button slds-m-horizontal--medium">Cancel</button>
+      <button (click)="backBtnPressed()" class="slds-button slds-button--neutral">
+        <div class="slds-icon_container">
+          <svg aria-hidden="true" class="slds-icon--x-small slds-button__icon">
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'"></use>
+          </svg>
+        </div>
+        Back</button>
+      <button [disabled] = "(errorData.length > 0)" (click)="nextBtnPressed()" class="slds-button slds-button--urebal">Next</button>
+      <!--<button  (click)="nextBtnPressed()" class="slds-button slds-button&#45;&#45;urebal">Next</button>-->
+    </div>
+
+
+  </div>
+
+
+</div>
+
+<app-modal #verifyDataModalRef >
+  <div class="slds-modal__header">
+    <label class="slds-text-heading--medium">{{notificationTitle}}</label>
+  </div>
+  <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+    <!--<p *ngFor="let msg of modalMessage">{{msg}}</p>-->
+      <urebal-grid #verifyImportDataGrid panelTitle="" debug=false gridId="verifyGridDataID" [autoHeight]=true [columnReorder]=false [columnResize]=false
+                   [displayHeader]=false
+                   dataType="array"
+                   dataColumns='[
+                                { "name": "fileType", "type": "string" },
+                                { "name": "message", "type": "string" },
+                                { "name": "reason", "type": "string" },
+                                { "name": "index", "type": "number" }
+                               ]'
+                   gridColumns='[
+                                { "text": "S.No", "cellsalign":"center", "width" : "10%", "align": "center", "datafield": "index"},
+                                { "text": "File", "cellsalign":"left", "width" : "20%", "align": "center", "datafield": "fileType"},
+                                { "text": "Row", "cellsalign":"left", "width" : "35%", "align": "center", "datafield": "message"},
+                                { "text": "Details", "cellsalign":"left", "width" : "35%", "align": "center", "datafield": "reason"}
+                              ]'
+      >
+      </urebal-grid>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--urebal" (click)="verifyDataModalRef.close()">OK</button>
+  </div>
+</app-modal>

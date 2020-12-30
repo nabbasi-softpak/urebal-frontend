@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 49" width="54" height="49">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-18 -307L1422 -307L1422 717L-18 717Z" />
+		</clipPath>
+		<image width="54" height="49" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAxCAMAAACmnqpXAAAAAXNSR0IB2cksfwAAASBQTFRFAAAAAHzDKZHNUKXWdrnfPJvRA33EPZvRcrfegL7hUqbWAHnAAHvCAHvCAHzCAHvCAHvCAHnDAHzCAHvCAHzDF4jIn87obbTdFIbIAHu9AHvD////msvnSqLUAHzCAHzCc7feAHvCksflAHzCnc3oKZHNUKXWdrnfPJvRA33EPZvRcrfegL7hUqbWyuTzB4DFMJXOUabWF4jIn87obbTdFIbI////msvnSqLUv97wc7fe3+/3ksflnc3ou9zvcbbeebrfKJHMyuTzB4DFQ57T4fD4DYPGVajXabLcN5jQTaPVFYfIv97wtNjt3+/3GYnJhsHjr9bsu9zvebrfQ57T4fD4DYPGabLctNjthsHj3O33TqTVw+Dxh8HjS6PVD4THlYl88QAAAGB0Uk5TAAAAAAAAAAAAAAA5dqjO6vwmiuL/AAAAABuZAAAAZfMAlwCvAP///////////wAA////////////AP8A//8A/wD///8AAAD/AP////8A//8A////////////////////+3T+2wAAAg9JREFUeJyt1mlX1DAUBuDBvXQ6nXYK2ol2GEEQCG4DARFEAQUFcWdz+///wjbrzdbp8fh+vLfPaU6SJm21/n8mQP7FNJY2agLdapzzqXrnV3VOPXPl6rXrTZ3o37h5KwiCySbvC9tRJ+52407UDivkYqZL0l4G0ksTyqamb9/xu7yfWennJQsQQnfveVgxsFWWDQrGEJpxuqELVRlyhu472KxPZdksZ2jOYko9mF94aDrO0KThxAgXl5YxxivWODl79FhjBW8/qZCDZQV3AWQ5m8PFpxhz9my0uqbNZ87YNGR8vYQqGSaErG8A12fsOWAJHyHWGSGbwCWUvQAsZUNcthjZUixlrwOM7cMlbDOyLVmPqpeKhay+42JETWpYsVeKtWn1NXay3T3B2hXbVyyi1Xk3I1iwqFRv3irWodUFwA4AGwnWKdkh2Fwxrb57r3IE2LFgMUIf4JbsWlspA+xElLpg9jX2EYxTMiLZpwmNxaLxmTjyRQ5SV3xKyqy62Fc5JQaLRGPNxb7JBdAVX+4q67b6fiqXW1dic5XZsNmZbIa6Elu5yqapzmWrZyr+4dBsGUx1UlOJz5RmG6IL0EhMJQ8FmpVdgS5/gHLfVuIIYtnDo+MT8vPX7z+gOMgtBA48bwrb1F4ALEMHGXcFlIe5T9VfHX5Vd1HVKf+1WK98l/A41XJd+Q0QDfzBqHvuL4PwrrofpevHAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Blueleaf Web App Dashboard" clip-path="url(#cp1)">
+		<g id="Group 4">
+			<use id="16 Investment Reporting, Allocation" href="#img1" x="0" y="0" />
+		</g>
+	</g>
+</svg>

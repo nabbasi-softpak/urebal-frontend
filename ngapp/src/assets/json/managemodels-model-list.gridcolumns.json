@@ -1,0 +1,40 @@
+[
+  {
+    "text": "Status",
+    "hidden" : false
+  },
+  {
+    "text": "Model ID",
+    "hidden": true
+  },
+  {
+    "text": "Model",
+    "hidden" : false
+  },
+  {
+    "text": "Model Type",
+    "hidden" : true
+
+  },
+  {
+    "text": "Securities",
+    "hidden" : false
+  },
+  {
+    "text": "Asset Classes",
+    "hidden" : true
+  },
+  {
+    "text": "Cash Target %",
+    "hidden" : false
+  },
+  {
+    "text": "Accounts",
+    "hidden" : false
+  },
+  {
+    "text": "Action",
+    "hidden" : false
+  }
+
+]

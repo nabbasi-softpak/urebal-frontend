@@ -1,0 +1,162 @@
+<div *ngIf="success != ''" style="color:green">{{success}}</div>
+
+<div class="slds-m-top--medium">
+    <div id="addRestrictionBlock" style="color:red" *ngIf="errors.length > 0">
+        <ul *ngFor="let error of errors">
+            <li>{{error}}</li>
+        </ul>
+    </div>
+    <!--table-->
+    <table class="slds-table">
+
+        <tbody>
+        <tr class="slds-theme--shade box">
+            <td style="width:20%">
+                <div class="slds-form-element">
+                    <!--here-->
+                    <select [(ngModel)]="addRestriction.attributes.attributeType" [disabled]="!attributesExist"
+                            class="slds-select" (change)="loadAttributes(-1)">
+                        <option *ngFor="let attribute of attributeTypes"
+                                [value]="attribute.attributeType">{{attribute.attributeType}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <div class="slds-form-element">
+                    <!--here-->
+                    <select [(ngModel)]="addRestriction.attributes.attributeName" [disabled]="!attributesExist"
+                            class="slds-select" (change)="setAttributeID(-1,$event)">
+                        <option *ngFor="let attribute of attributeNames[0]"
+                                [value]="attribute.attributeName">{{attribute.attributeName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <div class="slds-form-element">
+                    <!--here-->
+                    <select [(ngModel)]="addRestriction.restrictionType" class="slds-select"
+                            (change)="setAttrRestrictions()">
+                        <option *ngFor="let restriction of restrictions"
+                                [value]="restriction.value">{{restriction.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <!--here-->
+                <div class="slds-form-element">
+                    <input id="attMin" style="text-align: right;" min="0" ur-percentage [ifPercentage]=true
+                           [percentVal]="addRestriction.restrictionType" type="number" class="slds-input"
+                           [(ngModel)]="addRestriction.min"
+                           [placeholder]="isNonParametricRestriction(addRestriction.restrictionType) ? 'N/A' : 'Min %'"
+                           [disabled]="isNonParametricRestriction(addRestriction.restrictionType) || !attributesExist"
+                    />
+
+                </div>
+            </td>
+            <td style="width:20%">
+                <!--here-->
+                <div class="slds-form-element">
+                    <input id="attMax" style="text-align: right;" min="0" ur-percentage [ifPercentage]=true
+                           [percentVal]="addRestriction.restrictionType" type="number" class="slds-input"
+                           [(ngModel)]="addRestriction.max"
+                           [placeholder]="isNonParametricRestriction(addRestriction.restrictionType) ? 'N/A' : 'Max %'"
+                           [disabled]="isNonParametricRestriction(addRestriction.restrictionType) || !attributesExist"/>
+                </div>
+            </td>
+            <td>
+                <!--here-->
+                <button (click)="addAttributeRestriction()" [disabled]="!attributesExist"
+                        class="slds-button slds-button--icon-border" aria-live="assertive" title="Add more">
+                    <svg class="slds-button__icon" aria-hidden="true">
+                        <use [attr.xlink:href]="modelService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Add More</span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="slds-clearfix slds-border--bottom"></div>
+
+<div class="slds-m-top--medium slds-scrollable--y maxHeight450">
+    <div id="addedRestrictionBlock" style="color:red" *ngIf="saveErrors.length > 0">
+        <ul *ngFor="let error of saveErrors">
+            <li>{{error}}</li>
+        </ul>
+    </div>
+
+    <table class="slds-table" id="addedRestrictionsTable">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Attribute ID</th>
+            <th>Restriction</th>
+            <th style="text-align: right;">Min %</th>
+            <th style="text-align: right;">Max %</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let restriction of attributeRestrictions; let i = index">
+            <td style="width:20%">
+                <div class="slds-select_container">
+                    <select [(ngModel)]="restriction.attributes.attributeType" class="slds-select"
+                            (change)="loadAttributes(i)">
+                        <option *ngFor="let attribute of attributeTypes"
+                                [value]="attribute.attributeType">{{attribute.attributeType}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <div class="slds-select_container">
+                    <select [(ngModel)]="restriction.attributes.attributeName" class="slds-select"
+                            (change)="setAttributeID(i,$event)">
+                        <option *ngFor="let attribute of attributeNames[i+1]" [value]="attribute.attributeName"
+                                data-id="{{attribute.attributeID}}">{{attribute.attributeName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <div class="slds-select_container">
+                    <select [(ngModel)]="restriction.restrictionType" class="slds-select"
+                            (change)="setAddedAttrRestrictions(i)">
+                        <option *ngFor="let restriction of restrictions"
+                                [value]="restriction.value">{{restriction.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td style="width:20%">
+                <input id="editAttMin-{{i}}" style="text-align: right;" min="0" ur-percentage [ifPercentage]=true
+                       [percentVal]="restriction.restrictionType" type="number" [(ngModel)]="restriction.min"
+                       class="slds-input" (focusout)="applyChange.emit(restrictionsChange())"
+                       [placeholder]="isNonParametricRestriction(restriction.restrictionType) ? 'N/A' : 'Min %'"
+                       [disabled]="isNonParametricRestriction(restriction.restrictionType)"
+                />
+            </td>
+            <td style="width:20%">
+                <input id="editAttMax-{{i}}" style="text-align: right;" min="0" ur-percentage [ifPercentage]=true
+                       [percentVal]="restriction.restrictionType" type="number" [(ngModel)]="restriction.max"
+                       class="slds-input" (focusout)="applyChange.emit(restrictionsChange())"
+                       [placeholder]="isNonParametricRestriction(restriction.restrictionType) ? 'N/A' : 'Max %'"
+                       [disabled]="isNonParametricRestriction(restriction.restrictionType)"/>
+            </td>
+
+            <td>
+                <button (click)="removeAttributeRestriction(i)" class="slds-button slds-button--icon-border"
+                        aria-live="assertive" title="Remove">
+                    <svg class="slds-button__icon" aria-hidden="true">
+                        <use [attr.xlink:href]="modelService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Remove</span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>

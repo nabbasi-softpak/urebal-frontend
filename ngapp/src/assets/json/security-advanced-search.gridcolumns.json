@@ -1,0 +1,38 @@
+[
+  {
+    "text": "Name",
+    "hidden": false
+  },
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Price $",
+    "hidden": false
+  },
+  {
+    "text": "Market Value $",
+    "hidden": false
+  },
+  {
+    "text": "Primary Asset Class",
+    "hidden": true
+  },
+  {
+    "text": "Security Type",
+    "hidden": false
+  },
+  {
+    "text": "Sector",
+    "hidden": true
+  },
+  {
+    "text": "Size",
+    "hidden": true
+  },
+  {
+    "text": "Style",
+    "hidden": true
+  }
+]

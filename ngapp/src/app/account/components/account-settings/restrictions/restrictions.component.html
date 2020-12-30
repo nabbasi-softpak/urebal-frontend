@@ -1,0 +1,201 @@
+<!--<form class="slds-p-around&#45;&#45;medium slds-theme&#45;&#45;shade">-->
+
+<div *ngIf="success != ''" style="color:green" class="slds-p-left--xx-large ">{{succ}}</div>
+
+
+<div class="slds-p-around--medium">
+    <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box" style="position:relative;">
+        Min Core Cash Restriction
+    </h3>
+
+    <fieldset class="slds-form--compound slds-p-around--medium">
+        <div class="slds-form-element__group">
+
+            <!--start-->
+            <table class="slds-table" style="width: 30%">
+                <thead>
+                <tr class="blueleaf-text">
+                    <th>Cash ID</th>
+                    <th style="text-align: right;">Min {{ AppConfig.ENGINE_MTS_TYPE }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="blueleaf-text">
+                    <!--<td><app-autocomplete (postSelect)="selectTicker($event,-1)" [template]="'security'" [upperCase]="true" [(ngModel)]="addRestriction.ticker" [inputID]="'autocomplete-'+uniqueID" [items]="tickersForAutocomplete" [placeholder]="'Enter Security ID'" [defaultValue]="''" [disableCondition]="true"></app-autocomplete></td>-->
+                    <td><input class="slds-input" type="text" [placeholder]="FirmConfig.cashSymbol" [disabled]="true"></td>
+                    <td><input style="text-align: right;" class="slds-input"
+                               [(ngModel)]="minCoreCash" [value]="minCoreCash" [placeholder]="'Min ' + AppConfig.ENGINE_MTS_TYPE"
+                               InputValidation [validationType]="{
+                                    'dollar-three-decimals': AppConfig.ENGINE_MTS_TYPE == '$',
+                                    'percent-three-decimals': AppConfig.ENGINE_MTS_TYPE == '%'
+                                }" [empty]="'0'"
+                               (focusout)="checkAndReplaceZeroMinCash()"/></td>
+                </tr>
+                </tbody>
+
+            </table>
+            <!--end-->
+        </div>
+    </fieldset>
+
+    <!--</form>-->
+
+
+</div>
+
+<div class="slds-p-around--medium">
+    <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box" style="position:relative;">Security
+        Restrictions
+    </h3>
+
+    <fieldset class="slds-p-around--medium">
+        <!--<legend class="slds-form-element__label slds-text-title&#45;&#45;caps">Location</legend>-->
+        <div id="addRestrictionBlock" style="color:red">
+            <ul *ngFor="let error of restrictionsError">
+                <li>{{error}}</li>
+            </ul>
+        </div>
+        <!--start-->
+        <table class="slds-table">
+            <thead>
+            <tr class="blueleaf-text">
+                <th>Ticker</th>
+                <th>Restriction Type</th>
+                <th style="text-align: right; padding-right: 10px;">Min</th>
+                <th style="text-align: right; padding-right: 10px;">Max</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="slds-theme--shade box blueleaf-text">
+                <td class="slds-size_3-of-12">
+                    <ng-container *ngIf="tickers">
+                        <app-autocomplete (postSelect)="selectTicker($event,-1)" [template]="'security'"
+                                          [(ngModel)]="addRestriction.ticker" [inputID]="'autocomplete-'+uniqueID"
+                                          [items]="tickersForAutocomplete" [placeholder]="'Enter Ticker'"
+                                          [defaultValue]="''" [disableCondition]=""></app-autocomplete>
+                    </ng-container>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <softpak-dropdown #restrictionSelectbox id="restrictionSelectbox"
+                                      [height]="36"
+                                      [width]="'100%'"
+                                      class="blueleaf-dropdown"
+                                      (onChange)="setRestrictions()"
+                                      [source]="restrictionTypes"
+                                      [selectedIndex]="0">
+                    </softpak-dropdown>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <input id="addMin" style="text-align: right;" class="slds-input" autocomplete="off"
+                           InputValidation [validationType]="{
+                                      'dollar-three-decimals': addRestriction.restrictionType == 6 && AppConfig.ENGINE_MTS_TYPE == '$',
+                                      'percent-two-decimals': addRestriction.restrictionType != 6
+                           }" [empty]="'0'"
+                           [(ngModel)]="addRestriction.min"
+                           [placeholder]="([2, 3, 4].indexOf(addRestriction.restrictionType)) > -1 ? 'N/A' : (addRestriction.restrictionType == 6 ? 'Min ' + AppConfig.ENGINE_MTS_TYPE : 'Min %')"
+                           (focusout)="validateMinMax($event,addRestriction.restrictionType,addRestriction.min,addRestriction.max)"
+                           [value]="addRestriction.min"
+                           [disabled]="([2, 3, 4].indexOf(addRestriction.restrictionType)) > -1"/>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <input id="addMax" style="text-align: right;" class="slds-input" autocomplete="off"
+                           InputValidation [validationType]="{
+                                      'dollar-three-decimals': addRestriction.restrictionType == 6 && AppConfig.ENGINE_MTS_TYPE == '$',
+                                      'percent-two-decimals': addRestriction.restrictionType != 6
+                           }" [empty]="'0'"
+                           [(ngModel)]="addRestriction.max"
+                           [placeholder]="(addRestriction.restrictionType == 1) || (addRestriction.restrictionType == 2) || (addRestriction.restrictionType == 3) || (addRestriction.restrictionType == 4) || (addRestriction.restrictionType == 6) ? 'N/A' : 'Max %'"
+                           (focusout)="validateMinMax($event,addRestriction.restrictionType,addRestriction.min,addRestriction.max)"
+                           [value]="addRestriction.max"
+                           [disabled]="!(addRestriction.restrictionType == 5)"/>
+                </td>
+                <td>
+                    <button (click)="addMoreRestriction()" class="slds-button slds-button--icon-border"
+                            aria-live="assertive" title="Add more">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                            <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#add'"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Add More</span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
+
+    <!-- maxHeight150 -->
+    <div [ngClass]="isLoadedAsModal?'slds-p-around--medium slds-scrollable--y maxHeight150':'slds-p-around--medium slds-scrollable--y maxHeight450'">
+        <div id="addedRestrictionBlock" style="color:red">
+            <ul *ngFor="let error of saveRestrictionsError">
+                <li>{{error}}</li>
+            </ul>
+        </div>
+        <table class="slds-table">
+            <thead>
+            <tr>
+                <!--<th>Restriction Type</th>-->
+                <!--<th>Security ID</th>-->
+                <!--<th style="text-align: right;">Min %</th>-->
+                <!--<th style="text-align: right;">Max %</th>-->
+                <!--<th></th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let restriction of accountRestrictions; let count = index" class="blueleaf-text">
+                <td class="slds-size_3-of-12">
+                  <div>
+                    <span class="blueleaf-text slds-p-horizontal--small slds-p-top--x-small" style="width: 100%; display: inline-block; border: 1px solid #d8dde6; border-radius: 0.25rem; height: 2rem">
+                      {{restriction.ticker}}
+                    </span>
+                  </div>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <softpak-dropdown #restrictionSelection
+                                      [height]="36"
+                                      [width]="'100%'"
+                                      class="blueleaf-dropdown"
+                                      (onChange)="restriction.restrictionType = restrictionSelection.getSelectedIndex() + 2; setAddedRestrictions(count)"
+                                      [source]="restrictionTypes"
+                                      [selectedIndex]="restriction.restrictionType - 2">
+                    </softpak-dropdown>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <input id="editMin-{{count}}" style="text-align: right;"
+                           InputValidation [validationType]="{
+                                      'dollar-three-decimals': restriction.restrictionType == 6 && AppConfig.ENGINE_MTS_TYPE == '$',
+                                      'percent-two-decimals': restriction.restrictionType != 6
+                           }" [empty]="'0'"
+                           class="slds-input"
+                           [(ngModel)]="restriction.min"
+                           [disabled]="([2, 3, 4].indexOf(restriction.restrictionType)) > -1"
+                           [placeholder]="([2, 3, 4].indexOf(restriction.restrictionType)) > -1 ? 'N/A' : (restriction.restrictionType == 6 ? 'Min ' + AppConfig.ENGINE_MTS_TYPE : 'Min %')"
+                           (focusout)="validateMinMax($event,addRestriction.restrictionType,addRestriction.min,addRestriction.max)"/>
+                </td>
+                <td class="slds-size_3-of-12">
+                    <input id="editMax-{{count}}" style="text-align: right;"
+                           InputValidation [validationType]="{
+                                      'dollar-three-decimals': restriction.restrictionType == 6 && AppConfig.ENGINE_MTS_TYPE == '$',
+                                      'percent-two-decimals': restriction.restrictionType != 6
+                           }" [empty]="'0'"
+                           class="slds-input"
+                           [(ngModel)]="restriction.max"
+                           [disabled]="!(restriction.restrictionType == 5)"
+                           [placeholder]="(restriction.restrictionType == 1) || (restriction.restrictionType == 2) || (restriction.restrictionType == 3) || (restriction.restrictionType == 4) || (restriction.restrictionType == 6) ? 'N/A' : 'Max %'"
+                           (focusout)="validateMinMax($event,addRestriction.restrictionType,addRestriction.min,addRestriction.max)"/>
+                </td>
+
+                <td>
+                    <button (click)="removeRestriction(count)" class="slds-button slds-button--icon-border"
+                            aria-live="assertive" title="Remove">
+                      <i class="material-icons blueleaf-material-icon">remove</i>
+                      <span class="slds-assistive-text">Remove</span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+

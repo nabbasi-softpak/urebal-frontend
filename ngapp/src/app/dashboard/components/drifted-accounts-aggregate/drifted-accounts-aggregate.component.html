@@ -1,0 +1,53 @@
+<urebal-widget>
+  <div header>
+    <div class="blueleaf-widget-header">
+      Total Drifted Accounts: {{driftByCategories[driftStatus.CASH_IN] + driftByCategories[driftStatus.OUT_OF_TOLERANCE] + driftByCategories[driftStatus.UNASSIGNED] + driftByCategories[driftStatus.ERROR]}}
+    </div>
+    <div class="blueleaf-widget-subheader">
+      {{drint_execution_info}}
+    </div>
+  </div>
+  <div body>
+    <div class="slds-size--1-of-1">
+      <div style="display: flex; justify-content: center;">
+        <table class="urebal-widget-aggregate">
+          <tr>
+            <td class="blueleaf-widget-aggregate-label" >Cash In</td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-link slds-text-align--center">
+              <a routerLink="/secure/drift/list" [queryParams]="{filter: 'Cash in'}">{{driftByCategories[driftStatus.CASH_IN]}}</a>
+            </td>
+            <td class="blueleaf-widget-aggregate-value">
+              <progress id="cashIn"  max="100"></progress>
+            </td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-label">Out of Tolerance</td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-link slds-text-align--center">
+              <a routerLink="/secure/drift/list" [queryParams]="{filter: 'Out of tolerance'}">{{driftByCategories[driftStatus.OUT_OF_TOLERANCE]}}</a>
+            </td>
+            <td class="blueleaf-widget-aggregate-value">
+              <progress id="outOfTolerance"  max="100"></progress>
+            </td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-label">Unassigned</td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-link slds-text-align--center">
+              <a routerLink="/secure/drift/list" [queryParams]="{filter: 'Unassigned'}">{{driftByCategories[driftStatus.UNASSIGNED]}}</a></td>
+            <td class="blueleaf-widget-aggregate-value">
+              <progress id="Unassigned"  max="100"></progress>
+            </td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-label blueleaf-widget-aggregate-label-last">Error</td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-last blueleaf-widget-aggregate-value-link slds-text-align--center">
+              <a routerLink="/secure/drift/list" [queryParams]="{filter: 'Error'}">{{driftByCategories[driftStatus.ERROR]}}</a></td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-last">
+              <progress id="Error"  max="100"></progress>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</urebal-widget>
+

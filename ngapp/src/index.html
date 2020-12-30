@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="/">
+    <title id='Description'>Rebalancing by Blueleaf</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="SoftPak Financial Systems">
+
+    <!-- Styles -->
+    <link rel='shortcut icon' type='image/x-icon' href="assets/favicons/bl-favicon.ico"/>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="assets/favicons/bl-favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/bl-favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/bl-favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/bl-favicon.ico">
+    <link rel="manifest" href="assets/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="assets/favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- End Favicons -->
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+  <!-- Pendo Integration-->
+    <script>
+      (function(apiKey){
+        (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
+          v=['initialize','identify','updateOptions','pageLoad'];for(w=0,x=v.length;w<x;++w)(function(m){
+            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+          y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+          z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+      })('01ff14ba-fcfa-40e4-7d89-f8ace0eb4ae5');
+    </script>
+</head>
+<!-- Display the application -->
+<body>
+    <urebal-app>
+      <style>
+        .preload-spinner {
+          width: 40px;
+          height: 40px;
+          background-color: #007dc4; /* #09529c; !*#DD5533;*!*/
+
+          margin: 100px auto;
+          -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+          animation: sk-rotateplane 1.2s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes sk-rotateplane {
+          0% { -webkit-transform: perspective(120px) }
+          50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+          100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+        }
+
+        @keyframes sk-rotateplane {
+          0% {
+            transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+            -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+          } 50% {
+              transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+              -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+            } 100% {
+                transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+                -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+              }
+        }
+      </style>
+      <div class="preload-loading" style="width: 100%; position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(#D8D8D8, #FFFFFF, #FFFFFF, #FFFFFF, #D8D8D8);">
+        <div style="position: relative; text-align: center; top: 30%;">
+          <img alt="blueleaf-logo.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIcAAAAdCAMAAAC3xI8dAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAF1QTFRFAH3EAH3EAH3EAAAAAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3EAH3E/xXVUAAAAB90Uk5TgH9gAEDP/68gwJAQ8LBQMD+P71+/32+fcKDQTw/gH8q4MaoAAAMdSURBVHiczZfZgqsgDIZRkKLUpS5VO+15/8c8Sdgr006vZnJR8deQjxCBMlYURckPhnJxlF+a+NiDIlWyOikmwerjU5Tlpz1+7AHWUCTx2xxayjNj7a9zCCk76/vbHP0f4XC+f4yjHwb9KYdIfBIOPQxD1qN/xaEvIzaq6cDRzGBWjNuclyd6abmoA4e+LjLtz3hUpJ4EtOu5xB9QqFPD0RMFeeonjjpKTNzWs/RWPHGIxT+qwvD7yqurhgDMRqFOiWMMXcpF/4ijj33kmnB0GH8TQmzI40DQY2lQrXC4xMHYDlcww5GAzD/h0ItMrIk4IOC4WY8N2gZEQYyrVbtRrsTxVB9y3iKS8gccu5kPCCFMlYjAAW+FCgWo2flOsZrlqLhie13b4nrPoSiJNuOly6LhEL5eyK5mwSxTtctzuECCSql/y0Gbkx/0Be+U42jlGH3LnC+yJXWJRT6/5OAaQba3HDcs6MHZZGfTcLiqjShpO7sk6tdrDso4e8shj7ZbDuh4mWNbMMEirhka8PccX3f8hYS07zh0hqMOHAcTPlyw7zmmyk5c/Y4jFyvi2NmTqQzHnOMYzZRMhqM5cOjMvDzqxJrAIfjBQP2XKmN2/aB2tZh5SeqjNYnlPBbx2h6CMVuR2+EJll261dyz80L54Ku888FG9SHpBXOQ1kmS0q/Tc8C3lBKaXfAh50Sd8vVBsIUc7lDd52ToZcgX8+KGjZPrc1MxB6O1JNht6YwafzAYJ8cx4ktX+YXLB0s4aOnEDdIEN6I+Ex3FU1BRqwoc8CweemPWU1Cre1AvMs8BXU3DSvvdQyccpjijrZD7LMEWsM52M+88B/KGlWxzpz3wCCC0Auc5nJ3NrhFC9k8vmJ72VNxDPojcpIqL2Y2LPBZTqwOoZY7jdnvGiM+FZY7D/v+JMcI5CCGrS7HivvnwByFUR7PAQuHnOGrt0lK7EotDdo8MBxce/mH/l4Zz4Xb2hNFX5fupxXE9hQOSAGS1tXXLwiEO5bAedQ2sVHu544IV+u1ZC/esc/cqeGh6t92SLwf6YdANUyYAXbT1+Q/ENE6pNKc/TQAAAABJRU5ErkJggg"/>
+          <h3 style="color: #818181; font-size: 20px; font-weight: 300; font-family: 'Open Sans'; margin: 1rem 0;">Advanced Portfolio Rebalancing Software</h3>
+          <div class="preload-spinner"></div>
+        </div>
+      </div>
+    </urebal-app>
+</body>
+</html>

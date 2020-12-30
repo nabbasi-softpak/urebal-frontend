@@ -1,0 +1,78 @@
+<div class="blueleaf-modal-header">
+   <label>Equivalence Breakdown Rules</label>
+</div>
+<hr class="blueleaf-modal-divider">
+<div class="slds-modal__content">
+
+  <div class="slds-grid slds-grid--vertical">
+    <div class="slds-p-vertical--x-small slds-p-horizontal--large slds-shrink-none">
+      <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical slds-tabs--default">
+        <ul class="slds-tabs--default__nav equivalence-tabs blueleaf-tabs" id="Equivalence-settings" role="tablist">
+          <li class="slds-tabs--default__item slds-active" id="eqTabBuy" role="presentation" data-target="tab-list-buy"><a class="slds-tabs--default__link" style="font-family: MuseoSans-700, Sans-Serif;  font-size: 13px;  font-weight: bold; color: #36454f;" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-rebalance">Buy Rules</a></li>
+          <li class="slds-tabs--default__item" id="eqTabSell" role="presentation" data-target="tab-list-sell"><a class="slds-tabs--default__link" style="font-family: MuseoSans-700, Sans-Serif;  font-size: 13px;  font-weight: bold; color: #36454f;" role="tab" tabindex="1" aria-selected="false" aria-controls="tab-rebalance">Sell Rules</a></li>
+        </ul>
+
+        <div class="eq-tab slds-tabs--default__content slds-show" id="tab-list-buy" role="tabpanel" aria-labelledby="tab-default-1__item">
+          <div class="slds-grid slds-grid--vertical-stretch">
+            <div class="slds-large-size--6-of-12 slds-p-right--medium slds-border--right">
+              <p class="slds-p-around--medium blueleaf-text" style="font-size: 18px">Available Rules</p>
+              <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical">
+                <div class="slds-filters blueleaf-text" style="font-weight: bold">
+                  <div id="equivalenceBuyRulesDiv" #equivalenceBuyRulesDiv  class="slds-filters__body" [dragula]='"first-bag"' [(dragulaModel)]="Buyrules">
+                    <div  *ngFor="let rule of Buyrules" class="slds-filters__item slds-grid slds-grid--vertical-align-center"[innerHtml]="rule.value">
+                      <!-- {{rule.value}} -->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-large-size--6-of-12 slds-p-left--medium">
+                <p class="slds-p-around--medium blueleaf-text" style="font-size: 18px">Buy Rules</p>
+                <div class="dropable blueleaf-text">
+                  <p class="slds-text-align--center slds-p-around--medium" style="color: #007dc4;">Drag and Drop rules below. You can also re-arrange them.</p>
+                  <div class="slds-filters__body" id="equivalenceBodyDiv" #equivalenceBodyDiv [dragula]='"first-bag"' [(dragulaModel)]="chosenBuyRules" style="min-height:150px; font-weight: bold">
+                    <div draggable  *ngFor="let rule of chosenBuyRules" class="slds-filters__item slds-grid slds-grid--vertical-align-center" [innerHtml]="rule.value">
+                      <!-- {{rule.value}} -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div id="tab-list-sell" class="eq-tab slds-tabs--default__content slds-hide"  role="tabpanel" aria-labelledby="tab-default-2__item">
+            <div class="slds-grid slds-grid--vertical-stretch">
+              <div class="slds-large-size--6-of-12 slds-p-right--medium slds-border--right">
+                <p class="slds-p-around--medium blueleaf-text" style="font-size: 18px">Available Rules</p>
+                <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical">
+                  <div class="slds-filters blueleaf-text" style="font-weight: bold">
+                    <div id="equivalenceSellRulesDiv" #equivalenceSellRulesDiv  class="slds-filters__body" [dragula]='"first-bag"' [(dragulaModel)]="Sellrules">
+                      <div  *ngFor="let rule of Sellrules" class="slds-filters__item slds-grid slds-grid--vertical-align-center"[innerHtml]="rule.value">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slds-large-size--6-of-12 slds-p-left--medium">
+                <p class="slds-p-around--medium blueleaf-text" style="font-size: 18px">Sell Rules</p>
+                <div class="dropable blueleaf-text">
+                <p class="slds-text-align--center slds-p-around--medium " style="color: #007dc4;">Drag and Drop rules below. You can also re-arrange them.</p>
+                  <div class="slds-filters__body" id="equivalenceBodyDiv2" #equivalenceBodyDiv2 [dragula]='"first-bag"' [(dragulaModel)]="chosenSellRules" style="min-height:150px; font-weight: bold">
+                    <div *ngFor="let rule of chosenSellRules" class="slds-filters__item slds-grid slds-grid--vertical-align-center"[innerHtml]="rule.value">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="blueleaf-modal__footer">
+  <div class="slds-form-element__label  blueleaf-error-message slds-float_left">{{errMsg}}</div>
+  <button class="slds-button slds-button--blueleaf--neutral" (click)="closeModal()">Cancel</button>
+  <button class="slds-button slds-button--blueleaf" (click)="saveEquivalence()">OK</button>
+</div>

@@ -1,0 +1,154 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+    <div class="slds-size--1-of-1 box color-white">
+        <div class="slds-page-header color-white no-print">
+            <div class="slds-grid slds-grid--vertical-align-center">
+
+
+                <div class="slds-col">
+                    <div class="slds-media slds-no-space slds-grow">
+
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                                Report - Who Owns </h1>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right">
+
+
+                    <div class="slds-grid">
+
+                        <button id="printButton" [disabled]="(errMsg != '' || disableBtns)" (click)="printme()"
+                                class="slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true"
+                                title="Print View">
+                            Print
+                        </button>
+                        <button [disabled]="(errMsg != '' || disableBtns)" (click)="downloadReport()"
+                                class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small"
+                                aria-haspopup="true" title="Export">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use [attr.xlink:href]="service.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size--1-of-1">
+
+
+            <!-- options -->
+            <div class="slds-p-around--small slds-p-horizontal--medium gradient-background slds-border--bottom quick-filters slds-align--absolute-center no-print">
+
+                <div class="slds-form--inline">
+
+
+                    <div class="slds-grid slds-text-align_right" style="width: 500px">
+                        <div class="slds-col slds-size--2-of-8 slds-p-top--x-small slds-p-right--small">
+                            <p>Security ID</p>
+                        </div>
+                        <div class="slds-col slds-size--6-of-8">
+                            <app-autocomplete-security (onSelect)="selectedItem($event)"></app-autocomplete-security>
+                        </div>
+                    </div>
+
+                    <!--<div class="slds-form-element">-->
+                    <!--<div class="slds-form-element__control">-->
+                    <!--<button class="slds-button slds-button&#45;&#45;urebal" id="generate">Generate Report</button>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+
+                </div>
+
+
+            </div>
+
+            <div>
+
+            </div>
+
+            <div id="printData" class="slds-hide" style="width: 100%">
+                <!--Account Summary -->
+                <div id="printSummary" class="slds-p-around--medium myContainer container">
+                    <div class="slds-container_center gridContainer">
+
+
+                        <div class="slds-size--1-of-3">
+                            <div class="headerContainer">
+                                <div class="slds-tile">
+                                    <a class="slds-truncate slds-section-title">{{selectedTicker}}</a>
+                                    <div class="slds-tile__detail slds-text-body--small">
+                                        <dl class="slds-list--horizontal slds-wrap">
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate"><strong>Market
+                                                Price:</strong></dt>
+                                            <dd class="slds-item--detail slds-truncate"><span
+                                                    class="text-color-price">{{MktPrice | currency:'USD':'symbol'}}</span>
+                                            </dd>
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate"><strong>Total
+                                                Accounts:</strong></dt>
+                                            <dd class="slds-item--detail slds-truncate">{{totalAccounts}}</dd>
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate"><strong>Total
+                                                Shares:</strong></dt>
+                                            <dd class="slds-item--detail slds-truncate">{{totalShares.toLocaleString('en')}}</dd>
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate"><strong>Total
+                                                Market Value:</strong></dt>
+                                            <dd class="slds-item--detail slds-truncate"><span
+                                                    class="text-color-price">${{totalMktValue.toLocaleString('en')}}</span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Account List Grid Component -->
+                <div>
+                    <!--<div class="slds-p-top&#45;&#45;xx-large">-->
+                    <urebal-grid id="printGrid" #whoOwnsGrid panelTitle="" debug=false gridId="reportsList"
+                                 [autoHeight]=true [columnReorder]=false [columnResize]=false
+                                 dataType="json"
+                                 dataColumns='[
+                                { "name": "accountId", "type": "string" },
+                                { "name": "accountName", "type": "string" },
+                                { "name": "portfolioPercentWeight", "type": "number" },
+                                { "name": "shares", "type": "number" },
+                                { "name": "marketValue", "type": "number" },
+                                { "name": "unrealizedGainLoss", "type": "number" }
+                               ]'
+                                 rowRendererColumns='[
+                                  {"name":"unrealizedGainLoss","value":"0","color":"red","condition":"lt"}
+                              ]'
+                                 negativeValueColumns='[{"column":"unrealizedGainLoss"}]'
+                                 gridColumns='[
+                                { "text": "Account ID", "cellsalign":"left","width" : "22.5%", "align": "center", "datafield": "accountId"},
+                                { "text": "Account Name", "cellsalign":"left","width" : "22.5%", "align": "center", "datafield": "accountName"},
+                                { "text": "% Portfolio", "cellsalign":"right", "width" : "12.5%", "align": "center", "datafield": "portfolioPercentWeight", "cellsformat": "d2"},
+                                { "text": "Shares", "cellsalign":"right", "width" : "12.5%", "align": "center", "datafield": "shares", "cellsformat": "d0"},
+                                { "text": "Market Value (USD)", "cellsalign":"right", "width" : "15%", "align": "center", "datafield": "marketValue", "cellsformat": "c0"},
+                                { "text": "Unrealized G/L (USD)", "cellsalign":"right", "width" : "15%", "align": "center", "datafield": "unrealizedGainLoss", "cellsformat": "c0", "cellsrenderer":"cellsRenderer"}
+                              ]'
+                                 (onBindingComplete)="createAccountSummary($event)"
+                    >
+                    </urebal-grid>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <!--<div *ngIf="(errMsg != '')" class="alert alert-danger slds-size&#45;&#45;1-of-1 slds-text-align&#45;&#45;center">-->
+    <!--<div>-->
+    <!--{{errMsg}}-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+</div>

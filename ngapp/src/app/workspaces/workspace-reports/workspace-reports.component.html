@@ -1,0 +1,781 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+  <div class="slds-size--1-of-1 box color-white" style="min-height: 600px">
+    <div class="slds-grid slds-wrap slds-p-around--medium">
+      <div class="slds-size--1-of-1">
+        <div class="slds-grid">
+          <div class="slds-size--1-of-1">
+            <div>
+              <div class="slds-size--12-of-12">
+                <div class="slds-truncate">
+                  <span class="blueleaf-modal-header slds-p-left--large" title="{{paramValue}}">{{paramValue}}</span>
+                  <!-- Search Bar -->
+                  <div class="slds-grid slds-m-top_x-small">
+                    <div class="slds-col slds-p-left--large slds-size_1-of-8 slds-m-top_x-small">
+                      <label class="blueleaf-widget-subheading slds-form-element__label" >Accounts</label>
+                    </div>
+                    <div class="slds-col slds-size_1-of-8" style="width: 25%; height: 58px !important; ">
+                      <softpak-combobox class="blueleaf-dropdown" style="border-radius: 24px !important;"
+                                        [source]="portfoliosList"
+                                        [comboBoxInputClassName]="'combobox-remove-padding'"
+                                        [comboBoxContainerDivClassName]="'combobox-container1'"
+                                        id="accountComboxBox" #accountComboxBoxRef
+                                        [width]="'90%'"
+                                        [popupZIndex]="2000"
+                                        [height]="'32px'"
+                                        (onChange)="accountOnChange()"
+                                        [placeHolder]="'Please select account'"
+                                        [displayMember]="'portfolioName'"
+                      ></softpak-combobox>
+                    </div>
+                    <div class="slds-col slds-size_6-of-8 slds-m-top_x-small">
+                      <span class="slds-truncate rebalance-filter-text slds-p-left--large slds-p-right--x-small" style="" title="Account Name">Account Name:</span>
+                      <span class="slds-truncate slds-text-title blueleaf-text slds-p-right--large" title="{{portfolio?.portfolioName}}">{{portfolio?.portfolioName}}</span>
+                      <span class="slds-truncate rebalance-filter-text slds-p-right--x-small" style=""  title="Rebalance Date">Rebalance Date:</span>
+                      <span class="slds-truncate blueleaf-text" title="{{portfolio?.rebalance?.lastRunDate | date: DATETIME_FORMAT}}">{{portfolio?.rebalance?.lastRunDate ? (portfolio?.rebalance?.lastRunDate | date: DATETIME_FORMAT) : '--'}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-grid">
+
+              <!-- Report Section -->
+              <div class="slds-size--12-of-12 slds-p-horizontal--small">
+                <div class="slds-tabs--scoped">
+                  <ul class="blueleaf-text blueleaf-report-tabs tabList" role="tablist">
+                    <li class="slds-tabs--scoped__item active" role="presentation">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="project-summary">
+                        <div class="slds-icon_container" title="Rebalance Summary">
+                         <!-- <svg class="slds-icon icon-size-medium text-color-grey&#45;&#45;afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/images/blueleaf/rebalance-summary.svg'"></use>
+                          </svg>-->
+                          <img _ngcontent-otc-c2="" class="blueleaf-menu-icons" src="/app/assets/images/blueleaf/summary-rebalance.svg" style="width: 22px; height: 22px">
+                          <span class="slds-assistive-text">Rebalance Summary</span>
+                        </div>
+                        Rebalance Summary
+                      </a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" *ngIf="isAllowed('accountModifyTaxSettings')">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="tax-summary">
+                        <div class="slds-icon_container" title="Tax Summary">
+                          <svg class="slds-icon icon-size-medium text-color-grey--afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#summary'"></use>
+                          </svg>
+                          <span class="slds-assistive-text">Tax Summary</span>
+                        </div>
+                        Tax Summary</a>
+                    </li>
+
+                    <li class="slds-tabs--scoped__item" role="presentation" *ngIf="isAllowed('accountViewAccountSummaryReport')">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="account-summary">
+                        <div class="slds-icon_container" title="Account Summary">
+                          <!--<svg class="slds-icon icon-size-medium text-color-grey&#45;&#45;afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#user'"></use>
+                          </svg>-->
+                          <img _ngcontent-otc-c2="" class="blueleaf-menu-icons" src="/app/assets/images/blueleaf/summary-account.svg" style="width: 22px; height: 22px">
+                          <span class="slds-assistive-text">Account Summary</span>
+                        </div>
+                        Account Summary</a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" *ngIf="isAllowed('accountModifyTaxSettings')">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="sharelot-report">
+                        <div class="slds-icon_container" title="Sharelot Report">
+                          <svg class="slds-icon text-color-grey--afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/custom-sprite/svg/symbols.svg#custom57'"></use>
+                          </svg>
+                          <span class="slds-assistive-text">Sharelot Report</span>
+                        </div>
+                        Sharelot Report
+                      </a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" *ngIf="isAllowed('accountModifyTaxSettings')">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="stock-report">
+                        <div class="slds-icon_container" title="Stock Report">
+                          <!--<svg class="slds-icon icon-size-medium text-color-grey&#45;&#45;afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#metrics'"></use>
+                          </svg>-->
+                          <img _ngcontent-otc-c2="" class="blueleaf-menu-icons" src="/app/assets/images/blueleaf/summary-stock.svg" style="width: 22px; height: 22px">
+                          <span class="slds-assistive-text">Stock Report</span>
+                        </div>
+                        Stock Report</a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" *ngIf="isAllowed('modelViewAssetModel')">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" data-target="asset-allocation">
+                        <div class="slds-icon_container" title="Asset Allocation">
+                          <svg class="slds-icon icon-size-medium text-color-grey--afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chart'"></use>
+                          </svg>
+                          <span class="slds-assistive-text">Asset Allocation</span>
+                        </div>
+                        Asset Allocation</a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" id="trade-override-tab">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="6" aria-selected="true" aria-controls="tab-scoped-6" data-target="trade-override">
+                        <div class="slds-icon_container" title="Recommended Trades">
+                          <!--<svg class="slds-icon icon-size-medium text-color-grey&#45;&#45;afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#edit'"></use>
+                          </svg>-->
+                          <img _ngcontent-otc-c2="" class="blueleaf-menu-icons" src="/app/assets/images/blueleaf/summary-trade.svg" style="width: 22px; height: 22px">
+                          <span class="slds-assistive-text">Recommended Trades</span>
+                        </div>
+                        Recommended Trades</a>
+                    </li>
+                    <li class="slds-tabs--scoped__item" role="presentation" id="workspace-detail-tab">
+                      <a class="" href="javascript:void(0);" role="tab" tabindex="7" aria-selected="true" aria-controls="tab-scoped-7" data-target="workspace-swap-details">
+                        <div class="slds-icon_container" title="Workspace Report">
+                         <!-- <svg class="slds-icon icon-size-medium text-color-grey&#45;&#45;afb7bf" aria-hidden="true">
+                            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#description'"></use>
+                          </svg>-->
+                          <img _ngcontent-otc-c2="" class="blueleaf-menu-icons" src="/app/assets/images/blueleaf/summary-trade-report.svg" style="width: 22px; height: 22px">
+                          <span class="slds-assistive-text">Trade Reasoning</span>
+                        </div>
+                        Trade Reasoning</a>
+                    </li>
+                  </ul>
+
+                  <div id="tab-project-summary" class="slds-tabs--scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                    <div style="height: 500px; text-align: center;line-height: 35;" *ngIf="noDataFound">
+                      Selected account has not been rebalanced.
+                    </div>
+
+                    <div id="project-summary-report" *ngIf="!noDataFound">
+                      <div class="slds-align-middle slds-truncate rebalance-filter-text slds-m-bottom--small" style="margin-left: 5px;">
+                        Cash Summary
+                      </div>
+                      <table class="blueleaf-table--striped blueleaf-text blueleaf-table">
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Cash Before Rebalance">Cash Before Rebalance</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.cashSummary.cashBeforeRebalance}}" [innerHTML]="summaries?.cashSummary.cashBeforeRebalance | dollar : {html:true}"></div>
+                          </td>
+                        </tr>
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Cash After Rebalance">Cash After Rebalance</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="$ {{summaries?.cashSummary.cashAfterRebalance}}" [innerHTML]="summaries?.cashSummary.cashAfterRebalance | dollar : {html:true}"></div>
+                          </td>
+                        </tr>
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Cash Target">Cash Target</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="$ {{summaries?.cashSummary.cashTarget}}" [innerHTML]="summaries?.cashSummary.cashTarget | dollar : {html:true}"></div>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <div class="slds-p-around--medium"></div>
+
+                      <div class="slds-align-middle slds-truncate rebalance-filter-text slds-m-bottom--small" style="margin-left: 5px;">
+                        Trade Summary
+                      </div>
+                      <table class="blueleaf-table--striped blueleaf-text blueleaf-table">
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Total Buy Count">Total Buy Count</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.totalBuys}}" [innerHTML]="summaries?.tradeSummary.totalBuys"></div>
+                          </td>
+                        </tr>
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Total Sells Count">Total Sells Count</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.totalSells}}" [innerHTML]="summaries?.tradeSummary.totalSells"></div>
+                          </td>
+                        </tr>
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Buy">Buy</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.buyDollars}}" [innerHTML]="summaries?.tradeSummary.buyDollars | dollar : {html:true}"></div>
+                          </td>
+                        </tr>
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Sell">Sell</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.sellDollars}}" [innerHTML]="summaries?.tradeSummary.sellDollars | dollar : {html:true}"></div>
+                          </td>
+                        </tr>
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Buy Shares">Buy Shares</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.buyShares}}" [innerHTML]="summaries?.tradeSummary.buyShares | percent: {format: true, shares: true}"></div>
+                          </td>
+                        </tr>
+
+                        <tr class=" slds-border--bottom">
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="Sell Shares">Sell Shares</div>
+                          </td>
+                          <td scope="col" width="50%">
+                            <div class="slds-truncate" title="{{summaries?.tradeSummary.sellShares}}" [innerHTML]="summaries?.tradeSummary.sellShares | percent: {format: true, shares: true}"></div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div id="tab-tax-summary" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+                    <form class="slds-form--inline">
+                      <div class="slds-form-element slds-size--1-of-6">
+                        <label class="slds-form-element__label">Scope</label>
+                        <select class="slds-select" (change)="getSelectedAccount($event.target.value)" name="account" [(ngModel)]="selectedAccount">
+                          <option *ngFor="let account of accountsDropdown" [value]="account">
+                            {{account}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="slds-form-element slds-size--1-of-6">
+                        <label class="slds-form-element__label">Display in</label>
+                        <select class="slds-select" (change)="showIn($event.target.value)">
+                          <option>Dollar</option>
+                          <option>Percent</option>
+                        </select>
+                      </div>
+                    </form>
+
+                    <div class="sideTabs">
+                      <ul>
+                        <li class="active"><a href="javascript: void(0);" data-scroll="initial-unrealized">Initial Unrealized</a></li>
+                        <li><a href="javascript: void(0);" data-scroll="proposed-unrealized">Proposed Unrealized</a></li>
+                        <li><a href="javascript: void(0);" data-scroll="change-unrealized">Change Unrealized</a></li>
+                        <li><a href="javascript: void(0);" data-scroll="tax-summary">Tax Summary</a></li>
+                      </ul>
+                    </div>
+
+                    <div class="sidePanelRight" style="height: 500px;">
+
+                      <div class="initial-unrealized">
+                        <div class="group-heading">
+                          <h3 class="slds-align-middle slds-truncate">Initial Unrealized</h3>
+                        </div>
+
+                        <table class="slds-table slds-table--cell-buffer">
+
+                          <thead>
+                          <tr>
+                            <th class="slds-size--1-of-4"></th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Gain</th>
+                            <th class="slds-text-align--center slds-size--1-of-4"> Loss</th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Net</th>
+                          </tr>
+                          </thead>
+
+                          <tbody>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>S/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeShortTermGain "></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeShortTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeShortTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>L/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeLongTermGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeLongTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeLongTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeTotalGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.beforeTotalLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center">
+                              <b>
+                                <span [innerHTML]="selectedAccountTax?.beforeTotalNet"></span>
+                              </b>
+                            </td>
+                          </tr>
+
+                          </tbody>
+
+                        </table>
+
+
+                      </div>
+
+                      <div class="slds-p-around--medium"></div>
+
+                      <div class="proposed-unrealized">
+                        <div class="group-heading ">
+                          <h3 class="slds-align-middle slds-truncate">Proposed Unrealized</h3>
+                        </div>
+
+                        <table class="slds-table slds-table--cell-buffer">
+
+                          <thead>
+                          <tr>
+                            <th class="slds-size--1-of-4"></th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Gain</th>
+                            <th class="slds-text-align--center slds-size--1-of-4"> Loss</th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Net</th>
+                          </tr>
+                          </thead>
+
+                          <tbody>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>S/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterShortTermGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterShortTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterShortTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>L/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterLongTermGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterLongTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterLongTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterTotalGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.afterTotalLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center">
+                              <b>
+                                <span [innerHTML]="selectedAccountTax?.afterTotalNet"></span>
+                              </b>
+                            </td>
+                          </tr>
+
+                          </tbody>
+
+                        </table>
+                      </div>
+
+
+                      <div class="slds-p-around--medium"></div>
+
+
+                      <div class="change-unrealized">
+
+                        <div class="group-heading ">
+                          <h3 class="slds-align-middle slds-truncate">Change Unrealized</h3>
+                        </div>
+
+                        <table class="slds-table  slds-table--cell-buffer">
+
+                          <thead>
+                          <tr>
+                            <th class="slds-size--1-of-4"></th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Gain</th>
+                            <th class="slds-text-align--center slds-size--1-of-4"> Loss</th>
+                            <th class="slds-text-align--center slds-size--1-of-4">Net</th>
+                          </tr>
+                          </thead>
+
+                          <tbody>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>S/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeShortTermGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeShortTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeShortTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>L/T</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeLongTermGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeLongTermLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeLongTermNet"></td>
+                          </tr>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeTotalGain"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center" [innerHTML]="selectedAccountTax?.changeTotalLoss"></td>
+                            <td class="slds-size--1-of-4 slds-text-align--center">
+                              <b><span [innerHTML]="selectedAccountTax?.changeTotalNet"></span></b>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div class="tax-summary">
+
+                        <div class="group-heading ">
+                          <h3 class="slds-align-middle slds-truncate">Household Tax Summary</h3>
+                        </div>
+
+                        <table class="slds-table  slds-table--cell-buffer">
+                          <tbody>
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total Short Term Gain</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--left" [innerHTML]="summaries?.taxSummary?.totalSTGainDollar | dollar : {html:true}"></td>
+                          </tr>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total Long Term Gain</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--left" [innerHTML]="summaries?.taxSummary?.totalLTGainDollar | dollar : {html:true}"></td>
+                          </tr>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total Short Term Loss</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--left" [innerHTML]="summaries?.taxSummary?.totalSTLossDollar | dollar : {html:true}"></td>
+                          </tr>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total Long Term Loss</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--left" [innerHTML]="summaries?.taxSummary?.totalLTLossDollar | dollar : {html:true}"></td>
+                          </tr>
+
+                          <tr class="slds-text-title--caps slds-border--bottom">
+                            <td class="slds-size--1-of-4"><b>Total Tax</b></td>
+                            <td class="slds-size--1-of-4 slds-text-align--left" [innerHTML]="summaries?.taxSummary?.totalTaxCostDollar | dollar : {html:true}"></td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="tab-cash-summary" class="slds-tabs--scoped__content slds-hide" role="tabpanel">Cash Summary</div>
+                  <div id="tab-account-summary" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+
+                    <table class="blueleaf-table--striped blueleaf-text blueleaf-table">
+
+                      <tr class="slds-border--bottom">
+                        <td scope="col" style="width:50% !important">
+                          <div class="slds-truncate" title="Account Number(s)" style="font-weight: bold;">Account Number(s)</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary" style="width:50% !important">
+                          <div class="slds-truncate" title="{{summary?.account_number}}" [innerHTML]="summary?.account_number" style="font-weight: bold;"></div>
+                        </td>
+                      </tr>
+
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Market Value Pre-Rebalance">Market Value Pre-Rebalance</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.market_val_pre}}" [innerHTML]="summary?.market_val_pre | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Market Value Post-Rebalance">Market Value Post-Rebalance</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.market_val_post}}" [innerHTML]="summary?.market_val_post | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Cash Pre-Rebalance">Cash Pre-Rebalance</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.cash_pre}}" [innerHTML]="summary?.cash_pre | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Cash Post-Rebalance">Cash Post-Rebalance</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.cash_post}}" [innerHTML]="summary?.cash_post | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Cash Target">Cash Target</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.cash_target}}" [innerHTML]="summary?.cash_target | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Buy">Buy</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.total_buy}}" [innerHTML]="summary?.total_buy | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Sell">Sell</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.total_sell}}" [innerHTML]="summary?.total_sell | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Buys Count">Buys Count</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.count_buy}}" [innerHTML]="summary?.count_buy"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Sells Count">Sells Count</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.count_sell}}" [innerHTML]="summary?.count_sell"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Total S/T Gain">Total S/T Gain</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.short_term_gain}}" [innerHTML]="summary?.short_term_gain | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Total L/T Gain">Total L/T Gain</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.long_term_gain}}" [innerHTML]="summary?.long_term_gain | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Total S/T Loss">Total S/T Loss</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.short_term_loss}}">
+                            <span [innerHTML]="summary?.short_term_loss | dollar : {html:true}"></span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Total L/T Loss">Total L/T Loss</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" title="{{summary?.long_term_loss}}">
+                            <span [innerHTML]="summary?.long_term_loss | dollar : {html:true}"></span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="slds-border--bottom">
+                        <td scope="col">
+                          <div class="slds-truncate" title="Total Tax">Total Tax</div>
+                        </td>
+                        <td scope="col" *ngFor="let summary of accountsSummary">
+                          <div class="slds-truncate" [innerHTML]="summary?.tax | dollar : {html:true}"></div>
+                        </td>
+                      </tr>
+                    </table>
+
+
+
+                  </div>
+                  <div id="tab-sharelot-report" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+                    <div class="slds-p-around--small">
+                      <svg class="slds-button__icon icon-size-medium" style="cursor: pointer;" (click)="exportReport('sharelot')" aria-hidden="true">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/doctype-sprite/svg/symbols.svg#excel'"></use>
+                      </svg>
+                      <span class="slds-assistive-text">Export</span>
+                    </div>
+                    <urebal-grid #sharelotReportGrid gridId="sharelotreport" [displayHeader]=false panelTitle="Sharelot Report"
+                                 [autoHeight]=true [columnReorder]=false [columnResize]=false
+                                 dataType="json"
+                                 linkRendererParams='[{"link": "workspaces/viewreports","params": "name"}]'
+                                 rowRendererColumns='[
+                                  {"name":"ticker","value":"$$$","color":"blue"},
+                                  {"name":"roundGainLossValue","value":"0","color":"red","condition":"lt"}
+                              ]'
+                                 negativeValueColumns='[{"column":"taxCostValue"},{"column":"roundTaxCostValue"},{"column":"roundGainLossValue"}]'
+                                 dataColumns='[
+                                  {"name":"id","type":"number"},
+                                  {"name":"accountNumber","type":"string"},
+                                  {"name":"action","type":"string"},
+                                  {"name":"basisPrice","type":"number"},
+                                  {"name":"roundGainLossValue","type":"number"},
+                                  {"name":"initValue","type":"number"},
+                                  {"name":"initPercent","type":"number"},
+                                  {"name":"initShares","type":"number"},
+                                  {"name":"price","type":"number"},
+                                  {"name":"optValue","type":"number"},
+                                  {"name":"optPctWt","type":"number"},
+                                  {"name":"proposedShares","type":"number"},
+                                  {"name":"roundOptShares","type":"number"},
+                                  {"name":"purchaseDate","type":"date"},
+                                  {"name":"roundTaxCostValue","type":"number"},
+                                  {"name":"roundTradeValue","type":"number"},
+                                  {"name":"roundTradePercent","type":"number"},
+                                  {"name":"roundTradeShares","type":"number"},
+                                  {"name":"taxCostValue","type":"number"},
+                                  {"name":"taxRate","type":"number"},
+                                  {"name":"ticker","type":"string"},
+                                  {"name":"tradeValue","type":"number"},
+                                  {"name":"tradePercent","type":"number"},
+                                  {"name":"tradeShares","type":"number"},
+                                  {"name":"workflowId","type":"number"}
+                              ]'
+
+                                 gridColumns='[
+                                  { "text": "Account Number", "align": "center", "datafield": "accountNumber", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "minWidth": "200"},
+                                  { "text": "Security ID", "align": "center", "datafield": "ticker", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "minWidth": "200"},
+                                  { "text": "Action", "align": "center", "cellsalign":"left", "datafield": "action", "cellsrenderer":"cellsRenderer", "minWidth": "80"},
+                                  { "text": "Price (USD)", "align": "center", "cellsalign":"right", "datafield": "price", "cellsrenderer":"cellsRenderer", "cellsformat": "c2", "minWidth": "80" },
+                                  { "text": "Trade Shares", "align": "center", "cellsalign":"right", "datafield": "tradeShares", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Tax Cost Value (USD)", "align": "center", "cellsalign":"right", "datafield": "taxCostValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade Shares", "align": "center", "cellsalign":"right", "datafield": "roundTradeShares", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "140"},
+                                  { "text": "Round Tax Cost Value (USD)", "align": "center", "cellsalign":"right", "datafield": "roundTaxCostValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "140"},
+                                  { "text": "Basis Price (USD)", "align": "center", "cellsalign":"right", "datafield": "basisPrice", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Purchase Date", "align": "center", "cellsalign":"right", "datafield": "purchaseDate", "cellsrenderer":"cellsRenderer","cellsformat":"MMM dd, yyyy", "minWidth": "120"},
+                                  { "text": "Round Gain / Loss Value (USD)", "align": "center", "cellsalign":"right", "datafield": "roundGainLossValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "140"},
+                                  { "text": "Trade Value (USD)", "align": "center", "cellsalign":"right", "datafield": "tradeValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Trade %", "align": "center", "cellsalign":"right", "datafield": "tradePercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Init %", "align": "center", "cellsalign":"right", "datafield": "initPercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Proposed %", "align": "center", "cellsalign":"right", "datafield": "optPctWt", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Init. Shares", "align": "center", "cellsalign":"right", "datafield": "initShares", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Proposed Shares", "align": "center", "cellsalign":"right", "datafield": "proposedShares", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Round Proposed Shares", "align": "center", "cellsalign":"right", "datafield": "roundOptShares", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Initial Value (USD)", "align": "center", "cellsalign":"right", "datafield": "initValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Proposed Value (USD)", "align": "center", "cellsalign":"right", "datafield": "optValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade Value (USD)", "align": "center", "cellsalign":"right", "datafield": "roundTradeValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade %", "align": "center", "cellsalign":"right", "datafield": "roundTradePercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Tax Rate %", "align": "center", "cellsalign":"right", "datafield": "taxRate", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"}
+                              ]'
+                    >
+                    </urebal-grid>
+                  </div>
+                  <div id="tab-stock-report" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+                    <div class="slds-p-left--x-large">
+                      <!--<svg class="slds-button__icon icon-size-medium" style="cursor: pointer;" (click)="exportReport('stock')" aria-hidden="true">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/doctype-sprite/svg/symbols.svg#excel'"></use>
+                      </svg>
+                      <span class="slds-assistive-text">Export</span>-->
+                      <input type="button" value="Export" class="slds-button slds-button--blueleaf" (click)="exportReport('stock')">
+                    </div>
+                    <urebal-grid #stockReportGrid gridId="stockreport" [displayHeader]=false panelTitle="Stock Report"
+                                 [autoHeight]=false [columnReorder]=false [columnResize]=false
+                                 [height]="480"
+                                 dataType="json"
+                                 linkRendererParams='[{"link": "workspaces/viewreports","params": "name"}]'
+                                 rowRendererColumns='[
+                                  {"name":"ticker","value":"$$$","color":"blue"}
+                              ]'
+
+                                 dataColumns='[
+                                  {"name":"id","type":"number"},
+                                  {"name":"accountNumber","type":"string"},
+                                  {"name":"tradeType","type":"string"},
+                                  {"name":"initPct","type":"number"},
+                                  {"name":"initShares","type":"number"},
+                                  {"name":"attributeList","type":"string"},
+                                  {"name":"price","type":"number"},
+                                  {"name":"optValue","type":"number"},
+                                  {"name":"optPct","type":"number"},
+                                  {"name":"optShares","type":"number"},
+                                  {"name":"roundTradeValue","type":"number"},
+                                  {"name":"roundTradePct","type":"number"},
+                                  {"name":"roundTradeShares","type":"number"},
+                                  {"name":"ticker","type":"string"},
+                                  {"name":"equivalenceName","type":"string"},
+                                  {"name":"securityType","type":"string"},
+                                  {"name":"tradeValue","type":"number"},
+                                  {"name":"tradePct","type":"number"},
+                                  {"name":"tradeShares","type":"number"},
+                                  {"name":"adjustedTargetShares","type":"number"},
+                                  {"name":"adjustedTargetValue","type":"number"},
+                                  {"name":"targetValue","type":"number"},
+                                  {"name":"initValue","type":"number"},
+                                  {"name":"targetShares","type":"number"},
+                                  {"name":"workflowId","type":"number"},
+                                  {"name":"modelTargetPct","type":"number"},
+                                  {"name":"adjustedTargetPct","type":"number"},
+                                  {"name":"modelMinPct","type":"number"},
+                                  {"name":"modelMaxPct","type":"number"},
+                                  {"name":"adjustedMinPct","type":"number"},
+                                  {"name":"adjustedMaxPct","type":"number"}
+                              ]'
+
+                                 [gridColumns]='getStockReportGridColumns()'
+                    >
+                    </urebal-grid>
+                  </div>
+                  <div class="slds-size--1-of-1">
+                    <div id="tab-asset-allocation" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+
+                      <div class="slds-grid slds-wrap slds-m-bottom--medium" >
+
+                        <div class="slds-form--inline slds-container--left">
+                          <div class="slds-form-element" id="view-scope-container">
+                            <label class="slds-form-element__label ">View:</label>
+                            <div class="slds-form-element__control">
+                              <div class="slds-select_container">
+                                <select class="slds-select" id="scopeView" name="dropdown" (change)="onChangeViewScope()" [(ngModel)] = "selectedView" >
+                                  <option *ngFor="let account of allocationView" [value]="account">
+                                    {{account}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="slds-container--right" >
+                          <button id="btnCollapseAll" class="slds-button slds-button--neutral" (click)="expandAll($event)"> Collapse All </button>
+                          <button id="btnExpandAll" class="slds-button slds-button--neutral" (click)="expandAll($event)"> Expand All </button>
+                        </div>
+                      </div>
+                      <div>
+                        <div id="noAssetAllocationRecords" class="slds-hide" style="height: 500px; text-align: center;line-height: 35;" >
+                          No data to display.
+                        </div>
+                        <!-- AOT Commented -->
+                        <!--<div id="attributeAccountSummaryReportContainer" class="slds-size&#45;&#45;1-of-1" (onresize)="onResize($event)">-->
+                        <div id="attributeAccountSummaryReportContainer" class="slds-size--1-of-1">
+                          <urebal-account-tree-grid #accountAttributeReportGrid gridId="attributeAccountSummaryReport" [displayHeader]=false></urebal-account-tree-grid>
+                        </div>
+                        <!-- AOT Commented -->
+                        <!--<div id="attributeReportGridContainer" class="slds-size&#45;&#45;1-of-1" (onresize)="onResize($event)">-->
+                        <div id="attributeReportGridContainer" class="slds-size--1-of-1">
+                          <urebal-tree-grid #attributeReportGrid gridId="attributeSummaryReport" [displayHeader]=false></urebal-tree-grid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="tab-trade-override" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+                    <trade-override #tradeOverrideGrid gridId="tradeOverride" (onCellEdited)="getCellEditedValue($event)" [displayHeader]="false" [rowRendererColumns]='[
+                      {"name":"ticker","value": appConfig.CASH ,"color":"blue"},
+                      {"name":"roundGainLossValue","value":"0","color":"red","condition":"lt"}
+                    ]'
+                    ></trade-override>
+                  </div>
+                  <div id="tab-workspace-swap-details" class="slds-tabs--scoped__content slds-hide" role="tabpanel">
+                    <workspace-swap-details #workspaceDetailReport [portfolioId]="portfolio?.portfolioId" [portfolioName]="portfolio?.portfolioName" id='workspaceDetailReport'
+                                            [isSupportZipEnabled]="isSupportZipEnabled"
+                    ></workspace-swap-details>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Model to show notification/confirmation -->
+
+<app-dialog-modal #modalWorkspaceReport id='modalWorkspaceReport'
+                  [title]="'Confirmation'"
+                  [content]="modalMessage"
+                  (yes)="continueLoadingProject()" (no)="onModalClose()"
+                  [noText]="'No'" [yesText]="'Yes'">
+</app-dialog-modal>

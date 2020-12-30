@@ -1,0 +1,26 @@
+[
+  {
+    "text": "Ticker",
+    "hidden" : false
+  },
+  {
+    "text": "Security<br/> Name",
+    "hidden" : false
+  },
+  {
+    "text": "Type",
+    "hidden" : false
+  },
+  {
+    "text": "Price $",
+    "hidden" : false
+  },
+  {
+    "text": "Shares",
+    "hidden" : false
+  },
+  {
+    "text": "Market<br/> Value $",
+    "hidden" : false
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Attribute Name",
+    "hidden": true
+  },
+  {
+    "text": "Equivalence Name",
+    "hidden": false
+  },
+  {
+    "text": "Security Type",
+    "hidden": false
+  },
+  {
+    "text": "Action",
+    "hidden": false
+  },
+  {
+    "text": "Price",
+    "hidden": false
+  },
+  {
+    "text": "Trade Shares",
+    "hidden": false
+  },
+  {
+    "text": "Round Trade Shares",
+    "hidden": false
+  },
+  {
+    "text": "Trade Dollar",
+    "hidden": false
+  },
+  {
+    "text": "Trade %",
+    "hidden": false
+  },
+  {
+    "text": "Actual %",
+    "hidden": false
+  },
+  {
+    "text": "Target %",
+    "hidden": false
+  },
+  {
+    "text": "Min %",
+    "hidden": false
+  },
+  {
+    "text": "Max %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted Target %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted Min %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted Max %",
+    "hidden": false
+  },
+  {
+    "text": "Proposed %",
+    "hidden": false
+  },
+  {
+    "text": "Actual. Shares",
+    "hidden": false
+  },
+  {
+    "text": "Target Shares",
+    "hidden": false
+  },
+  {
+    "text": "Proposed Shares",
+    "hidden": false
+  },
+  {
+    "text": "Actual. Dollar",
+    "hidden": false
+  },
+  {
+    "text": "Target Dollar",
+    "hidden": false
+  },
+  {
+    "text": "Proposed Dollar",
+    "hidden": false
+  },
+  {
+    "text": "Round Trade Dollar",
+    "hidden": false
+  },
+  {
+    "text": "Round Trade %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted Target Shares",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted Target Dollar",
+    "hidden": false
+  }
+]

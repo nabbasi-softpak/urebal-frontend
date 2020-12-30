@@ -1,0 +1,75 @@
+<div id="reviewFinish" class="slds-grid slds-grid--align-center slds-hide">
+
+  <div class="slds-size--1-of-2 slds-p-around--medium">
+
+    <h1 class="slds-page-header__title slds-truncate">Review and Finish</h1>
+    <p class="slds-p-vertical--medium"></p>
+
+
+    <div *ngFor="let file of mappedData; let i= index" data-accordion-group="">
+      <div id="rfAccordionid{{i}}" class="accordion" data-accordion="">
+        <div (click)="reviewFinishAccordionAnimate(i)" data-control=""> <strong>{{file.fileName}}</strong></div>
+        <div id="rfDivHeightid{{i}}" data-content="" style="transition: max-height 400ms ease; max-height: 0px;">
+          <table class="slds-table slds-table_bordered">
+            <thead>
+            <tr>
+              <th width="30%"><strong>uRebal Fields</strong></th>
+              <th style="width:5%"></th>
+              <th><strong>CSV Field</strong></th>
+              <th style="width:10%"><strong>Advanced Rules</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let row of file.urebalFields; let i = index">
+              <td>{{row}}</td>
+              <td align="right"><img src="{{urebalService.getAppContext()}}/assets/images/field_map_arrow.png" width="22"></td>
+              <td>
+                {{file.csvFields[i]}}
+              </td>
+              <td>
+                <ng-container  *ngFor="let mappedCol of file.mappedColumns">
+                  <ng-container *ngIf="mappedCol.replace">
+                    <ng-container *ngIf="mappedCol.dbColumn == file.urebal_Fields[i]" style="text-align: center;">
+                      <span *ngIf="(mappedCol.replace[0].search != '')">Replace({{mappedCol.replace[0].search}} => {{mappedCol.replace[0].replace}}),</span><span>Transform({{mappedCol.transform.changeCase}})</span>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </td>
+
+            </tr>
+
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="slds-p-around--medium slds-align--absolute-center">
+      <button (click)="cancelBtnPressed()" class="slds-button slds-m-horizontal--medium">Cancel</button>
+      <button (click)="bckBtnPressed()" class="slds-button slds-button--neutral">
+        <div class="slds-icon_container">
+          <svg aria-hidden="true" class="slds-icon--x-small slds-button__icon">
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'"></use>
+          </svg>
+        </div>
+        Back</button>
+      <button (click)="startImport()" class="slds-button slds-button--urebal">Start Import</button>
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+<app-modal id="reviewFinishModal" #startImportModal >
+  <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+    <p>{{importMsg}}</p>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--urebal" (click)="navigateToAccountsList()">OK</button>
+  </div>
+</app-modal>

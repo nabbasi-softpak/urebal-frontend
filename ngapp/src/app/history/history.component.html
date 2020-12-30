@@ -1,0 +1,30 @@
+<div class="slds-grid slds-page-header">
+  <div class="slds-size--1-of-1 slds-wrap">
+    <h1 class="text-size--heading">History</h1>
+  </div>
+</div>
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+    <div class="slds-size--1-of-1" *ngFor="let history of histories">
+      <urebal-accordion-group>
+        <div class="slds-text-title--caps slds-truncate slds-p-horizontal--medium" style="margin:15px 0 15px 0;">
+          <b>{{history.date}}</b>
+        </div>
+        <urebal-accordion *ngFor="let record of history.records" [title]="record.name" [icon]="record.icon" [length]="record.accounts.length">
+          <div *ngFor="let account of record.accounts" style="border-bottom: 1px solid #D7D7D7; padding: 0 0 0 10px;">
+            <div class="slds-grid slds-wrap slds-p-around--medium">
+              <div class="slds-col slds-size_3-of-4" style="padding-left: 20px;">
+                <p class="slds-text-title--caps "><b>{{account.title}}</b></p>
+                <p>{{account.description}}</p>
+              </div>
+              <div class="slds-col slds-size_1-of-4" style="text-align: right;">
+                <button class="slds-button slds-button--neutral actionButton">{{ record.btn_name }}</button>
+              </div>
+            </div>
+          </div>
+        </urebal-accordion>
+      </urebal-accordion-group>
+    </div>
+  </div>
+</div>

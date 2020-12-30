@@ -1,0 +1,18 @@
+[
+  {
+    "text": "Date",
+    "hidden" : false
+  },
+  {
+    "text": "Rebalance Name",
+    "hidden" : false
+  },
+  {
+    "text": "Status",
+    "hidden" : false
+  },
+  {
+    "text": "Volume",
+    "hidden" : false
+  }
+]

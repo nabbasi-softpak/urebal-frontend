@@ -1,0 +1,9 @@
+<block-ui>
+  <router-outlet></router-outlet>
+
+  <form>
+    <input type="hidden" name="uiVersion" [value]="versionInfo.uiVersion">
+    <input type="hidden" name="restServicesVersion" [value]="versionInfo.restServicesVersion">
+    <input type="hidden" name="dbVersion" [value]="versionInfo.dbVersion">
+  </form>
+</block-ui>

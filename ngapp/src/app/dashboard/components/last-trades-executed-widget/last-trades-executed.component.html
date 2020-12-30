@@ -1,0 +1,18 @@
+<urebal-widget>
+    <div header>
+        <div class="blueleaf-widget-header">
+            Last Trades Executed
+        </div>
+        <div class="blueleaf-widget-subheader">
+            &nbsp;
+        </div>
+    </div>
+    <div body>
+        <softpak-grid #lastTradesWidgetGridRef
+                      [columns]=lastTradesWidgetGridCols
+                      [source]=lastTradesWidgetGridAdapter
+                      [height]="'368px'"
+        >
+        </softpak-grid>
+    </div>
+</urebal-widget>

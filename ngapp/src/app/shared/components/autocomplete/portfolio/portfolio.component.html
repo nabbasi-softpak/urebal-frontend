@@ -1,0 +1,27 @@
+<li *ngFor="let item of items">
+  <a (click)="selectItem(item)">
+    <!--<div class="slds-grid slds-grid&#45;&#45;align-spread">-->
+      <!--<div class="slds-col">-->
+        <!--<span class="ticker-title">{{item.portfolioName}}</span>-->
+        <!--<span class="slds-text-color&#45;&#45;weak">No. of holdings: {{item.positionsCount}}</span>-->
+      <!--</div>-->
+      <!--<div class="slds-col">-->
+        <!--<span class="text-color-price">Taxable: {{item.taxable}}</span>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <div  class="slds-grid slds-grid--align-spread">
+      <div style="display:  flex;flex-direction: row;align-items:  center;">
+        <img *ngIf="!item.houseHold" src="{{urebalService.getAppContext()}}/assets/images/single.png" style="width: 18px;height: 18px;/* margin-right: 5px; */">
+        <img *ngIf="item.houseHold" src="{{urebalService.getAppContext()}}/assets/images/household.png" style="width: 18px;height: 18px;/* margin-right: 5px; */">
+      </div>
+      <div  class="slds-col slds-truncate" style="width: 58%">
+        <span class="ticker-title">{{item.portfolioName}}</span>
+        <span class="slds-text-color--weak">No. of holdings: {{item.positionsCount}}</span>
+      </div>
+      <div  class="slds-col" style="width: 27%">
+        <span class="text-color-price">Taxable: {{item.houseHold?'--':item.taxable}}</span>
+      </div>
+    </div>
+  </a>
+</li>

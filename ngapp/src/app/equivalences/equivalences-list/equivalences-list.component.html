@@ -1,0 +1,127 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+  <div class="slds-size--1-of-1 box color-white">
+    <urebal-widget>
+      <div header>
+        <div class="blueleaf-widget-header blueleaf-widget-header-left">
+          <!-- Grid Header -->
+          <div>
+            <div class="slds-grid slds-grid--vertical-align-center">
+              <div class="slds-col">
+                <div class="slds-media slds-no-space slds-grow">
+                  <div class="slds-media__body">
+                    Security Equivalences
+                  </div>
+                </div>
+              </div>
+
+              <div class="slds-no-space slds-grow blueleaf-text">
+                <div>
+                  <!--Pagination-->
+                  <div class="slds-grid slds-grid--vertical-align-center">
+                    <div class="slds-p-around--small">
+                      <div class="slds-text-body--regular"><b>{{totalItemsCount > 0 ? itemIndex + 1 : 0}}
+                        - {{itemIndex + listLength}}</b> of <b>{{totalItemsCount}}</b></div>
+                    </div>
+                    <div class="slds-button-group">
+                      <button (click)="pagination('prev')" class="slds-button slds-m-right--medium"
+                              title="Previous">
+                        <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-left.svg'"
+                             class="slds-input__icon"
+                             aria-hidden="true">
+                        <span class="slds-assistive-text">Previous</span>
+                      </button>
+                      <button (click)="pagination('next')" class="slds-button"
+                              title="Next">
+                        <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/chevron-right.svg'"
+                             class="slds-input__icon"
+                             aria-hidden="true">
+                        <span class="slds-assistive-text">Next</span>
+                      </button>
+                    </div>
+                  </div>
+                  <!--pagination End-->
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div *ngIf="isAllowed('equivalenceCreate')" class="slds-bump--left slds-m-horizontal--medium">
+                <button class="slds-button slds-button--blueleaf slds-button--blueleaf--adapt"
+                        (click)="navigateToCreateEquivalence()">Create Equivalence
+                </button>
+              </div>
+
+              <!-- Referesh button -->
+              <div class="slds-m-left--medium slds-m-right--x-large">
+                <button class="slds-button slds-button_icon" aria-haspopup="true" (click)="reloadEquivalences()">
+                  <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-reload.svg'">
+                </button>
+              </div>
+
+              <!-- Search Panel -->
+              <div>
+                <div class="slds-form-element">
+                  <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                    <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                         class="slds-input__icon slds-icon-text-default blueleaf-search-input-icon"
+                         aria-hidden="true">
+                    <input autocomplete="off" type="text" id="text-input-01"
+                           class="slds-input blueleaf-search-input" placeholder="Search"
+                           (keyup)="searchEquivalences($event)"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div body>
+        <div class="slds-size--1-of-1" id="equivalenceTable" style="overflow: auto;">
+          <urebal-accordion-group>
+            <div class="slds-text-title--caps slds-truncate blueleaf-text blueleaf-border--bottom" style="padding: 1rem;">
+              <b>Equivalence Name</b>
+            </div>
+
+            <div *ngIf="(equivalenceList) === undefined || equivalenceList.length == 0" class="blueleaf-border--bottom">
+              <div style="height: 500px;" class="blueleaf-text blueleaf-no-data-message">
+                No data to display
+              </div >
+            </div>
+
+            <div class="blueleaf-border--bottom" *ngFor="let equivalence of equivalenceList">
+              <urebal-accordion [theme]="'blueleaf'" [id]="equivalence.id" [title]="equivalence.name" [actions]="equivalenceActions">
+                  <ng-template AccordionLazyLoadedDirective>
+                      <app-equivalence-detail [id]="equivalence.id"></app-equivalence-detail>
+                  </ng-template>
+              </urebal-accordion>
+            </div>
+          </urebal-accordion-group>
+        </div>
+      </div>
+    </urebal-widget>
+  </div>
+</div>
+
+<app-dialog-modal id="deletedModal"
+                  [modalSize]="'medium'"
+                  [title]="'Delete Equivalence'"
+                  [content]="deleteResponseMsg"
+                  (yes)="closeModal()"
+                  [yesText]="'OK'"
+                  [hideSecondaryButton]="true"
+>
+
+</app-dialog-modal>
+
+<app-dialog-modal id="confirmationModal"
+                  [modalSize]="'medium'"
+                  [title]="'Delete Equivalence'"
+                  [content]="'Selected Equivalence will be deleted, Are you sure you want to continue?'"
+                  (yes)="confirmDeleteEquivalence()"
+                  [yesText]="'Yes'"
+                  (no)="closeModal()"
+                  [noText]="'No'"
+>
+
+</app-dialog-modal>

@@ -1,0 +1,27 @@
+[
+  {
+    "text": "Rebalance ID",
+    "hidden": true
+
+  },
+  {
+    "text": "Rebalance Name",
+    "hidden": false
+  },
+  {
+    "text": "Accounts",
+    "hidden": false
+  },
+  {
+    "text": "No. of Households",
+    "hidden": true
+  },
+  {
+    "text": "Total Market Value $",
+    "hidden": false
+  },
+  {
+    "text": "Action",
+    "hidden": false
+  }
+]

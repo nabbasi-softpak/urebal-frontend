@@ -1,0 +1,111 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Accounts </h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right" id="printControls">
+          <div class="slds-grid">
+            <button [disabled] = "(disableBtns)" (click)="printReport()" aria-haspopup="true" class="slds-button slds-button--neutral slds-m-horizontal--small" title="Print View">
+              Print
+            </button>
+            <button  (click)="downloadReport()" aria-haspopup="true" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" title="Export">
+              <svg aria-hidden="true" class="slds-button__icon">
+                <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--main-->
+
+    <div id="printData">
+      <!--grid-->
+      <div  class="slds-size--1-of-1">
+
+        <div id="printSummary" class="slds-container_center slds-size--1-of-1 color-white slds-p-left--x-large">
+          <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
+            <tbody><tr style="height: 20px"></tr>
+            <tr class="slds-col--padded-medium">
+              <td class="slds-col--padded-medium">
+                <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+                  <span class="text-color-dark--grey">Number of Accounts: </span>
+                  <span class="slds-col--padded-medium" style="font-size:0.8rem;"> {{singleAccounts}} </span>
+                </div>
+              </td>
+              <!--<td class="slds-col&#45;&#45;padded-medium">-->
+                <!--<div class="slds-size&#45;&#45;1-of-3 text-color-dark&#45;&#45;grey text-size&#45;&#45;subtext">-->
+                  <!--<span class="text-color-dark&#45;&#45;grey">Total No. of Single Accounts: </span>-->
+                  <!--<span class="slds-col&#45;&#45;padded-medium" style="font-size:0.8rem;">{{driftedAccounts.length}}</span>-->
+                <!--</div>-->
+              <!--</td>-->
+
+            </tr>
+            <tr style="height: 20px"></tr>
+            </tbody></table>
+        </div>
+
+        <urebal-grid dataUrl="portfolios?filter=isHouseHold:eq:false" [showEmptyRow]="true" panelTitle="Account List"  gridId="accountsList" [autoHeight]=true [columnReorder]=false [columnResize]=false
+                     dataType="json"
+                     linkRendererParams='[{"click": "openAccountDetail","params": ["accountId","houseHold"]}]'
+                     linkRendererPermissions='[{"datafield": "portfolioName","permissionName": "accountViewData"}]'
+                     dataColumns='[{ "name": "portfolioId", "type": "number" },
+                { "name": "portfolioName", "type": "link" },
+                { "name": "houseHold", "type": "boolean" },
+                { "name": "taxable", "type": "string" },
+                { "name": "accountId", "type": "string" },
+                { "name": "marketValue", "type": "number" },
+                { "name": "freeCash", "type": "number" },
+                { "name": "freeCashPercentage", "type": "number" },
+                { "name": "cash", "type": "number" },
+                { "name": "cashPercentage", "type": "number" },
+                { "name": "positionsCount", "type": "number" }
+            ]'
+
+                     gridColumns='[
+                { "text": "Account ID", "align": "center", "filterable": false, "datafield": "accountId", "cellsalign":"left", "width": "21%"},
+                { "text": "Account Name", "align": "center", "filterable": false, "datafield": "portfolioName", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "width": "21%"},
+                { "text": "Taxable", "align": "center", "cellsalign":"center", "filterable" : false, "filtertype": "checkedlist", "datafield": "taxable", "width": "7%"},
+                { "text": "Free Cash (USD)", "align": "center", "filterable": false, "datafield": "freeCash", "cellsalign":"right", "width": "8.5%","cellsformat":"c0"},
+                { "text": "Free Cash %", "align": "center", "filterable": false, "datafield": "freeCashPercentage", "cellsalign":"right", "width": "8.5%","cellsformat":"d2"},
+                { "text": "Core Cash (USD)", "align": "center", "filterable": false, "datafield": "cash", "cellsalign":"right", "width": "8.5%","cellsformat":"c0"},
+                { "text": "Core Cash %", "align": "center", "filterable": false, "datafield": "cashPercentage", "cellsalign":"right", "width": "8.5%","cellsformat":"d2"},
+                { "text": "No. of Holdings", "align": "center", "filterable": false, "datafield": "positionsCount", "cellsalign":"right", "width": "8.5%"},
+                { "text": "Market Value (USD)", "align": "center", "filterable": false, "datafield": "marketValue", "cellsalign":"right", "width": "8.5%","cellsformat":"c0"}
+            ]'
+        >
+          <!-- AOT Commented -->
+          <!--(onLinkClick)="OnLinkActive($event)"-->
+          <!--(onCellEdit)="getCellEditedValue($event)"-->
+        </urebal-grid>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!--error header-->
+  <!--<div *ngIf="(errMsg != '')" class="alert alert-danger slds-size&#45;&#45;1-of-1 slds-text-align&#45;&#45;center">-->
+  <!--<div>-->
+  <!--{{errMsg}}-->
+  <!--</div>-->
+  <!--</div>-->
+
+
+
+</div>

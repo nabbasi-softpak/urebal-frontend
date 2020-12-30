@@ -1,0 +1,17 @@
+<div class="slds-p-around--xx-small box urebal-widget-card widget-card-purple">
+  <div class="slds-grid">
+    <div class="slds-size--1-of-1">
+      <h3 class="text-color-dark--grey" style="padding-left: 0.5rem;">TOTAL HOUSEHOLDS
+        <a *ngIf="false" [routerLink]="['/dashboard']" class="slds-float--right" title="View all">
+          <svg class="slds-icon slds-icon-text-default slds-icon--x-small" aria-hidden="true">
+            <use [attr.xlink:href]="dashboardService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#forward'"></use>
+          </svg>
+        </a>
+      </h3>
+      <div class="slds-grid">
+        <span class="slds-size--1-of-2 text-color-dark--grey text-size--heading" style="padding-left: 0.5rem;margin-top: 0px; font-size: 1.1em;">No. of Accounts: {{ totalNumberOfHouseholds ? totalNumberOfHouseholds : 'N/A' }}</span>
+        <span class="slds-size--1-of-2 text-color-purple--a94dab slds-truncate slds-text-align--right text-size--heading" style="padding-right: 0.5rem;margin-top: 0px; font-size: 1.1em;">AUM: {{ householdMarketValue ? (householdMarketValue | currency:'USD':'symbol':'4.0-0') : 'N/A'}}</span>
+      </div>
+    </div>
+  </div>
+</div>

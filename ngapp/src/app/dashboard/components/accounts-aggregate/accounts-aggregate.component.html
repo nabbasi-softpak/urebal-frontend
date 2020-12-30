@@ -1,0 +1,46 @@
+<urebal-widget>
+  <div header>
+    <div class="blueleaf-widget-header">
+      Total Accounts: {{totalTaxableAccounts + totalNonTaxableAccounts + totalHouseholds}}
+    </div>
+    <div class="blueleaf-widget-subheader">
+       {{ totalMarketValueOfTaxableAccounts+totalMarketValueOfNonTaxableAccounts+totalMarketValueOfHouseholds ? (totalMarketValueOfTaxableAccounts+totalMarketValueOfNonTaxableAccounts+totalMarketValueOfHouseholds | currency:'USD':'symbol':'4.0-0') : 'N/A'  }} AUM
+    </div>
+  </div>
+  <div body>
+    <div class="slds-size--1-of-1">
+      <div style="display: flex; justify-content: center;">
+        <table class="urebal-widget-aggregate">
+          <tr>
+            <td class="blueleaf-widget-aggregate-label">
+              Individual
+            </td>
+            <td class="blueleaf-widget-aggregate-value slds-text-align--center">{{totalTaxableAccounts+totalNonTaxableAccounts}}  </td>
+            <td class="blueleaf-widget-aggregate-value slds-text-align--right">{{ totalMarketValueOfTaxableAccounts+totalMarketValueOfNonTaxableAccounts ? (totalMarketValueOfTaxableAccounts+totalMarketValueOfNonTaxableAccounts | currency:'USD':'symbol':'4.0-0') : 'N/A'  }} </td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-sublabel">
+              Taxable
+            </td>
+            <td class="blueleaf-widget-aggregate-value slds-text-align--center">{{totalTaxableAccounts}}   </td>
+            <td class="blueleaf-widget-aggregate-value  slds-text-align--right">{{ totalMarketValueOfTaxableAccounts ? (totalMarketValueOfTaxableAccounts | currency:'USD':'symbol':'4.0-0') : 'N/A'  }} </td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-sublabel">
+              Non-Taxable
+            </td>
+            <td class="blueleaf-widget-aggregate-value slds-text-align--center">{{totalNonTaxableAccounts}}</td>
+            <td class="blueleaf-widget-aggregate-value  slds-text-align--right">{{ totalMarketValueOfNonTaxableAccounts ? (totalMarketValueOfNonTaxableAccounts | currency:'USD':'symbol':'4.0-0') : 'N/A'  }}</td>
+          </tr>
+          <tr>
+            <td class="blueleaf-widget-aggregate-label blueleaf-widget-aggregate-label-last">
+              Households
+            </td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-last slds-text-align--center">{{totalHouseholds}}</td>
+            <td class="blueleaf-widget-aggregate-value blueleaf-widget-aggregate-value-last slds-text-align--right">{{ totalMarketValueOfHouseholds ? (totalMarketValueOfHouseholds | currency:'USD':'symbol':'4.0-0') : 'N/A'  }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</urebal-widget>

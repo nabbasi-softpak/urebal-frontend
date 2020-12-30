@@ -1,0 +1,36 @@
+<urebal-grid dataUrl="portfolios" panelTitle="Account List" #accountsList gridId="accountsList" [autoHeight]=false [columnReorder]=false [columnResize]=false
+             dataType="json"
+             linkRendererParams='[{"click": "openAccountDetail","params": ["portfolioId","portfolioName","houseHold"]}]'
+             linkRendererPermissions='[{"datafield": "portfolioName","permissionName": "accountViewData"}]'
+             dataColumns='[{ "name": "portfolioId", "type": "number" },
+                { "name": "portfolioName", "type": "link" },
+                { "name": "houseHold", "type": "boolean" },
+                { "name": "taxable", "type": "string" },
+                { "name": "accountId", "type": "string" },
+                { "name": "marketValue", "type": "number" },
+                { "name": "freeCash", "type": "number" },
+                { "name": "freeCashPercentage", "type": "number" },
+                { "name": "cash", "type": "number" },
+                { "name": "cashPercentage", "type": "number" },
+                { "name": "positionsCount", "type": "number" }
+            ]'
+
+            gridColumns='[
+                {"text": "Type","align": "center", "cellsalign":"center", "filterable": false, "cellsrenderer":"typeRenderer", "datafield" : "houseHold", "width":"3.5%"},
+                { "text": "Account ID", "align": "center", "filterable": false, "datafield": "accountId", "cellsalign":"left", "width": "18%"},
+                { "text": "Account Name", "align": "center", "filterable": false, "datafield": "portfolioName", "cellsalign":"left", "cellsrenderer":"linkRenderer", "width": "19.5%"},
+                { "text": "Taxable", "align": "center", "cellsalign":"center", "filterable" : false, "filtertype": "checkedlist", "datafield": "taxable", "width": "7%"},
+                { "text": "Free Cash (USD)", "align": "center", "filterable": false, "datafield": "freeCash", "cellsalign":"right", "width": "8.5%","cellsformat":"c0"},
+                { "text": "Free Cash %", "align": "center", "filterable": false, "datafield": "freeCashPercentage", "cellsalign":"right", "width": "8.5%","cellsformat":"d2"},
+                { "text": "Core Cash (USD)", "align": "center", "filterable": false, "datafield": "cash", "cellsalign":"right", "width": "8.5%","cellsformat":"c0"},
+                { "text": "Core Cash %", "align": "center", "filterable": false, "datafield": "cashPercentage", "cellsalign":"right", "width": "8.5%","cellsformat":"d2"},
+                { "text": "No. of Holdings", "align": "center", "filterable": false, "datafield": "positionsCount", "cellsalign":"right", "width": "8.5%"},
+                { "text": "Market Value (USD)", "align": "center", "filterable": false, "datafield": "marketValue", "cellsalign":"right", "width": "9.5%","cellsformat":"c0"}
+            ]'
+
+			(onLinkClick)="OnLinkActive($event)"
+
+      >
+    <!-- AOT Commented -->
+    <!--(onCellEdit)="getCellEditedValue($event)"-->
+</urebal-grid>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="18px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Icon Search</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Round-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Blueleaf-Web-App-Manage-Models" transform="translate(-1191.000000, -164.000000)">
+            <g id="Group-7" transform="translate(314.000000, 132.000000)">
+                <g id="Group-12" transform="translate(875.000000, 29.000000)">
+                    <g id="Icon-Search" transform="translate(-0.000000, 0.000000)">
+                        <polygon id="Path" points="0 0 25 0 25 24 0 24"></polygon>
+                        <path d="M15.9016393,14 L15.0727869,14 L14.7790164,13.73 C15.8072131,12.59 16.4262295,11.11 16.4262295,9.5 C16.4262295,5.91 13.3731148,3 9.60655738,3 C5.84,3 2.78688525,5.91 2.78688525,9.5 C2.78688525,13.09 5.84,16 9.60655738,16 C11.2957377,16 12.8485246,15.41 14.0445902,14.43 L14.3278689,14.71 L14.3278689,15.5 L19.5737705,20.49 L21.1370492,19 L15.9016393,14 Z M9.60655738,14 C6.99409836,14 4.8852459,11.99 4.8852459,9.5 C4.8852459,7.01 6.99409836,5 9.60655738,5 C12.2190164,5 14.3278689,7.01 14.3278689,9.5 C14.3278689,11.99 12.2190164,14 9.60655738,14 Z" id="Shape" fill="#007DC4" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,60 @@
+<div class="slds-filter--row slds-p-around--medium">
+  <label class="slds-form-element__label slds-text-title--caps">{{security}}</label>
+
+  <form class="slds-form--inline">
+
+    <div class="slds-form-element" *ngIf="isPriceZero">
+      <div class="slds-form-element__control">
+       <span class="slds-icon_container" title="Price is zero">
+        <svg class="slds-icon slds-icon-text-warning slds-icon--x-small" aria-hidden="true">
+          <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#warning'"></use>
+        </svg>
+        <span class="slds-assistive-text">Warning</span>
+      </span>
+      </div>
+    </div>
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <input type="text" class="slds-input" [(ngModel)]="target" name="target" placeholder="Target %" ur-percentage (blur)="changeSecurityDetails('target')">
+      </div>
+    </div>
+
+
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <input type="text" class="slds-input" [(ngModel)]="min" name="min" placeholder="Min %" ur-percentage (blur)="changeSecurityDetails('min')">
+      </div>
+    </div>
+
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+
+        <input type="text" class="slds-input" [(ngModel)]="max" name="max" placeholder="Max %"ur-percentage  (blur)="changeSecurityDetails('max')">
+      </div>
+    </div>
+
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <button class="slds-button slds-button--icon-border" (click)="deleteSecurity()" aria-live="assertive" title="Remove">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+          </svg>
+          <span class="slds-assistive-text">Remove</span>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="slds-clearfix">&nbsp;</div>
+
+
+
+  </form>
+  <div>
+    <label class="slds-form-element__label slds-text-title-- error-message">{{modelSecError}}</label>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+<div class="slds-button-group" [ngClass]="'toggle-'+buttonProperty" role="group">
+  <button [disabled]="disableBtn" class="slds-button button-inactive text-color-default" (click)="changeState($event)" [class.slds-button-active]="buttonValue">{{labelTrue}}</button>
+  <button [disabled]="disableBtn" class="slds-button button-inactive text-color-default " (click)="changeState($event)" [class.slds-button-active]="!buttonValue">{{labelFalse}}</button>
+</div>

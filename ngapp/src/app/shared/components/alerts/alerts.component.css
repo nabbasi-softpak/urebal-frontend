@@ -1,0 +1,3 @@
+.popup-notification{background-color: rgba(220,39,39,0.8); position: fixed; top:0px; width:100%; z-index: 9999; padding:10px; transition: all .5s; transform: translateY(-60px)}
+.popup-notification .content{text-align:center; display:block; color:#fff;}
+.popup-notification.show{transform: translateY(0px)}

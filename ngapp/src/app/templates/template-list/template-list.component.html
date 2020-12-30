@@ -1,0 +1,53 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-grid #templateListGrid dataUrl="templates" [displayHeader]=true panelTitle="Template List"
+                     [autoHeight]=false [columnReorder]=false [columnResize]=false [pageable]=true [height]="595"
+                     gridId="templateListGrid"
+                     dataType="json"
+                     [linkRendererParams]="linkRendererParams"
+                     [actionItems]="actionItems"
+                     [actionItemsPermissions]="actionItemPermissions"
+                     [dataColumns]="dataColumns"
+                     [gridColumns]="templateListGridCols()"
+                     (onLinkClick)="onGridRowLinkClick($event)"
+        >
+        </urebal-grid>
+    </div>
+</div>
+
+
+<app-dialog-modal #templateDeleteWarning id='templateDeleteWarning'
+                  [modalSize]="'default'"
+                  [title]="'Delete Template'"
+                  (yes)="onDeleteTemplateConfirmed()"
+                  [content]="templateDeleteWarningMsg"
+                  (no)="templateDeleteWarning.close();">
+</app-dialog-modal>
+
+
+<app-dialog-modal *ngIf="template"
+                  #templateDeleteMsgModal id='templateDeleteMsgModal'
+                  [modalSize]="'default'"
+                  [title]="'Delete Template'"
+                  (yes)="onCloseTemplateDeleteMsgModal()"
+                  [yesText]="'OK'"
+                  [content]="templateDeleteMsg"
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>
+
+<app-dialog-modal
+  #defaultTemplateNotFoundModal id='defaultTemplateNotFoundModal'
+  [modalSize]="'medium'"
+  [title]="'Create Template'"
+  (yes)="onCloseDefaultTemplateNotFoundMsgModal()"
+  [yesText]="'Close'"
+  [hideSecondaryButton]=true>
+  <!--[content]="defaultTemplateNotFoundMessage"-->
+  <div>
+    <p style="display: flex;  justify-content: center;">
+      <i [style.display]="'block'" class="material-icons"
+         style="margin-right: 5px; font-size: 30px;color: #F12439;">error</i>
+      {{defaultTemplateNotFoundMessage}}
+    </p>
+  </div>
+</app-dialog-modal>

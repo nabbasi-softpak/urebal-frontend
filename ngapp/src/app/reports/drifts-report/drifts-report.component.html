@@ -1,0 +1,126 @@
+
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Drifts </h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right" id="printControls">
+          <div class="slds-grid">
+            <button [disabled] = "(disableBtns)" (click)="printReport()" aria-haspopup="true" class="slds-button slds-button--neutral slds-m-horizontal--small" title="Print View">
+              Print
+            </button>
+            <button  (click)="downloadReport()" aria-haspopup="true" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" title="Export">
+              <svg aria-hidden="true" class="slds-button__icon">
+                <use [attr.xlink:href]="driftService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--main-->
+
+    <div>
+      <!--grid-->
+      <div  class="slds-size--1-of-1">
+
+        <div id="printSummary" class="slds-container_center slds-size--1-of-1 color-white slds-p-left--x-large">
+          <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
+            <tbody><tr style="height: 20px"></tr>
+            <tr class="slds-col--padded-medium">
+              <td class="slds-col--padded-medium">
+                <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+                  <span id="totalAccounts" class="text-color-dark--grey">Number of Accounts: </span>
+                  <span class="slds-col--padded-medium" style="font-size:0.8rem;"> {{totalAccounts}} </span>
+                </div>
+              </td>
+              <td class="slds-col--padded-medium">
+                <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+                  <span id="accountsDrifted" class="text-color-dark--grey">Total Accounts Drifted: </span>
+                  <span class="slds-col--padded-medium" style="font-size:0.8rem;">{{driftedAccounts.length}}</span>
+                </div>
+              </td>
+              <td class="slds-col--padded-medium">
+                <div class="slds-size--1-of-3 text-color-dark--grey text-size--subtext">
+                  <span id="driftLastRun" class="text-color-dark--grey">Drift last run at: </span>
+                  <span title="{{ driftDate | date: DATETIME_FORMAT}}" class="slds-col--padded-medium" style="font-size:0.8rem;">{{driftDate | date: DATETIME_FORMAT}}</span>
+                </div>
+              </td>
+
+            </tr>
+            <tr style="height: 20px"></tr>
+            </tbody></table>
+        </div>
+
+        <urebal-grid panelTitle="Drift List"  [displayHeader]=false gridId="driftsList"  [autoHeight]=false [columnReorder]=true [columnResize]=false
+                     linkRendererParams='[{"click": "routeToDriftDetails","params": ["portfolioId", "portfolioName"]}]'
+                     customTooltipParam='{"driftStatus": "statusDescription"}'
+                     dataType="json"
+                     sortColumn="portfolioName"
+                     sortDirection="asc"
+                     dataColumns='[{ "name": "portfolioId", "type": "number" },
+      { "name": "portfolioName", "type": "link" },
+      { "name": "marketValue", "type": "number" },
+      { "name": "sleeveCount", "type": "number" },
+      { "name": "driftStatus", "type": "string" },
+      { "name": "asOfDate", "type": "date" },
+      { "name": "drift", "type": "number" },
+      { "name": "lastRebalanced", "type": "date" },
+      { "name": "isHouseHold", "type": "boolean" },
+      { "name": "accountId", "type": "string" },
+      { "name": "taxStatus", "type": "string" },
+      { "name": "cashDrift", "type": "number" },
+      { "name": "statusDescription", "type": "string" },
+      { "name": "coreCash", "type": "number" },
+      { "name": "modelName", "type": "string" }
+    ]'
+                     linkRendererPermissions='[{"datafield": "portfolioName", "permissionName": "portfolioViewDrift"}]'
+                     gridColumns='[
+      { "text": "Type", "align": "center", "cellsalign":"right", "datafield": "isHouseHold", "cellsrenderer":"typeRenderer", "width": "3.9%"},
+      { "text": "Account ID", "align": "center", "datafield": "accountId", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "width": "13%"},
+      { "text": "Account Name", "align": "center", "datafield": "portfolioName", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "width": "13%"},
+      { "text": "Tax Status", "align": "center", "cellsalign":"left", "datafield": "taxStatus", "cellsrenderer":"cellsRenderer", "width": "6%"},
+      { "text": "Drift Status", "align": "center", "cellsalign":"left", "datafield": "driftStatus", "cellsrenderer":"cellsRenderer", "width": "12%"},
+      { "text": "Drift %", "align": "center", "cellsalign":"right", "datafield": "drift", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "width": "6%"},
+      { "text": "Model Name", "align": "center", "cellsalign":"left", "datafield": "modelName", "cellsrenderer":"cellsRenderer", "width": "14.1%"},
+      { "text": "Market Value (USD)", "align": "center", "cellsalign":"right", "datafield": "marketValue", "cellsrenderer":"cellsRenderer","cellsformat":"c0", "width": "8%"},
+      { "text": "Available Cash %", "align": "center", "cellsalign":"right", "datafield": "coreCash", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "width": "8%"},
+      { "text": "Cash Drift %", "align": "center", "cellsalign":"right", "datafield": "cashDrift", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "width": "6%"},
+      { "text": "Last Rebalanced", "align": "center", "cellsalign":"center", "datafield": "lastRebalanced", "cellsrenderer":"cellsRenderer", "width": "10%", "cellsformat":"MMM dd, yyyy hh:mm tt"}
+    ]'
+
+        >
+          <!-- AOT Commented -->
+          <!--(onLinkClick)="OnLinkActive($event)"-->
+        </urebal-grid>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+

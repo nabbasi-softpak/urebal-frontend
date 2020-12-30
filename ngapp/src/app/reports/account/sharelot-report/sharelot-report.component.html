@@ -1,0 +1,180 @@
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+
+
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+
+
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Sharelot Summary</h1>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="slds-grid slds-grid--vertical-align-center slds-text-align--right">
+
+
+          <div class="slds-grid">
+
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="printme()" class="slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true" title="Print View">
+              Print
+            </button>
+            <button [disabled] = "(errMsg != '' || disableBtns)" (click)="exportme()" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Export">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="workspaceService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+              </svg>
+
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="slds-size--1-of-1">
+
+
+      <!-- options -->
+      <div class="slds-p-around--small slds-p-horizontal--medium gradient-background slds-border--bottom quick-filters slds-align--absolute-center no-print">
+
+        <div class="slds-form--inline">
+
+
+
+          <div class="slds-form-element">
+            <label class="slds-form-element__label">Account Name</label>
+            <div class="slds-form-element__control">
+
+              <!--Implement autocomplete here ...  -->
+              <app-autocomplete (postSelect)="getReport($event)" [items]="portfolioList" [inputID]="'autocomplete-sharelot'" [template]="'portfolio'" [placeholder]="'Enter Account Name'" [defaultValue]="''"> </app-autocomplete>
+
+            </div>
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+      <div>
+
+      </div>
+      <div class="slds-hide container" id="printData" style="width: 100%">
+
+
+        <div  class="slds-p-around--medium myContainer" id="summary">
+
+          <div class="slds-container_center gridContainer">
+
+
+            <app-account-summary></app-account-summary>
+
+
+            <!-- Sharelot report List Grid Component -->
+
+            <div>
+
+              <urebal-grid #sharelotReportGrid gridId="sharelotreport" [displayHeader]=false panelTitle="Sharelot Report"
+                           [autoHeight]=true [columnReorder]=false [columnResize]=false
+                           dataType="json"
+                           rowRendererColumns='[
+                                  {"name":"ticker","value":"$$$","color":"blue"},
+                                  {"name":"roundGainLossValue","value":"0","color":"red","condition":"lt"}
+                              ]'
+                           negativeValueColumns='[{"column":"taxCostValue"},{"column":"roundTaxCostValue"},{"column":"roundGainLossValue"}]'
+                           dataColumns='[
+                                  {"name":"id","type":"number"},
+                                  {"name":"accountId","type":"string"},
+                                  {"name":"action","type":"string"},
+                                  {"name":"basisPrice","type":"number"},
+                                  {"name":"roundGainLossValue","type":"number"},
+                                  {"name":"initValue","type":"number"},
+                                  {"name":"initPercent","type":"number"},
+                                  {"name":"initShares","type":"number"},
+                                  {"name":"price","type":"number"},
+                                  {"name":"optValue","type":"number"},
+                                  {"name":"optPctWt","type":"number"},
+                                  {"name":"proposedShares","type":"number"},
+                                  {"name":"roundOptShares","type":"number"},
+                                  {"name":"purchaseDate","type":"date"},
+                                  {"name":"roundTaxCostValue","type":"number"},
+                                  {"name":"roundTradeValue","type":"number"},
+                                  {"name":"roundTradePercent","type":"number"},
+                                  {"name":"roundTradeShares","type":"number"},
+                                  {"name":"taxCostValue","type":"number"},
+                                  {"name":"taxRate","type":"number"},
+                                  {"name":"ticker","type":"string"},
+                                  {"name":"tradeValue","type":"number"},
+                                  {"name":"tradePercent","type":"number"},
+                                  {"name":"tradeShares","type":"number"},
+                                  {"name":"workflowId","type":"number"}
+                              ]'
+
+                           gridColumns='[
+                                  { "text": "Account ID", "exportable": false, "align": "center", "datafield": "accountId", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "minWidth": "200"},
+                                  { "text": "Security ID", "exportable": true, "align": "center", "datafield": "ticker", "cellsalign":"left", "cellsrenderer":"cellsRenderer", "minWidth": "200"},
+                                  { "text": "Action", "exportable": true, "align": "center", "cellsalign":"left", "datafield": "action", "cellsrenderer":"cellsRenderer", "minWidth": "80"},
+                                  { "text": "Price (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "price", "cellsrenderer":"cellsRenderer", "cellsformat": "c2", "minWidth": "80" },
+                                  { "text": "Trade Shares", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "tradeShares", "cellsrenderer":"cellsRenderer","cellsformat":"d0", "minWidth": "120"},
+                                  { "text": "Tax Cost Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "taxCostValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade Shares", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "roundTradeShares", "cellsrenderer":"cellsRenderer","cellsformat":"d0", "minWidth": "140"},
+                                  { "text": "Round Tax Cost Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "roundTaxCostValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "140"},
+                                  { "text": "Basis Price (USD)", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "basisPrice", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Purchase Date", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "purchaseDate", "cellsrenderer":"cellsRenderer","cellsformat":"MMM dd, yyyy", "minWidth": "120"},
+                                  { "text": "Round Gain / Loss Value (USD)", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "roundGainLossValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "140"},
+                                  { "text": "Trade Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "tradeValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Trade %", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "tradePercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Init %", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "initPercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Proposed %", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "optPctWt", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Init. Shares", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "initShares", "cellsrenderer":"cellsRenderer","cellsformat":"d0", "minWidth": "120"},
+                                  { "text": "Proposed Shares", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "proposedShares", "cellsrenderer":"cellsRenderer","cellsformat":"d0", "minWidth": "120"},
+                                  { "text": "Round Proposed Shares", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "roundOptShares", "cellsrenderer":"cellsRenderer","cellsformat":"d0", "minWidth": "120"},
+                                  { "text": "Initial Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "initValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Proposed Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "optValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade Value (USD)", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "roundTradeValue", "cellsrenderer":"cellsRenderer","cellsformat":"c2", "minWidth": "120"},
+                                  { "text": "Round Trade %", "exportable": false, "align": "center", "cellsalign":"right", "datafield": "roundTradePercent", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"},
+                                  { "text": "Tax Rate %", "exportable": true, "align": "center", "cellsalign":"right", "datafield": "taxRate", "cellsrenderer":"cellsRenderer","cellsformat":"d2", "minWidth": "120"}
+                              ]'
+              >
+              </urebal-grid>
+
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+  <!--<div *ngIf="(errMsg != '')" class="alert alert-danger slds-size&#45;&#45;1-of-1 slds-text-align&#45;&#45;center">-->
+    <!--<div>-->
+      <!--{{errMsg}}-->
+    <!--</div>-->
+  <!--</div>-->
+
+
+
+</div>

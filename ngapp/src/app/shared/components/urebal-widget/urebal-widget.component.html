@@ -1,0 +1,18 @@
+<div class="slds-m-top--medium" [class.slds-hide]="!showHeader && !showDivider">
+    <ng-content select="[header]"></ng-content>
+    <hr class="blueleaf-widget-divider" [class.slds-hide]="!showDivider">
+</div>
+<div class="slds-grid slds-wrap" [ngClass]="contentClass != '' ? contentClass : 'blueleaf-widget-content-area'">
+    <div class="slds-size--1-of-1">
+        <div>
+            <ng-content select="[body]"></ng-content>
+        </div>
+    </div>
+</div>
+<div class="blueleaf-widget-footer" [class.slds-hide]="!showFooter">
+    <div class="slds-size--1-of-1">
+        <div>
+            <ng-content select="[footer]"></ng-content>
+        </div>
+    </div>
+</div>

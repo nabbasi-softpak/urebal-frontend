@@ -1,0 +1,15 @@
+<ng-container *ngIf="model; else NoModel">
+    <div *ngIf="isHouseHold; else accountOverviewTab">
+        <app-overview-household-tab></app-overview-household-tab>
+    </div>
+    <ng-template #accountOverviewTab>
+        <app-overview-account-tab></app-overview-account-tab>
+    </ng-template>
+</ng-container>
+<ng-template #NoModel>
+    <div class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center blueleaf-text">
+        No model assigned.
+    </div>
+</ng-template>
+
+

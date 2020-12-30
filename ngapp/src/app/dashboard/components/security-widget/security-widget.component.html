@@ -1,0 +1,18 @@
+<urebal-widget>
+    <div header>
+        <div class="blueleaf-widget-header">
+            Top Held Securities
+        </div>
+        <div class="blueleaf-widget-subheader">
+            By Market Value
+        </div>
+    </div>
+    <div body>
+        <softpak-grid #securityWidgetGridRef
+                      [columns]=securityWidgetGridCols
+                      [source]=securityWidgetGridAdapter
+                      [height]="'368px'"
+        >
+        </softpak-grid>
+    </div>
+</urebal-widget>

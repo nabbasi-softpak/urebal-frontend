@@ -1,0 +1,5 @@
+<div class="legendContainer">
+  <div *ngFor="let chartColor of chartColors" class="colorBlock">
+    <span class="square" [style.backgroundColor]="chartColor.color"></span> {{chartColor.name}}
+  </div>
+</div>

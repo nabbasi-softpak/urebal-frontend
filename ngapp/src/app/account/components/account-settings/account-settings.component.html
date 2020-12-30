@@ -1,0 +1,179 @@
+<div class="slds-modal__header">
+    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" (click)="closeModal()">
+        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+            <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'"></use>
+        </svg>
+        <span class="slds-assistive-text">Close</span>
+    </button>
+    <h2 id="header43" class="slds-text-heading--medium slds-text-color_weak">Account Profile</h2>
+</div>
+<div class="slds-modal__content modalFixedHeight">
+
+    <table class="slds-table slds-table--striped acct-list slds-hide">
+        <thead>
+        <tr class="slds-text-title--caps slds-border--bottom">
+            <th scope="col" style="width:2.2rem;">
+
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">Account Id</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" style="text-align: left">Account Name</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" style="text-align: right">Market Value</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" style="text-align: center">Taxable</div>
+            </th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let account of accountList">
+            <td></td>
+            <td><a (click)="loadAcctSettings(account?.id, account?.accountName)">{{account?.id}}</a></td>
+            <td style="text-align: left">{{account?.accountName}}</td>
+            <td style="text-align: right">{{account?.marketValue | currency:'USD':'symbol'}}</td>
+            <td style="text-align: center">{{account?.isTaxable ? "Yes" : "No"}}</td>
+        </tr>
+        <!--<tr>
+          <td></td>
+          <td><a (click)="loadAcctSettings(2)">YF_GENERATE_CASH</a></td>
+          <td>$0.00</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a (click)="loadAcctSettings(3)">JK_ACC_REBLANCE_4</a></td>
+          <td>$0.00</td>
+          <td>No</td>
+        </tr>-->
+
+        </tbody>
+    </table>
+
+
+    <div class="acct-setting-panel slds-hide">
+        <div class="slds-size--1-of-1 slds-p-around--medium">
+
+            <div class="slds-size--1-of-1" style="width: 100%; margin-left: 10%;">
+                <div class="slds-grid slds-wrap slds-p-around--medium">
+                    <!--<div class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--medium slds-text-align--center">
+                      Account Profile
+                    </div>-->
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Account ID: </span> <span>{{accountID}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Account Name: </span> <span title={{portfolioName}}
+                                                                                           style="overflow: hidden; word-wrap: unset;text-overflow: ellipsis;max-width: 287px;display: inline-grid;white-space: nowrap"> {{accountName}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">No. of Holdings: </span><span>{{holdingsNum}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Type: </span>
+                        <span>{{isHouseHold ? 'Household' : 'Individual Account'}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Total Market Value: </span><span
+                            class="text-color-price">${{totalMktVal.toLocaleString('en')}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Core Cash: </span><span
+                            class="text-color-price">{{coreCash | currency:'USD':'symbol'}}</span>
+                        <span>({{coreCashPercentage}}%)</span>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Model Assigned: </span><span>{{modelName}}</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <ng-container *ngIf="isHouseHold">
+                            <span class="settings-text-color-gray">Taxable: </span> <span
+                                class="text-color-price">${{taxableMktVal.toLocaleString('en')}}</span>
+                        </ng-container>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <span class="settings-text-color-gray">Free Cash: </span> <span
+                            class="text-color-price">{{freeCash | currency:'USD':'symbol'}}</span>
+                        <span>({{freeCashPercentage}}%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-tabs--default slds-border--top">
+                <ul class="slds-tabs--default__nav setting-tabs" id="acc-settings" role="tablist">
+                    <li class="slds-tabs--default__item slds-active" id="positions" role="presentation"
+                        data-target="tab-acct-positions"><a class="slds-tabs--default__link" href="javascript:void(0);"
+                                                            role="tab" tabindex="0" aria-selected="true"
+                                                            aria-controls="tab-rebalance">Positions</a></li>
+                    <li class="slds-tabs--default__item" id="taxSettings" role="presentation"
+                        data-target="tab-acct-taxsetting"><a class="slds-tabs--default__link" href="javascript:void(0);"
+                                                             role="tab" tabindex="3" aria-selected="false"
+                                                             aria-controls="tab-rounding">Tax Settings</a></li>
+                    <li class="slds-tabs--default__item" id="restrictions" role="presentation"
+                        data-target="tab-acct-restrictions"><a class="slds-tabs--default__link"
+                                                               href="javascript:void(0);" role="tab" tabindex="1"
+                                                               aria-selected="false" aria-controls="tab-rebalance">Restrictions</a>
+                    </li>
+                    <li class="slds-tabs--default__item" id="attributes" role="presentation"
+                        data-target="tab-acct-attributes"><a class="slds-tabs--default__link" href="javascript:void(0);"
+                                                             role="tab" tabindex="2" aria-selected="false"
+                                                             aria-controls="tab-rebalance">Attribute Restrictions</a>
+                    </li>
+                    <li class="slds-tabs--default__item" id="washsales" role="presentation"
+                        data-target="tab-acct-washsale"><a class="slds-tabs--default__link" href="javascript:void(0);"
+                                                           role="tab" tabindex="4" aria-selected="false"
+                                                           aria-controls="tab-tax">Wash Sale</a></li>
+                </ul>
+                <div id="tab-acct-positions" class="acc-tab slds-tabs--default__content slds-show" role="tabpanel"
+                     aria-labelledby="tab-default-1__item">
+                    <app-positions (successMsg)="updateSuccessMessage($event)"
+                                   (applyChange)="isApplicableCondition.positions = $event"></app-positions>
+                </div>
+
+                <div id="tab-acct-restrictions" class="acc-tab slds-tabs--default__content slds-hide" role="tabpanel"
+                     aria-labelledby="tab-default-2__item">
+                    <app-restrictions (successMsg)="updateSuccessMessage($event)"
+                                      (applyChange)="isApplicableCondition.restrictions = $event"></app-restrictions>
+                </div>
+
+                <div id="tab-acct-attributes" class="acc-tab slds-tabs--default__content slds-hide" role="tabpanel"
+                     aria-labelledby="tab-default-2__item">
+                    <app-attribute-restriction (successMsg)="updateSuccessMessage($event)"
+                                               (applyChange)="isApplicableCondition.attributeRestrictions = $event"></app-attribute-restriction>
+                </div>
+
+
+                <div id="tab-acct-taxsetting" class="acc-tab slds-tabs--default__content slds-hide" role="tabpanel"
+                     aria-labelledby="tab-default-3__item">
+                    <app-tax-settings (successMsg)="updateSuccessMessage($event)"
+                                      (applyChange)="isApplicableCondition.taxsettings = $event"></app-tax-settings>
+                </div>
+
+
+                <div id="tab-acct-washsale" class="acc-tab slds-tabs--default__content slds-hide" role="tabpanel"
+                     aria-labelledby="tab-default-4__item">
+                    <app-washsales></app-washsales>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+<div class="slds-modal__footer">
+    <button (click)="closeModal()" class="slds-button slds-button--neutral cancel-button">Cancel</button>
+    <button (click)="loadAcctList(true)" class="slds-button slds-button--neutral back-button">Back</button>
+    <button (click)="apply()" class="slds-button slds-button--urebal">Save</button>
+    <label *ngIf="noChangesErr != ''" class="slds-text-color--error slds-m-top--xx-small"
+           style="float:  left;">{{noChangesErr}}</label>
+    <label *ngIf="successMsg != ''" class="text-color-green--70b12a slds-m-top--xx-small"
+           style="float:  left;">{{successMsg}}</label>
+</div>

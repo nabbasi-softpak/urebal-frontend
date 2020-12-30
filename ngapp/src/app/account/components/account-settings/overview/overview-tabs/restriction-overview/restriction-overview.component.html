@@ -1,0 +1,63 @@
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-2 star-chart">
+    <div
+      class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak blueleaf-widget-subheading">
+      <b>Account Current Distribution</b><br />&nbsp;
+    </div>
+    <ng-container *ngIf="overviewData.isHouseHold; else accountDistribution">
+      <app-urebal-cytoscape #householdAccountDistributionChart></app-urebal-cytoscape>
+    </ng-container>
+    <ng-template #accountDistribution>
+      <softpak-chart #accountDistributionChart [height]='350' [showLegend]='false'
+          [borderLineWidth]="0" [title]="''" [description]="''"
+          [enableAnimations]='true' [padding]='padding'
+          [source]='accountDistributionPieData' [legendLayout]='legendLayout'
+          [seriesGroups]='accountDistributionSeriesGroups' [showBorderLine]="true">
+      </softpak-chart>
+      <ng-container *ngIf="assetAllocationMessage != ''">
+        <br />
+        <div class="slds-col">
+          <h3 class="slds-text-align--center slds-text-color--error slds-text-body_small blueleaf-error-message">
+            <span>
+              Note: {{assetAllocationMessage}}
+            </span>
+          </h3>
+        </div>
+      </ng-container>
+    </ng-template>
+  </div>
+  <div class="slds-col slds-size_1-of-2">
+    <div
+      class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak blueleaf-widget-subheading">
+      <b>Account Target Distribution</b><br />&nbsp;
+    </div>
+    <ng-container *ngIf="overviewData.isHouseHold; else accountTargetDistribution">
+      <app-urebal-cytoscape #restrictionDistributionChart></app-urebal-cytoscape>
+    </ng-container>
+    <ng-template #accountTargetDistribution>
+      <ng-container *ngIf="targetDistributionMessage == ''; else showDistMessage">
+        <softpak-chart #accountRestrictionDistributionChart [height]='350' [showLegend]='false'
+                  [borderLineWidth]="0" [title]="''" [description]="''"
+                  [enableAnimations]='true' [padding]='padding'
+                  [source]='accountRestrictionDistributionPieData' [legendLayout]='legendLayout'
+                  [seriesGroups]='accountRestrictionDistributionSeriesGroups' [showBorderLine]="true">
+        </softpak-chart>
+      </ng-container>
+      <ng-template #showDistMessage>
+        <div class="slds-col">
+          <h3 class="slds-text-align--center slds-text-color--error slds-text-body_small blueleaf-error-message">
+            <br /><br /><br /><br /><br />
+            <span style="width: 60%; display: block; margin: 0 auto;">
+              Note: {{targetDistributionMessage}}
+            </span>
+          </h3>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-1">
+    <app-chart-legend *ngIf="overviewService.getChartColors().length != 0" [chartColors]="overviewService.getChartColors()"></app-chart-legend>
+  </div>
+</div>

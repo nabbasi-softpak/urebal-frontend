@@ -1,0 +1,28 @@
+<div class="slds-container">
+  <div class="slds-grid slds-wrap">
+    <urebal-topbar></urebal-topbar>
+  </div>
+</div>
+<!-- Sidebar Navigation Structure -->
+<div class="drawer-container">
+  <urebal-sidebar></urebal-sidebar>
+  <!-- Sidebar Right side content area -->
+  <div class="drawer-content-area open">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<app-message-modal #dataNotExistModal id='notExistModal' title="Session Timeout!" (ok)="redirect()">
+  {{dataNotExistMessage}}
+</app-message-modal>
+
+<app-message-modal #sessionTimeoutModal id='sessionTimeoutModal' title="Session Timeout!" (ok)="sessionTimeoutModal.close()">
+  {{sessionTimeoutMessage}}
+</app-message-modal>
+
+<!-- Generic Alert display component -->
+<app-alerts></app-alerts>
+
+<app-error-modal #errorModal ></app-error-modal>
+
+<app-notification></app-notification>

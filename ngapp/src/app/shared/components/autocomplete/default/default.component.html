@@ -1,0 +1,10 @@
+<li *ngFor="let item of items">
+  <a (click)="selectItem(item)">
+    <div class="slds-grid slds-grid--align-spread">
+      <div class="slds-col">
+        <span class="ticker-title">{{item}}</span>
+      </div>
+    </div>
+  </a>
+</li>
+

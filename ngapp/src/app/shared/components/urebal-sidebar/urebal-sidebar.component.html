@@ -1,0 +1,206 @@
+<div class="drawer open">
+    <ul class="drawer-items">
+        <!--Dashboard-->
+        <li id="dashBoardLink"><a (click)="routeMenuItem($event)" [routerLink]="['dashboard']" data-route="dashboard"
+                                  title="Dashboard" data-parent="dashBoardLink">
+            <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/Icon-dashboard.svg'"
+                    class="blueleaf-menu-icons">
+            <span class="drawer-item-label">Dashboard</span>
+        </a></li>
+
+        <!--Account-->
+        <li id="accountsLink" *ngIf="isAllowed('portfolioList')">
+            <a (click)="routeMenuItem($event)" [routerLink]="['drift/list']" title="Monitor Accounts"
+               data-route="drift/list" data-parent="accountsLink">
+                <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-monitor-accounts.svg'"
+                     class="blueleaf-menu-icons">
+                <span class="drawer-item-label">Monitor Accounts</span>
+            </a>
+
+        </li>
+
+      <!--  -->
+        <!--Models-->
+        <li id="modelLink" class="has-submenu"  >
+            <a [routerLink]="['model/list']" data-route="model/list" (click)="routeMenuItem($event)"
+               title="Manage Models" data-parent="modelLink">
+                <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/manage-models.svg'"
+                     style="margin-bottom: 10px;">
+                <span class="drawer-item-label" style="padding-left: 0px;">Manage Models</span>
+            </a>
+            <a (click)="toggleMenuItem($event)" title="Expand" class="toggleMenuItem">
+                <i class="material-icons caret">expand_more</i>
+            </a>
+
+            <!-- sub menu -->
+            <ul class="drawer-item-submenu">
+                <li *ngIf="isAllowed('modelCreateSecurityModel') && isAllowed('modelList')"><a [routerLink]="['model/securityModel']"
+                                                                     data-route="model/securityModel"
+                                                                     data-parent="modelLink"
+                                                                     (click)="routeMenuItem($event)">Create Security
+                    Model</a></li>
+                <li *ngIf="isAllowed('modelCreateAssetModel')"><a [routerLink]="['model/attributeModel']"
+                                                                  data-route="model/attributeModel"
+                                                                  data-parent="modelLink"
+                                                                  (click)="routeMenuItem($event)">Create Attribute
+                    Model</a></li>
+                <li *ngIf="isAllowed('modelCreateModelOfModel')"><a [routerLink]="['model/compositemodel']"
+                                                                    data-route="model/compositemodel"
+                                                                    data-parent="modelLink"
+                                                                    (click)="routeMenuItem($event)">Create Model of
+                    Models</a></li>
+                <li class="slds-m-top--medium" *ngIf="isAllowed('equivalenceList')"><a [routerLink]="['equivalences/list']"
+                                                            (click)="routeMenuItem($event)"
+                                                            data-route="equivalences/list" data-parent="modelLink">Security
+                    Equivalences</a></li>
+            </ul>
+        </li>
+
+        <!--Workspace-->
+        <li id="rebalanceLink" class="has-submenu" *ngIf="isAllowed('workspaceList')">
+            <a [routerLink]="['rebalances/list']" data-route="rebalances/list" data-parent="rebalanceLink"
+               title="Rebalance" (click)="routeMenuItem($event)">
+                <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-rebalance.svg'"
+                     class="blueleaf-menu-icons">
+                <span class="drawer-item-label">Rebalance</span>
+            </a>
+            <a (click)="toggleMenuItem($event)" *ngIf="isAllowed('workspaceCreate')" title="Expand" class="toggleMenuItem">
+                <i class="material-icons caret">expand_more</i>
+            </a>
+            <!-- sub menu -->
+            <ul class="drawer-item-submenu">
+                <li *ngIf="isAllowed('workspaceCreate')"><a [routerLink]="['rebalances/rebalance']"
+                                                            (click)="routeMenuItem($event)"
+                                                            data-route="rebalances/rebalance"
+                                                            data-parent="rebalanceLink">Create new rebalance</a></li>
+
+                <li class="slds-m-top--x-small"><a [routerLink]="['templates/list']"
+                                                   (click)="routeMenuItem($event)"
+                                                   data-route="templates/list"
+                                                   data-parent="rebalanceLink">Manage Templates</a></li>
+            </ul>
+        </li>
+
+        <!--Security-->
+        <li id="securityLink" class="security" [class.has-submenu]="isSecurityAttributesAllowed" *ngIf="isAllowed('securitymasterView')">
+            <a [routerLink]="['security/master']" data-route="security/master" data-parent="securityLink"
+               (click)="routeMenuItem($event)" title="View Securities">
+                <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-view-securites.svg'"
+                     class="blueleaf-menu-icons">
+                <span class="drawer-item-label">View Securities</span>
+            </a>
+            <a *ngIf="isSecurityAttributesAllowed" (click)="toggleMenuItem($event)" title="Expand" class="toggleMenuItem">
+                <i class="material-icons caret">expand_more</i>
+            </a>
+            <!-- sub menu -->
+            <ul *ngIf="isSecurityAttributesAllowed" class="drawer-item-submenu">
+                <li><a (click)="routeMenuItem($event)" [routerLink]="['attributes/securities']"
+                       data-route="attributes/securities" data-parent="securityLink">Security Attributes</a></li>
+            </ul>
+        </li>
+
+        <!--Reports-->
+        <li id="reportsLink" class="has-submenu reports" *ngIf="isAllowed('reportInsights')">
+            <a [routerLink]="['reports/taxCostCurveReport']" data-route="reports/taxCostCurveReport"
+               data-parent="reportsLink" (click)="routeMenuItem($event)" title="Insights">
+                <i class="material-icons">find_in_page</i>
+                <span class="drawer-item-label">Insights</span>
+            </a>
+            <a (click)="toggleMenuItem($event)" title="Expand" class="toggleMenuItem">
+                <i class="material-icons caret">expand_more</i>
+            </a>
+            <!-- sub menu -->
+            <ul class="drawer-item-submenu">
+                <li class="drawer-submenu-level-2">
+                    <a (click)="toggleSubmenu2($event);">TCC Reports<i class="material-icons arrow">expand_more</i></a>
+                    <ul class="drawer-submenu-level-2-items">
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/taxCostCurveReport']"
+                               data-route="reports/taxCostCurveReport" data-parent="reportsLink">Tax Cost Curve</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/tradeCostCurveReport']"
+                               data-route="reports/tradeCostCurveReport" data-parent="reportsLink">Trade Cost Curve</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="drawer-submenu-level-2">
+                    <a (click)="toggleSubmenu2($event);">Account Level Reports<i class="material-icons arrow">expand_more</i></a>
+                    <ul class="drawer-submenu-level-2-items">
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/sharelot-report']"
+                               data-route="reports/sharelot-report" data-parent="reportsLink">Sharelot Summary</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/stock-report']"
+                               data-route="reports/stock-report" data-parent="reportsLink">Shares Summary</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/attribute-report']"
+                               data-route="reports/attribute-report" data-parent="reportsLink">Attributes Summary</a>
+                        </li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/holdings-report']"
+                               data-route="reports/holdings-report" data-parent="reportsLink">Holdings Summary</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/drift-report']"
+                               data-route="reports/drift-report" data-parent="reportsLink">Drift Details</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/washsale-report']"
+                               data-route="reports/washsale-report" data-parent="reportsLink">Washsales</a></li>
+                    </ul>
+                <li class="drawer-submenu-level-2">
+                    <a (click)="toggleSubmenu2($event);" class="submenu-head">Model Level Reports<i
+                            class="material-icons arrow">expand_more</i></a>
+                    <ul class="drawer-submenu-level-2-items">
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/security-model-report']"
+                               data-route="reports/security-model-report" data-parent="reportsLink">Security Model
+                            Summary</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/attribute-model-report']"
+                               data-route="reports/attribute-model-report" data-parent="reportsLink">Attribute Model
+                            Summary</a></li>
+                    </ul>
+                </li>
+
+                <li class="drawer-submenu-level-2">
+                    <a (click)="toggleSubmenu2($event);" class="submenu-head">Rebalance Level Reports<i
+                            class="material-icons arrow">expand_more</i></a>
+                    <ul class="drawer-submenu-level-2-items">
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/rebalance-summary-report']"
+                               data-route="reports/rebalance-summary-report" data-parent="reportsLink">Rebalance
+                            Summary</a></li>
+                    </ul>
+                </li>
+
+                <li class="drawer-submenu-level-2">
+                    <a (click)="toggleSubmenu2($event);" class="submenu-head">General Reports<i
+                            class="material-icons arrow">expand_more</i></a>
+                    <ul class="drawer-submenu-level-2-items">
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/who-owns']"
+                               data-route="reports/who-owns" data-parent="reportsLink">Who Owns - Security</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/who-owns-multisecurity']"
+                               data-route="reports/who-owns-multisecurity" data-parent="reportsLink">Who Owns - Multi
+                            Security</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/drifts']"
+                               data-route="reports/drifts" data-parent="reportsLink">Drifts</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/accounts-report']"
+                               data-route="reports/accounts-report" data-parent="reportsLink">Accounts</a></li>
+                        <li><a (click)="routeMenuItem($event)" [routerLink]="['reports/households-report']"
+                               data-route="reports/households-report" data-parent="reportsLink">Households</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </li>
+
+        <ul class="drawer-items quicklinks">
+            <!-- Manage Data -->
+            <li id="manageDataLink" *ngIf="dataImportAllowed"><a (click)="routeMenuItem($event)" [routerLink]="['imports']" data-route="imports"
+                                       title="Manage Data" data-parent="manageDataLink"> <i class="material-icons">save_alt</i><span
+                    class="drawer-item-label">Manage Data</span></a></li>
+            <!-- Manage Data -->
+            <li id="manageTradesLink"><a (click)="routeMenuItem($event)" [routerLink]="['/toms/trade/execution']"
+                                         data-route="toms/trade/execution" title="Manage Trades"
+                                         data-parent="manageTradesLink"> <i class="material-icons">swap_horiz</i><span
+                    class="drawer-item-label">Manage Trades</span></a></li>
+        </ul>
+    </ul>
+    <div class="softpak-logo-mneu-footer">
+        <div>
+            Powered by
+        </div>
+
+        <a href="http://softpak.com/" target="_blank">
+          <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/softpak-logo.png'">
+        </a>
+    </div>
+</div>

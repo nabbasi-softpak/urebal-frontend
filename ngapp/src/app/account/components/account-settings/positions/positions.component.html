@@ -1,0 +1,17 @@
+
+
+
+
+<urebal-grid #positionsGrid gridId="position-grid-{{randomText}}" [data]="positions" [displayHeader]=false [autoHeight]=true panelTitle=""
+             [columnReorder]=false
+             [editable]="true"
+             [pageSize]=10
+             [columnResize]=false
+             dataType="json"
+             (onCellEdit) = "selectedTradableRow($event)"
+             [dataColumns]='getDataColumns()'
+             [gridColumns]='getGridColumns()'
+>
+</urebal-grid>
+
+

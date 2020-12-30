@@ -1,0 +1,78 @@
+<div class="slds-grid slds-wrap slds-m-around--medium">
+  <div class="slds-size--1-of-1">
+    <div class="slds-grid">
+      <div class="slds-size--1-of-1 box slds-p-around--medium color-white">
+        <div class="slds-grid slds-grid--vertical-align-center">
+          <div class="slds-size--8-of-12">
+            <h3 class="text-size--heading">{{titleName}}</h3>
+          </div>
+        </div>
+        <div class="slds-clearfix">&nbsp;</div>
+
+        <table>
+          <tr>
+            <td class="slds-p-around--small" style="width:25%">
+              <label class="slds-form-element__label slds-text-title--caps">Model Name</label>
+              <input autocomplete="off" type="text" [disabled]="isEdit" class="slds-input" [(ngModel)]="modelName" name="modelName" (blur)="getModel()" placeholder="Enter Model Name"/>
+
+            </td>
+            <td class="slds-p-around--small" style="width:15%" >
+              <label class="slds-form-element__label">ATTRIBUTE TYPE</label>
+              <app-urebal-dropdown id="attributeTypesModel" width='100%' selectedIndex="-1" (onSelect)="changeAttributeType($event)"></app-urebal-dropdown>
+
+            </td>
+
+            <td class="slds-p-around--small" style="width:15%">
+              <label class="slds-form-element__label slds-text-title--caps">Attributes</label>
+              <app-urebal-dropdown id="attributes"  width='100%' [checkboxes]="true" (onSelect)="selectAttribute($event)"></app-urebal-dropdown>
+
+            </td>
+            <td></td>
+
+          </tr>
+
+        </table>
+
+        <div class="slds-clearfix slds-m-left--small ">
+
+          <label class="slds-form-element__label slds-text-title-- error-message"  *ngIf="invalidModelName">{{modelErrorMessage}}</label>
+          <label class="slds-form-element__label slds-text-title-- error-message"  *ngIf="modelAlreadyExist">Model already exists. <a [routerLink]="['./',encodedModelName, modelId]">Click here</a> to load model.</label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slds-grid slds-wrap slds-m-around--medium collapsible-panel color-white">
+  <div class="slds-size--7-of-12">
+    <model-builder #attributeModelBuilder [selectedAttributes]="selectedAttributes" (modelOutput)="setModelAttributes($event)" [isSecurityModel]="false"></model-builder>
+  </div>
+  <div class="slds-size--5-of-12">
+    <div style="height:500px;" id="defaultPie" class="slds-m-around--medium default-pie">
+      <jqxChart #attModelChartReference [width]="chartWidth" [height]="chartHeight" [showLegend]='true'
+                [borderLineWidth]="0" [title]="title" [description]="description"
+                [enableAnimations]='true' [padding]='padding'
+                [source]='pieData' [legendLayout]='legendLayout'
+                [colorScheme]='"scheme06"'[seriesGroups]='seriesGroups'>
+      </jqxChart>
+    </div>
+  </div>
+</div>
+
+<div class="slds-grid slds-wrap slds-m-around--medium box color-white ">
+  <div class="slds-size--1-of-1 slds-p-around--medium slds-text-align--right ">
+    <label class="slds-form-element__label error-message" *ngIf="invalidModel">{{modelErrorMessage}}</label>
+    <button class="slds-button slds-button--blueleaf--neutral" (click)="navigateToModelDetail()" >Cancel</button>
+    <button class="slds-button slds-button--blueleaf" (click)="saveAttributeModel()">Save</button>
+  </div>
+</div>
+
+<app-dialog-modal #saveAttrModelRef id='saveModelModal'
+    [title]="modelSuccessMessage"
+    [content]="modelSuccessMessage"
+    (yes)="navigateToModelDetail()"
+    yesText="OK"
+    [hideSecondaryButton]="true">
+
+</app-dialog-modal>

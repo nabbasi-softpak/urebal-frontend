@@ -1,0 +1,54 @@
+.urebal-accordion-head {
+  cursor: pointer;
+  display: block;
+  padding: 10px;
+  background: #f4f6f9;
+  outline: 1px solid #dddddd;
+  margin: 0 1px 1px 0;
+  font-weight: bold;
+  position: relative;
+}
+
+.urebal-accordion-body {
+  display: none;
+}
+
+.urebal-accordion-body.active {
+  display: block;
+  -webkit-animation: fadeIn .2s;
+  animation: fadeIn .2s;
+}
+
+.urebal-accordion-handler {
+  transition: all .5s;
+  transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+}
+.urebal-accordion-head.active .urebal-accordion-handler{
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

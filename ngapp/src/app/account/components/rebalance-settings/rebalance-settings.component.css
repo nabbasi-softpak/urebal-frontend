@@ -1,0 +1,57 @@
+@-webkit-keyframes dot-keyframes {
+  0% {
+    opacity: 0.4;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1.2, 1.2);
+    transform: scale(1.2, 1.2);
+  }
+  100% {
+    opacity: 0.4;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+}
+@keyframes dot-keyframes {
+  0% {
+    opacity: 0.4;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1.2, 1.2);
+    transform: scale(1.2, 1.2);
+  }
+  100% {
+    opacity: 0.4;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+}
+.loading-dots {
+  text-align: center;
+  width: 30px;
+  vertical-align: text-bottom;
+  display: inline;
+}
+.loading-dots--dot {
+  -webkit-animation: dot-keyframes 1.5s infinite ease-in-out;
+  animation: dot-keyframes 1.5s infinite ease-in-out;
+  background-color: #000;
+  border-radius: 10px;
+  display: inline-block;
+  height: 3px;
+  width: 3px;
+}
+.loading-dots--dot:nth-child(2) {
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+}
+.loading-dots--dot:nth-child(3) {
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}

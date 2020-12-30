@@ -1,0 +1,59 @@
+<div class="slds-modal__header">
+  <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" (click)="closeModal()">
+    <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+      <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+  <h2 class="slds-text-heading--medium">Model:{{model.name}}</h2>
+</div>
+<div class="slds-modal__content">
+  <urebal-grid *ngIf="model.modelType != 3" [debug]=false gridId="security-model-grid{{randomGridID}}" [data]="modelSecurities" [displayHeader]=false [autoHeight]=true panelTitle=""
+               [columnReorder]=false
+               [columnResize]=false
+               dataType="json"
+               dataColumns='[
+                                { "name": "ticker", "type": "string" },
+                                { "name": "target", "type": "number" },
+                                { "name": "min", "type": "number" },
+                                { "name": "max", "type": "number" }
+                               ]'
+               gridColumns='[
+                                {
+                                    "text": "Security ID", "datafield": "ticker", "cellsrenderer":"cellsRenderer", "align": "center"
+                                },
+                                {
+                                    "text": "Target", "datafield": "target", "cellsrenderer":"cellsRenderer","cellsformat": "d2", "align": "center", "cellsalign":"right"
+                                },
+                                {
+                                    "text": "Min", "datafield": "min", "cellsrenderer":"cellsRenderer","cellsformat": "d2", "align": "center", "cellsalign":"right"
+                                },
+                                {
+                                    "text": "Max", "datafield": "max", "cellsrenderer":"cellsRenderer","cellsformat": "d2", "align": "center", "cellsalign":"right"
+                                }
+                              ]'
+  >
+  </urebal-grid>
+  <urebal-grid *ngIf="model.modelType == 3" [debug]=false gridId="attribute-model-grid{{randomGridID}}" [data]="modelSubModels" [displayHeader]=false [autoHeight]=true panelTitle=""
+               [columnReorder]=false
+               [columnResize]=false
+               dataType="json"
+               dataColumns='[
+                                { "name": "name", "type": "string" },
+                                { "name": "ratio", "type": "number" }
+                               ]'
+               gridColumns='[
+                                {
+                                    "text": "Model Name", "datafield": "name", "width":"60%","cellsrenderer":"cellsRenderer", "align": "left"
+                                },
+                                {
+                                    "text": "Ratio", "datafield": "ratio", "width":"40%","cellsrenderer":"cellsRenderer","cellsformat": "d2", "align": "right", "cellsalign":"right"
+                                }
+                              ]'
+  >
+  </urebal-grid>
+
+</div>
+<div class="slds-modal__footer">
+  <button (click)="closeModal()" class="slds-button slds-button--neutral cancel-button">Close</button>
+</div>

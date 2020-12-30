@@ -1,0 +1,225 @@
+<div class="slds-grid slds-wrap slds-m-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+    <div class="slds-page-header color-white" id="summaryHeading">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+                <h1 class="slds-text-heading--medium slds-align-middle slds-truncate">Drift Summary </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-size--1-of-1 slds-p-around--large" id="printSummary">
+      <div class="slds-grid">
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+            <h3 class="text-color-dark--grey slds-text-title--caps">Total Market Value</h3>
+            <span class="text-color-green--70b12a slds-truncate slds-text-align--right text-bold">${{ totalMktVal | number }}</span>
+        </div>
+
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+            <h3 class="text-color-dark--grey slds-text-title--caps">Account Name</h3>
+            <a (click)="openAccountDetail(portfolioName)" class="slds-truncate slds-text-align--right text-bold">{{portfolioName}}</a>
+        </div>
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+            <h3 class="text-color-dark--grey slds-text-title--caps">Model</h3>
+            <a (click)="openModelDetails(driftSummary?.modelName)" class="slds-truncate slds-text-align--right text-bold">{{driftSummary?.modelName}}</a>
+        </div>
+
+        <!--<div class="slds-col slds-border&#45;&#45;right slds-m-horizontal&#45;&#45;medium">-->
+            <!--<h3 class="text-color-dark&#45;&#45;grey slds-text-title&#45;&#45;caps">TOTAL FREECASH VALUE</h3>-->
+            <!--<span class="slds-truncate slds-text-align&#45;&#45;right text-bold">Overlay : 2</span>-->
+        <!--</div>-->
+
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+          <h3 class="text-color-dark--grey slds-text-title--caps">Total Free Cash Value</h3>
+          <span class="text-color-green--70b12a slds-truncate slds-text-align--right text-bold">${{totalFreeCashVal | number: '.3-3'}}</span>
+        </div>
+
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+            <h3 class="text-color-dark--grey slds-text-title--caps">Total Securities Drifted</h3>
+            <span class="slds-truncate slds-text-align--right text-bold text-color-red">{{totalSecuritiesDrifted}}</span>
+        </div>
+
+        <div class="slds-col slds-border--right slds-m-horizontal--medium">
+          <h3 class="text-color-dark--grey slds-text-title--caps">Drift Status</h3>
+          <span class="slds-truncate slds-text-align--right text-bold ">{{driftStatus}}</span>
+        </div>
+
+        <div class="slds-col slds-m-horizontal--medium">
+            <h3 class="text-color-dark--grey slds-text-title--caps">Drift Last Run</h3>
+            <span title="{{ driftDate | date: DATETIME_FORMAT}}" class="slds-truncate slds-text-align--right text-bold">{{driftDate | date: DATETIME_FORMAT}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Drift Report-->
+
+
+<div class="slds-grid slds-wrap slds-m-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+
+
+    <div class="slds-page-header color-white">
+      <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-spread">
+
+
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow" id="reportHeading">
+
+            <div class="slds-media__body">
+              <h1 class="slds-text-heading--medium slds-align-middle slds-truncate">Drift Report</h1>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="slds-col">
+          <div class="slds-form--inline">
+
+
+            <div class="slds-form-element">
+              <label class="slds-form-element__label">Show </label>
+              <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                  <select (change)="showFilteredChart($event.target.value)" class="slds-select">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option selected value="10000000">All</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="slds-form-element">-->
+              <!--<label class="slds-form-element__label"> Scope </label>-->
+              <!--<div class="slds-form-element__control">-->
+                <!--<div class="slds-select_container">-->
+                  <!--<select (change)="getAttributeWithAttrType($event)" class="slds-select">-->
+                    <!--&lt;!&ndash;<option value="undefined" disabled selected hidden>Select Attribute Type</option>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<option value="null" disabled selected hidden>Select Attribute Type</option>&ndash;&gt;-->
+                    <!--<option *ngFor="let attr of attrTypes" value={{attr}}>{{attr}}</option>-->
+
+                  <!--</select>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <div class="slds-form-element">
+              <label class="slds-form-element__label">Sort By </label>
+              <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                  <select (change)="sortingOptions($event)" class="slds-select">
+                    <option value="initPct" >Percentage (%)</option>
+                    <option value="modelTargetPct">Target</option>
+                    <option value="drift">Drift</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="slds-size--1-of-1 slds-p-around--large">
+
+
+      <div class="slds-size--1-of-1 slds-m-horizontal--medium">
+
+        <div class="slds-grid slds-p-around--medium">
+
+
+
+          <div class="slds-col slds-align--absolute-center">
+            <ul class="slds-button-group-list filter-options">
+              <li>
+                <button id="chartViewBtn" class="slds-button slds-button--neutral " data-target="jqxChart" (click)="refreshChartView()">Chart View</button>
+              </li>
+              <li>
+                <button id="gridViewBtn" class="slds-button slds-button--neutral urebal-button-active" (click)="refreshGridView()">Grid View</button>
+              </li>
+            </ul>
+          </div>
+
+
+
+        </div>
+
+        <!--Chart View-->
+
+        <div class="slds-hide" id="jqxChart" style="height: 550px;">
+
+          <!--<jqxChart #chartRef [width]='850' [height]='500' [showLegend]='true'-->
+                    <!--[borderLineWidth]="0" [title]="title" [description]="description"-->
+                    <!--[enableAnimations]='true' [padding]='padding' (onClick)="drillDown($event)"-->
+                    <!--[source]='driftReport' [legendLayout]='legendLayout'-->
+                    <!--[colorScheme]='"scheme05"'[seriesGroups]='seriesGroups'>-->
+          <!--</jqxChart>-->
+
+        </div>
+
+        <!--GridView-->
+        <div id="gridView" class="slds-size--1-of-1  container">
+
+
+          <urebal-grid panelTitle="" [debug]=false [displayHeader]=false [autoHeight]=true [columnReorder]=false [columnResize]=false
+             dataType="json"
+             gridId="drift-report"
+             linkRendererParams='[]'
+             rowRendererColumns='[
+                {"name":"securityId","value":"$CASH","color":"blue"}
+             ]'
+             sortColumn="initPct"
+             sortDirection="desc"
+
+             dataColumns='[{ "name": "impartial", "type": "boolean" },
+                { "name": "securityId", "type": "string" },
+                { "name": "securityType", "type": "string" },
+                { "name": "initPct", "type": "number" },
+                { "name": "modelMinPct", "type": "number" },
+                { "name": "modelTargetPct", "type": "number" },
+                { "name": "modelMaxPct", "type": "number" },
+                { "name": "drift", "type": "number" }
+             ]'
+
+             gridColumns='[
+                {"text": "Security ID", "align": "center", "datafield": "securityId", "cellsrenderer":"cellsRenderer"},
+                {"text": "Security Type", "align": "center",  "datafield": "securityType", "cellsrenderer":"cellsRenderer"},
+                {"text": "Init %", "align": "center", "cellsalign":"right", "datafield": "initPct","cellsrenderer":"cellsRenderer", "cellsformat":"d2"},
+                {"text": "Min %", "align": "center", "cellsalign":"right", "datafield": "modelMinPct","cellsrenderer":"cellsRenderer", "cellsformat":"d2"},
+                {"text": "Target %", "align": "center", "cellsalign":"right", "datafield": "modelTargetPct", "cellsrenderer":"cellsRenderer", "cellsformat":"d2"},
+                {"text": "Max %", "align": "center", "cellsalign":"right", "datafield": "modelMaxPct","cellsrenderer":"cellsRenderer", "cellsformat":"d2"},
+                {"text": "Drift %", "align": "center", "cellsalign":"right", "datafield": "drift","cellsrenderer":"cellsRenderer", "cellsformat":"d2"}
+              ]'
+          >
+          </urebal-grid>
+
+
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
+</div>

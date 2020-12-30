@@ -1,0 +1,47 @@
+<div class="slds-grid">
+  <div class="slds-size--1-of-1">
+    <div class="slds-grid slds-wrap ">
+      <div class="slds-size--1-of-1 box color-white">
+        <div id="account-tree-grid-header-{{gridId}}" class="slds-page-header color-white">
+          <div class="slds-grid slds-grid--vertical-align-center">
+            <div class="slds-col">
+              <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__body">
+                  <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{{panelTitle}}</h1>
+                </div>
+              </div>
+            </div>
+
+            <!-- Referesh button -->
+            <div class="slds-col">
+              <button class="slds-button slds-button--urebal-green" aria-haspopup="true" title="Reload Grid">
+                <svg class="slds-button__icon" aria-hidden="true">
+                  <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/action-sprite/svg/symbols.svg#refresh'"></use>
+                </svg>
+                Reload
+              </button>
+            </div>
+
+            <!-- AOT Commented -->
+            <!-- Search Panel -->
+            <!--<div class="slds-col">-->
+              <!--<div class="slds-form-element">-->
+                <!--<div class="slds-form-element__control slds-input-has-icon slds-input-has-icon&#45;&#45;left">-->
+                  <!--<svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">-->
+                    <!--<use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#search'"></use>-->
+                  <!--</svg>-->
+                  <!--<input type="text" id="text-input-01" class="slds-input" placeholder="Search" [(ngModel)]="txtSearch" (keyup)="searchInGrid($event)" />-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          </div>
+        </div>
+
+        <!-- Treegrid container -->
+        <div class="slds-size--1-of-1" id="account-tree-{{gridId}}">
+          <jqxTreeGrid #accountTreeGridReference [auto-create]='false'></jqxTreeGrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

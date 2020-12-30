@@ -1,0 +1,32 @@
+<div class="autocomplete">
+  <img src="{{urebalService.getAppContext()}}/assets/images/loader.svg" class="spinner" *ngIf="isLoader" />
+  <input autocomplete="off" [ngStyle]="{'text-transform': (upperCase ? 'uppercase' : '')}" type="text" id="{{inputID}}" class="slds-input blueleaf-text autoComplete-input" placeholder="{{placeholder}}" [value]="item ? item : defaultValue" [disabled]="disableCondition"/>
+
+  <div>
+    <div class="handle">
+      <ul class="tickers">
+        <!--Default template for autocomplete-->
+        <app-default *ngIf="template == 'none'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-default>
+        <!--Security component with template for autocomplete-->
+        <app-security *ngIf="template == 'security'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-security>
+        <!--Security and model combined component with template for autocomplete-->
+        <app-security-and-model *ngIf="template == 'securityandmodel'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-security-and-model>
+        <!--poretfolio component with template for autocomplete-->
+        <app-portfolio *ngIf="template == 'portfolio'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-portfolio>
+        <!--portfolio_simple component with template for autocomplete. Doesn't have No. of Holdings-->
+        <app-portfolio-simple *ngIf="template == 'portfolio_simple'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-portfolio-simple>
+        <!--Drifted account component with template for autocomplete-->
+        <app-drifted-account *ngIf="template == 'drift'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-drifted-account>
+        <!--account component with template for autocomplete-->
+        <app-account *ngIf="template == 'account'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-account>
+        <!--equivalence component with template for autocomplete-->
+        <app-equivalence *ngIf="template == 'equivalence'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-equivalence>
+        <!--account component with template for autocomplete-->
+        <app-model *ngIf="template == 'model'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-model>
+        <!--rebalance component with template for autocomplete-->
+        <app-rebalance *ngIf="template == 'rebalance'" [items]="autocomplete" (onClick)="selectAutocomplete($event)"></app-rebalance>
+      </ul>
+    </div>
+  </div>
+</div>
+

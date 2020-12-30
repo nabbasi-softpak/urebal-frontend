@@ -1,0 +1,64 @@
+<!-- Apply Equivalence -->
+<app-dialog-modal #applyEquivalenceModalRef id="applyEquivalence"
+                  [modalSize]="'large'"
+                  [title]="title"
+                  [yesText]="'Save'"
+                  (yes)="save()"
+                  [noText]="'Cancel'"
+                  (no)="close()">
+    <div style="text-align: left;">
+        <div class="slds-grid">
+            <div class="slds-col slds-size--7-of-12">
+                <app-autocomplete-equivalence #autocompleteEquivalenceRef [tabIndex]="1"
+                                              (onSelect)="equivalenceSelectedItem($event)"></app-autocomplete-equivalence>
+            </div>
+            <div class="slds-col slds-size--5-of-12">
+            </div>
+        </div>
+        <div *ngIf="errorMessage" class="blueleaf-input-error-box blueleaf-text">{{errorMessage}}</div>
+
+        <div *ngIf="applyAll else showAccounts">
+            <div style="max-height: 300px;  overflow-y: auto; margin-top: 32px;">
+                <table class="blueleaf-text blueleaf-table" style="">
+                    <thead>
+                    <tr>
+                        <th style="width:50%;"><strong>Account Selected</strong></th>
+                        <th style="width:50%;"><strong>Associated Equivalence</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><i>All accounts selected</i></td>
+                        <td>--</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <ng-template #showAccounts>
+            <div style="max-height: 300px;  overflow-y: auto; margin-top: 32px;">
+                <table class="blueleaf-text blueleaf-table" style="">
+                    <thead>
+                    <tr>
+                        <th style="width:50%;"><strong>Account Selected</strong></th>
+                        <th style="width:50%;"><strong>Associated Equivalence</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let row of this.groupAccountByEquivalence(accountEquivalenceAssignment)">
+                        <td>{{ row.accountName }}</td>
+                        <td>{{ row.equivalenceName || "--" }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-template>
+    </div>
+
+    <div footerMessage *ngIf="applyAll">
+        <p class="blueleaf-text" style="font-weight: bold; color: #007dc4;">Equivalence will be applied to all accounts</p>
+    </div>
+
+</app-dialog-modal>

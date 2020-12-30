@@ -1,0 +1,210 @@
+<div class="slds-grid slds-wrap slds-p-around--medium">
+  <div class="slds-size--1-of-1 box color-white">
+    <!-- Header -->
+    <div class="slds-page-header color-white">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Security Attributes </h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-grid slds-col slds-grid--vertical-align-center slds-grid--align-spread">
+          <div class="slds-grid">
+            <button class="slds-button slds-button--urebal-green" (click)="reload();" aria-haspopup="true" title="Reload">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#refresh'"></use>
+              </svg>
+              Reload
+            </button>
+          </div>
+
+          <!-- Pagination -->
+          <div class="slds-grid slds-grid--vertical-align-center">
+            <div class="slds-p-around--small">
+              <div class="slds-text-body--regular"><b>{{AllAttributes.length > 0 ? index+1 : 0}} - {{index+attributes.length}}</b> of <b>{{AllAttributes.length}}</b></div>
+            </div>
+
+            <div class="slds-button-group">
+              <button (click)="page('down')" class="slds-button slds-button--icon-border" title="Down">
+                <svg class="slds-button__icon" aria-hidden="true">
+                  <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'"></use>
+                </svg>
+                <span class="slds-assistive-text">Previous</span>
+              </button>
+              <button (click)="page('up')" class="slds-button slds-button--icon-border" title="Up">
+                <svg class="slds-button__icon" aria-hidden="true">
+                  <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronright'"></use>
+                </svg>
+                <span class="slds-assistive-text">Next</span>
+              </button>
+            </div>
+          </div>
+          <!-- end Pagination -->
+
+          <!-- Search Bar -->
+          <div class="slds-form-element slds-size--1-of-2">
+
+            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+              <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#search'"></use>
+              </svg>
+              <input autocomplete="off" (keyup)="filterAttribute($event)" type="text" id="text-input-01" class="slds-input" placeholder="Search">
+            </div>
+          </div>
+          <!-- End Search Bar -->
+        </div>
+      </div>
+    </div>
+    <!-- Header end -->
+    <!-- Table -->
+    <div class="slds-size--1-of-1" id="table">
+      <table class="slds-table ur-attributes-table ur-collapsible">
+        <thead>
+        <tr class="slds-text-title--caps slds-border--bottom">
+          <th scope="col">
+            <div class="slds-truncate slds-p-horizontal--medium"><b>Attribute Type</b>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody *ngIf="AllAttributes.length == 0">
+        <tr class="slds-border--bottom" style="cursor: pointer;">
+          <td scope="row" style="text-align: center; height: 500px;">
+            No data to display
+          </td>
+        </tbody>
+        <tbody>
+        <tr class="slds-border--bottom" style="cursor: pointer;" *ngFor="let attribute of attributes">
+          <td scope="row" >
+            <div class="slds-truncate urebal-collapsible-header"><span>{{attribute.attributeType}}</span>
+              <a href="javascript:void(0);" class="slds-button--icon slds-float--right ur-collapsible-handler">
+                <span class="slds-icon_container" title="Expand ">
+                  <svg style="display: none" class="slds-icon slds-icon--x-small slds-icon-text-default icon chevronUp" aria-hidden="true">
+                    <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronup'"></use>
+                  </svg>
+                  <svg class="slds-icon slds-icon--x-small slds-icon-text-default icon chevronDown" aria-hidden="true">
+                    <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevrondown'"></use>
+                  </svg>
+                  <span class="slds-assistive-text">Expand</span>
+                </span>
+              </a>
+            </div>
+            <div class="urebal-collapsible-body  ur-is-active" style="display: none;">
+
+            <table class="slds-table">
+              <thead>
+              <tr class="slds-text-title--caps slds-border--bottom">
+                <th scope="col" >
+                  <div class="slds-truncate slds-p-horizontal--medium"><b>Attribute Name</b></div>
+                </th>
+                <th scope="col" >
+                  <div class="slds-truncate slds-p-horizontal--medium"><b>No. of Securities</b></div>
+                </th>
+
+              </tr>
+              </thead>
+              <tbody >
+              <tr class="slds-border--bottom"  style="cursor: pointer;" *ngFor="let item of list">
+                <td scope="row">
+                  <div class="slds-truncate  slds-p-horizontal--medium ">
+                    <a href="javascript:void(0);" (click)="openSidePanel(item,$event);">
+                      {{item.attributeName}}
+                    </a>
+                  </div>
+                </td>
+                <td scope="row">
+                  <div class="slds-truncate  slds-p-horizontal--medium">{{item.securities.length}}</div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <!-- Table end -->
+    </div>
+  </div>
+
+  <div class="slidingPanel" style="top:70px; right:0;" [@slideInOut]="menuState">
+    <!--Close Button -->
+    <div class="close" (click)="menuState='out'">
+      <button class="slds-button slds-button--icon">
+        <svg class="slds-button__icon" aria-hidden="true">
+          <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'"></use>
+        </svg>
+        <span class="slds-assistive-text">Close</span>
+      </button>
+    </div>
+
+
+    <!-- Sliding Panel Header -->
+    <div class="slidingPanelHeader">
+      <h3 class="slds-truncate slds-text-heading--medium">Attribute Name</h3>
+    </div>
+
+
+    <div class="slidingPanelBody">
+
+      <div style="height:100%">
+
+        <div class="slds-grid slds-grid--vertical-align-center">
+          <div class="slds-form-element slds-size--1-of-1">
+
+            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+              <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                <use [attr.xlink:href]="accountService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#search'"></use>
+              </svg>
+              <input type="text" (keyup)="filterSecurities($event)" class="slds-input" placeholder="Search">
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-p-around--medium"></div>
+
+
+        <table class="slds-table slds-table--bordered">
+          <thead>
+          <tr class=" slds-text-title--caps slds-border--bottom">
+            <th>Security ID</th>
+            <th class="slds-text-align--right">Attribute Value</th>
+          </tr>
+          </thead>
+        </table>
+
+        <div class="scrollItem">
+          <table class="slds-table slds-table--bordered">
+            <tbody>
+            <tr *ngFor="let security of securities">
+              <td>{{security.securityID}}</td>
+              <td class="slds-text-align--right">{{security.attributeValue}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="slidingPanelFooter">
+
+      <div class="slds-grid slds-grid--vertical-align-center slds-p-around--medium slds-grid--align-spread" (click)="menuState='out'">
+        <button class="slds-button slds-button--neutral btn-cancel">Cancel</button>
+      </div>
+
+
+
+    </div>
+
+
+  </div>
+
+
+
+</div>

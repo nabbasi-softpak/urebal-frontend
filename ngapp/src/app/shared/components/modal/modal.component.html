@@ -1,0 +1,6 @@
+<div [ngClass]="'backdrop-'+id" class="blueleaf-backdrop"></div>
+<div role="dialog" tabindex="-1" aria-labelledby="header43" [ngClass]="['modal-'+id, 'slds-modal--' + modalSize]" class="blueleaf-modal  slds-scrollable_y">
+  <div [ngClass]="['blueleaf-modal__container'+containerSize, 'modal-position--' + modalPosition]">
+      <ng-content></ng-content>
+  </div>
+</div>

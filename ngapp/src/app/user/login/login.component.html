@@ -1,0 +1,54 @@
+<div class="login-container">
+
+  <div class="col direction-vertical">
+      <img src="{{urebalService.getAppContext()}}/assets/images/uRebal-logo.png" />
+      <h3 class="tagline">Advanced Portfolio Rebalancing Software</h3>
+      <img src="{{urebalService.getAppContext()}}/assets/images/login-img.png" />
+
+    <span class="copyright">&copy; <span id="copyright-year"></span> SoftPak Financial Systems.</span>
+
+  </div>
+
+  <div class="col direction-vertical login-bg">
+    <h3 class="label-secure-login">Secure Login</h3>
+    <p class="label-instruction">Please contact our client relations officer if you are having trouble logging in.</p>
+
+    <form (ngSubmit)="onLogin()"class="frm-login">
+    <div class="form-control">
+      <span class="infield-icon company-icon"></span>
+      <input type="text" maxlength="15" class="input-company" placeholder="Company Name" [(ngModel)]="companyName" name="companyName" id="companyName" required/>
+    </div>
+    <div class="form-control">
+      <span class="infield-icon user-icon"></span>
+      <input type="text" maxlength="15" class="input-user" placeholder="Username" [(ngModel)]="username" name="username" id="username" required />
+    </div>
+    <div class="form-control">
+      <span class="infield-icon password-icon"></span>
+      <input type="password" maxlength="15" class="input-password" placeholder="Password" [(ngModel)]="password" name="password" id="password" required/>
+    </div>
+    <div class="form-control">
+      <button id="loginButton" class="btn-login">Log In</button>
+    </div>
+
+    <div id="captchaContainer" class="slds-hide">
+      <re-captcha (captchaResponse)="handleCaptcha($event)" site_key="6LcTwygUAAAAADQUyrzNsmdNUSfAmxNK24lYmdk6" theme="light"></re-captcha>
+    </div>
+
+    <div id="lblMsg" class="error-text-red"></div>
+
+    <div class="slds-text-align--center slds-m-bottom--small text-bold" *ngIf="clientName()">
+      <p class="slds-m-bottom--small">or</p>
+      <a href="javascript:void(0);" (click)="loginOauth()">
+        <img src="{{urebalService.getAppContext()}}/assets/images/{{clientName()}}-oauth.png" />
+      </a>
+    </div>
+
+    <div id="oauthMsg" class="error-text-red error-text-red slds-text-align--left slds-m-top--large" [innerHTML]="oauthErrorMessage"></div>
+
+    </form>
+
+    <span class="privacy"><a [routerLink]="['/terms']">Terms of Use </a> | Privacy Policy</span>
+
+  </div>
+
+</div>

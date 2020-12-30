@@ -1,0 +1,267 @@
+<div class="slds-p-around--medium">
+    <div class="slds-grid slds-wrap slds-m-around--medium">
+        <div class="slds-size--1-of-1 box color-white">
+            <urebal-widget>
+                <div header>
+                    <div class="blueleaf-widget-header">
+                        <div *ngIf="equivalenceType !== 'Edit'">
+                            Create A New Equivalence
+                        </div>
+                        <div *ngIf="equivalenceType === 'Edit'">
+                            Edit Equivalence
+                        </div>
+                    </div>
+                </div>
+                <div body>
+                    <div>
+                        <div class="slds-grid slds-grid--vertical-align-center">
+                            <span class="slds-shrink-none blueleaf-form-control-label" style="margin-right: 16px;">Equivalence Name</span>
+
+                            <div *ngIf="equivalenceType !== 'Edit'">
+                                <input type="text" id="equiNameid"
+                                       class="slds-input slds-input--blueleaf"
+                                       [(ngModel)]="equivalenceName" name="equivalenceName"
+                                       (keyup)="equivalenceNameChanged()"
+                                       placeholder="Enter Equivalence Name" autofocus autocomplete="off">
+                            </div>
+
+                            <div *ngIf="equivalenceType === 'Edit' && responseObject">
+                                <span class="blueleaf-widget-subheader"
+                                      style="text-transform: none">{{responseObject.name}}</span>
+                            </div>
+
+                            <div class="slds-size--6-of-8 slds-p-bottom--none slds-p-left--medium">
+                                <p *ngIf="equiNameErrMsg" class="error-text-red">
+                                    <i class="material-icons text-color-red slds-align-middle slds-m-right--x-small">warning</i>
+                                    <span class="slds-align-middle blueleaf-error-message">{{equiNameErrMsg}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </urebal-widget>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-m-around--medium box color-white ">
+        <div class="slds-size--1-of-1">
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <div class="slds-size--1-of-2 slds-p-horizontal--small">
+                    <urebal-widget [showDivider]="false">
+                        <div header>
+                            <div class="blueleaf-widget-header blueleaf-widget-header-left blueleaf-widget-subheading">
+                                <div>Securities</div>
+                            </div>
+
+                            <hr class="blueleaf-widget-divider--gray slds-m-around--medium slds-m-bottom_none">
+                        </div>
+
+                        <div body>
+                            <div class="slds-grid slds-grid--vertical-stretch">
+                                <div class="slds-large-size--1-of-1" style="width: 100%;">
+                                    <div class="slds-form--inline slds-grid">
+                                        <div class="slds-form-element slds-size--2-of-3">
+                                            <div class="slds-form-element__control slds-size--1-of-1 slds-input-has-icon slds-input-has-icon--left">
+                                                <img [attr.src]="modelService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                                                     class="slds-input__icon slds-icon-text-default blueleaf-combo-search-input-icon"
+                                                     aria-hidden="true"/>
+
+                                                <app-autocomplete-security
+                                                        (onSelect)="addSecuritiesOnSelect($event)"></app-autocomplete-security>
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element slds-size--1-of-3 slds-align-middle">
+                                            <div class="slds-form-element__control slds-size--1-of-1">
+                                                <label class="slds-form-element__label blueleaf-error-message">{{securityErrMsg}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical" style="max-height: 350px;">
+                                        <div *ngFor="let singleSecurity of responseObject?.securities"
+                                             class="slds-grid slds-grid--align-spread slds-m-top--medium slds-p-bottom--small slds-border--bottom slds-grid--vertical-align-center">
+                                            <span class="slds-text-title--caps">{{singleSecurity.ticker}}</span>
+                                            <button (click)="removeSecurities(singleSecurity)"
+                                                    class="slds-button slds-button--icon-border slds-m-right--small" aria-live="assertive"
+                                                    title="Remove">
+                                                <i class="material-icons" style="color: #007DC4;">remove</i>
+                                                <span class="slds-assistive-text">Remove</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </urebal-widget>
+                </div>
+
+                <div class="slds-size--1-of-2 slds-p-horizontal--small" *ngIf="isAllowed('accountModifyEquivalances') || equivalenceType=='Edit'">
+                    <urebal-widget [showDivider]="false">
+                        <div header>
+                            <div class="blueleaf-widget-header blueleaf-widget-header-left blueleaf-widget-subheading">
+                                <div >Accounts</div>
+                            </div>
+
+                            <hr class="blueleaf-widget-divider--gray slds-m-around--medium slds-m-bottom_none">
+                        </div>
+
+                        <div body>
+                            <div class="slds-grid slds-grid--vertical-stretch">
+                                <div class="slds-large-size--1-of-1">
+                                    <div *ngIf="isAllowed('accountModifyEquivalances')" class="slds-form--inline">
+                                        <div class="slds-form--inline slds-grid">
+                                            <div class="slds-form-element slds-size--2-of-3">
+                                                <div class="slds-form-element__control slds-size--1-of-1 slds-input-has-icon slds-input-has-icon--left">
+                                                    <img [attr.src]="modelService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                                                         class="slds-input__icon slds-icon-text-default blueleaf-combo-search-input-icon"
+                                                         aria-hidden="true"/>
+
+                                                    <app-autocomplete-account
+                                                            (onSelect)="accountNameSelected($event)"></app-autocomplete-account>
+                                                </div>
+                                            </div>
+
+                                            <div class="slds-form-element slds-size--1-of-3 slds-align-middle">
+                                                <div class="slds-form-element__control slds-size--1-of-1">
+                                                    <label class="slds-form-element__label blueleaf-error-message">{{accountErrMsg}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical" style="max-height: 350px;">
+                                        <div *ngFor="let account of responseObject?.assignments"
+                                             class="slds-grid slds-grid--align-spread slds-m-top--medium slds-p-bottom--small slds-border--bottom slds-grid--vertical-align-center">
+                                            <span class="slds-text-title">{{account.accountNumber || '--'}}</span>
+                                            <span class="slds-text-title">{{account.accountName}}</span>
+                                            <button *ngIf="isAllowed('accountModifyEquivalances')"
+                                                    (click)="removeAccounts(account)"
+                                                    class="slds-button slds-button--icon-border slds-m-right--small" aria-live="assertive"
+                                                    title="Remove">
+                                                <i class="material-icons" style="color: #007DC4;">remove</i>
+                                                <span class="slds-assistive-text">Remove</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </urebal-widget>
+                </div>
+            </div>
+
+            <div class="slds-size--1-of-1">
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--blueleaf--neutral" (click)="navigateToEquivalenceList()">
+                        Cancel
+                    </button>
+                    <button class="slds-button slds-button--blueleaf" (click)="saveEquivalence()"
+                            [disabled]="!allowSave()">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal criteria-rebalance-model">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#close'"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="header43" class="slds-text-heading--medium">Create Criteria</h2>
+        </div>
+        <div class="slds-modal__content">
+
+            <table class="slds-table">
+                <thead>
+                <tr class="slds-text-title--caps slds-border--bottom">
+                    <th scope="col" style="width:2.2rem;">
+                        <div class="slds-th__action slds-th__action--form">
+                                  <span class="slds-checkbox">
+                                    <input type="checkbox" name="rebalance-all" id="rebalance-all" data-checked="false">
+                                    <label class="slds-checkbox__label" for="rebalance-all">
+                                      <span class="slds-checkbox--faux"></span>
+                                      <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                    </label>
+                                  </span>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">Rebalance Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">Rebalance Type</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">Created Date</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">Last Execution Date</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="slds-th__action slds-th__action--form">
+                                  <span class="slds-checkbox">
+                                    <input type="checkbox" name="rebalance-checkbox" id="rebalance-checkbox-1"
+                                           data-checked="false">
+                                    <label class="slds-checkbox__label" for="rebalance-checkbox-1">
+                                      <span class="slds-checkbox--faux"></span>
+                                    </label>
+                                  </span>
+                        </div>
+                    </td>
+                    <td>BSG_TEST</td>
+                    <td>Account</td>
+                    <td>2/16/2017</td>
+                    <td>---</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="slds-th__action slds-th__action--form">
+                                  <span class="slds-checkbox">
+                                    <input type="checkbox" name="rebalance-checkbox" id="rebalance-checkbox-2"
+                                           data-checked="false">
+                                    <label class="slds-checkbox__label" for="rebalance-checkbox-2">
+                                      <span class="slds-checkbox--faux"></span>
+                                    </label>
+                                  </span>
+                        </div>
+
+                    </td>
+                    <td>BSG_TEST33</td>
+                    <td>Overlay</td>
+                    <td>3/4/2016</td>
+                    <td>3/4/2016</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral">Cancel</button>
+            <button class="slds-button slds-button--brand">Apply</button>
+        </div>
+    </div>
+</div>
+
+<app-message-modal #equivalenceModalRef
+                   [id]="'equivalance-save'"
+                   [title]="responseObject?.name"
+                   [content]="responseMsg"
+                   (ok)="onSaveModalOkButtonClicked()"
+                   [okText]="'OK'"
+>
+
+</app-message-modal>

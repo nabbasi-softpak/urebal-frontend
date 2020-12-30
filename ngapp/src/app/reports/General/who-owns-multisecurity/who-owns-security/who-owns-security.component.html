@@ -1,0 +1,98 @@
+<div class="panel">
+    <div class="slds-hide container" id="printData{{uniqueID}}" style="width: 100%">
+      <div  class="slds-p-around--xx-small myContainer" id="summary">
+        <div class="slds-container_center gridContainer">
+
+          <!-- Selected Security Summarized Info -->
+          <div class="slds-tile">
+            <div class="slds-grid">
+              <div class="slds-col">
+                <div class="panel-heading" (click)="visible = !visible">
+                  <div class="panel-title slds-grid slds-grid--vertical-align-center">
+                    <div class="slds-col slds-grid--vertical-align-center">
+                      <span class="slds-text-heading_small slds-text-color--weak  slds-m-left--large">
+                       <svg [style.display]="!visible ? 'inline' : 'none'" class="slds-icon slds-icon-text-default slds-icon--x-small" aria-hidden="true">
+                        <use [attr.xlink:href]="service.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevronright'"></use>
+                      </svg>
+                      <svg [style.display]="!visible ? 'none' : 'inline'" class="slds-icon slds-icon-text-default slds-icon--x-small" aria-hidden="true">
+                        <use [attr.xlink:href]="service.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#chevrondown'"></use>
+                      </svg>
+                       <span [style.font-weight]="!visible ? 'normal' : 'bold'"> {{securityID + ' - ' + securityName}} </span>
+                    </span>
+                    </div>
+                    <div class="slds-col--bump-left">
+                      <div class="slds-grid panel-body">
+                        <button [style.display]="visible ? 'inline' : 'none'" id="printButton{{uniqueID}}" (click)="printReport()" class="no-print slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true" title="Print View">
+                          Print
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="slds-col--bump-left">
+                      <button [style.display]="visible ? 'inline' : 'none'" id="exportButton{{uniqueID}}" (click)="downloadReport()" class="no-print slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Export">
+                        <svg class="slds-button__icon slds-text-align--center" aria-hidden="true">
+                          <use [attr.xlink:href]="service.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#download'"></use>
+                        </svg>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+            <div class="panel-body" *ngIf="visible">
+              <div class="slds-has-divider slds-m-left--large slds-m-right--large"></div>
+              <div class="slds-tile__detail slds-text-body--small slds-m-left--large">
+                <dl class="slds-list--horizontal">
+                  <dt class="slds-item--label slds-text-color--weak"><strong>Market Price:</strong></dt>
+                  <dd class="slds-item--detail slds-truncate"><span class="text-color-price">{{MktPrice | currency:'USD':'symbol'}}</span></dd>
+                  <dt class="slds-item--label slds-text-color--weak"><strong>Total Accounts:</strong></dt>
+                  <dd class="slds-item--detail slds-truncate">{{reportsArr.length | number}}</dd>
+                  <dt class="slds-item--label slds-text-color--weak"><strong>Total Shares:</strong></dt>
+                  <dd class="slds-item--detail slds-truncate">{{totalShares | number}}</dd>
+                  <dt class="slds-item--label slds-text-color--weak"><strong>Total Market Value:</strong></dt>
+                  <dd class="slds-item--detail slds-truncate"><span class="text-color-price">{{totalMktValue | currency:'USD':'symbol':'1.0-0'}}</span></dd>
+                </dl>
+              </div>
+              <div class="slds-has-divider slds-m-left--large slds-m-right--large"></div>
+            </div>
+
+          </div>
+
+          <div class="panel-body" [hidden]="!visible">
+            <!-- Account List Grid Component -->
+            <div>
+              <urebal-grid  id="'whoOwnsMultiSecurityGrid'+uniqueID" #whoOwnsMultiSecurityGrid panelTitle="" debug=false [gridId]="'whoOwnsMultiSecurityGrid'+uniqueID" [autoHeight]=true
+                            [columnReorder]=false [columnResize]=false [displayHeader]=false dataType="json"
+                            dataColumns='[
+                                  { "name": "accountId", "type": "string" },
+                                  { "name": "accountName", "type": "string" },
+                                  { "name": "portfolioPercentWeight", "type": "number" },
+                                  { "name": "shares", "type": "number" },
+                                  { "name": "marketValue", "type": "number" },
+                                  { "name": "unrealizedGainLoss", "type": "number" }
+                                 ]'
+                            negativeValueColumns = '[{"column":"unrealizedGainLoss"}]'
+                            gridColumns='[
+                                  { "text": "Account ID", "align": "center", "width" : "22.5%", "cellsalign":"left", "datafield": "accountId"},
+                                  { "text": "Account Name", "align": "center", "width" : "22.5%", "cellsalign":"left", "datafield": "accountName"},
+                                  { "text": "% Portfolio", "align": "center", "width" : "12.5%", "cellsalign":"right", "datafield": "portfolioPercentWeight", "cellsformat": "d2"},
+                                  { "text": "Shares", "align": "center", "cellsalign":"right", "width" : "12.5%", "datafield": "shares", "cellsformat": "d0"},
+                                  { "text": "Market Value (USD)", "align": "center", "width" : "15%", "cellsalign":"right", "datafield": "marketValue", "cellsformat": "c2"},
+                                  { "text": "Unrealized G/L (USD)", "align": "center", "width" : "15%", "cellsalign":"right", "datafield": "unrealizedGainLoss", "cellsrenderer":"cellsRenderer", "cellsformat": "c2"}
+                                ]'>
+              </urebal-grid>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+<div id="pageDivider{{uniqueID}}" class="slds-has-divider slds-hide" *ngIf="false"></div>

@@ -1,0 +1,14 @@
+<li *ngFor="let item of items">
+  <a (click)="selectItem(item.modelName)">
+    <div class="slds-grid slds-grid--align-spread">
+      <div class="slds-col">
+        <span class="ticker-title">{{item.modelName}}</span>
+        <span class="slds-text-color--weak">{{item.modelType}}</span>
+      </div>
+      <div class="slds-col">
+        <!--<span class="text-color-price">{{item.price | currency:'USD':'symbol'}}</span>-->
+      </div>
+    </div>
+  </a>
+</li>
+

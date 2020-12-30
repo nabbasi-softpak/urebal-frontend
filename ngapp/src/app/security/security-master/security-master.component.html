@@ -1,0 +1,58 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget>
+            <div header>
+                <div class="blueleaf-widget-header blueleaf-widget-header-left">
+                    <!-- Grid Header -->
+                    <div id="grid-header-securityMaster">
+                        <div class="slds-grid slds-grid--vertical-align-center">
+                            <div class="slds-col">
+                                <div class="slds-media slds-no-space slds-grow">
+                                    <div class="slds-media__body">
+                                        Security Master
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Referesh button -->
+                            <div class="slds-m-horizontal--x-large">
+                                <button class="slds-button slds-button_icon" aria-haspopup="true" (click)="refreshGrid()">
+                                    <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-reload.svg'">
+                                </button>
+                            </div>
+
+                            <!-- Search Panel -->
+                            <div>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                        <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                                             class="slds-input__icon slds-icon-text-default blueleaf-search-input-icon"
+                                             aria-hidden="true">
+                                        <input autocomplete="off" type="text" id="textSearch"
+                                               class="slds-input blueleaf-search-input" placeholder="Search"
+                                               (keyup)='keyUp.next($event.target.value)'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div body>
+                <!-- Grid container -->
+                <div class="uGrid" id="securityMaster">
+                    <jqxGrid #lazyGrid [width]="'100%'" [auto-create]=true
+                             [columns]="securityMasterGridCols" [source]="securityMasterGridAdapter"
+                             [theme]='"blueleaf"' [autoheight]=false
+                             [enabletooltips]="true" [sortable]="true" [showsortmenuitems]="false"
+                             [altrows]="true" [pageable]="true" [pagermode]="'simple'"
+                             [virtualmode]="true" [rendergridrows]="renderGridRows"
+                             (onSort)="gridOnSort($event)" (onPagechanged)="pageChanged($event)"
+                    >
+                    </jqxGrid>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+</div>

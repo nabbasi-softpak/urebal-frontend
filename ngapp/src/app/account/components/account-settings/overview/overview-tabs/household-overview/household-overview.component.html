@@ -1,0 +1,43 @@
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-2 star-chart">
+    <div
+      class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak blueleaf-widget-subheading">
+      <b>{{ getTitle() }} Current Allocation</b><br />&nbsp;
+    </div>
+    <softpak-chart  #assetAllocationModelChart [height]='350' [showLegend]='false'
+              [borderLineWidth]="0" [title]="''" [description]="''"
+              [enableAnimations]='true' [padding]='padding'
+              [source]='assetAllocationPieData' [legendLayout]='legendLayout'
+              [seriesGroups]='assetAllocationSeriesGroups' [showBorderLine]="true">
+    </softpak-chart >
+    <ng-container *ngIf="assetAllocationMessage != ''">
+      <br />
+      <div class="slds-col">
+        <h3 class="slds-text-align--center slds-text-color--error slds-text-body_small blueleaf-error-message">
+            <span>
+              Note: {{assetAllocationMessage}}
+            </span>
+        </h3>
+      </div>
+    </ng-container>
+  </div>
+  <div class="slds-col slds-size_1-of-2">
+    <div
+      class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak blueleaf-widget-subheading">
+      <b>{{ getTitle() }} Target Allocation</b><br />{{overviewData.model?.name}}
+    </div>
+    <div>
+      <softpak-chart #accountModelChart [height]='350' [showLegend]='false'
+                [borderLineWidth]="0" [title]="''" [description]="''"
+                [enableAnimations]='true' [padding]='padding'
+                [source]='accountModelPieData' [legendLayout]='legendLayout'
+                [seriesGroups]='accountModelSeriesGroups' [showBorderLine]="true">
+      </softpak-chart>
+    </div>
+  </div>
+</div>
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-1">
+    <app-chart-legend *ngIf="overviewService.getChartColors().length != 0" [chartColors]="overviewService.getChartColors()"></app-chart-legend>
+  </div>
+</div>

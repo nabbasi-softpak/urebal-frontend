@@ -1,0 +1,16 @@
+<div class="slds-grid slds-wrap ">
+
+
+  <div class="slds-size--1-of-1 slds-p-horizontal--medium slds-m-top--medium">
+    <nav role="navigation" aria-label="Breadcrumbs">
+      <ol class="slds-breadcrumb slds-list--horizontal">
+        <li *ngFor="let breadcrumb of breadcrumbs" class="slds-breadcrumb__item">
+          <a [routerLink]="breadcrumb.url" href="javascript:void(0);">{{ breadcrumb.label }}</a>
+        </li>
+      </ol>
+    </nav>
+
+  </div>
+
+
+</div>

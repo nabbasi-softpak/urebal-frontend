@@ -1,0 +1,22 @@
+<div class="slds-filter--row slds-p-around--medium">
+  <label class="slds-form-element__label blueleaf-text" >Drift Status</label>
+  <div class="slds-form--inline">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <app-urebal-dropdown id="driftStatusDropDown"  width='250px' [localdata]="driftStatusList" [placeholder] = "'Choose Drift Status:'"
+                             (onSelect)="selectDriftStatus($event)" [displayMember]="'display'" [valueMember]="'value'" [checkboxes]=true>
+        </app-urebal-dropdown>
+      </div>
+    </div>
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <button (click)="removeParameter()" class="slds-button slds-button--icon-border" aria-live="assertive" title="Remove Drift Status">
+          <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+          </svg>
+          <span class="slds-assistive-text">Remove Drift Status</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

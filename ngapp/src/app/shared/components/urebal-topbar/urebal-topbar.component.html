@@ -1,0 +1,90 @@
+<header class="navigation">
+    <div class="slds-grid slds-grid--align-spread">
+        <div>
+            <div class="blueleaf-logo">
+            </div>
+        </div>
+        <div>
+            <ul id="urUserMenuContainer" class="slds-grid"
+                role=menu>
+                <li class="slds-dropdown-trigger bl-settings-dropdown-trigger" role="presentation">
+                <span class="slds-icon_container slds-icon_container--circle slds-icon-action-user">
+                <svg aria-hidden="true" class="slds-icon slds-icon--small">
+                  <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/standard-sprite/svg/symbols.svg#user'"></use>
+                </svg>
+                </span>
+                    <a href="javascript: void(0);" class="slds-text-link--reset">
+
+                        <span class="blueleaf-username">{{localStorage.get("userFirstName")}}</span>
+
+                        <div class="slds-button slds-button--icon bl-settings-down-arrow slds-hide">
+                            <img aria-hidden="true"
+                                 [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-arrow-down-light.svg'">
+                        </div>
+
+                    </a>
+
+
+                    <div class="slds-dropdown slds-dropdown--right slds-nubbin--top-right  slds-hide">
+                        <ul class="slds-dropdown__list user_menu" role="menu">
+                <span id="hideNavigation">
+                <li href="#" class="slds-dropdown__item">
+                <a class="slds-truncate" role="menuitem">
+                  <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small"
+                       aria-hidden="true">
+                    <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#user_role'"></use>
+                  </svg>
+                  User Settings</a>
+                </li>
+                <li href="#" class="slds-dropdown__item">
+                <a class="slds-truncate" role="menuitem">
+                  <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small"
+                       aria-hidden="true">
+                    <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#notification'"></use>
+                  </svg>
+                  Alert Preferences</a>
+                </li>
+                <li href="#" class="slds-dropdown__item">
+                <a [routerLink]="['history']" class="slds-truncate" role="menuitem">
+                  <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small"
+                       aria-hidden="true">
+                    <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#record_create'"></use>
+                  </svg>
+                  History</a>
+                </li>
+                </span>
+                            <li href="#" class="slds-dropdown__item">
+                                <a [routerLink]="['user/changepassword']" class="slds-truncate" role="menuitem">
+                                    <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small"
+                                         aria-hidden="true">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#reset_password'"></use>
+                                    </svg>
+                                    Change Password</a>
+                            </li>
+                            <li href="#" class="slds-dropdown__item">
+                                <a (click)="userService.logout();" class="slds-truncate" role="menuitem">
+                                    <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small"
+                                         aria-hidden="true">
+                                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#logout'"></use>
+                                    </svg>
+                                    Logout</a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</header>
+<header class="navigation slds-hide">
+    <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-spread">
+        <div class="slds-p-horizontal--medium slds-size--1-of-6"><img
+                [attr.src]="urebalService.getAppContext() + '/assets/images/urebal-logo.svg'"></div>
+
+
+    </div>
+</header>

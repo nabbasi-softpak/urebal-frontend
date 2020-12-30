@@ -1,0 +1,99 @@
+<!--<div id="dvImportSegments" class="fileupload">-->
+  <!--<fieldset>-->
+    <!--<legend>Upload your CSV File</legend>-->
+    <!--<input type="file" name="File Upload" id="txtFileUpload" (change)="changeListener($event)" accept=".csv"/>-->
+  <!--</fieldset>-->
+<!--</div>-->
+
+<div id="uploadFiles" class="slds-grid slds-grid--align-center">
+
+  <div class="slds-size--1-of-2 slds-p-around--medium">
+
+    <div class="slds-m-bottom--large">
+      <label class="slds-text-color--error">{{errMsg}}</label>
+    </div>
+
+    <h1 class="slds-page-header__title slds-truncate">Upload Files</h1>
+    <div class="slds-size--1-of-4 slds-float--left">
+    <p class="slds-p-vertical--medium">Only .csv files are supported</p>
+    </div>
+
+    <div class="slds-p-vertical--small slds-m-right--large slds-float--right">
+      <select (change)="onChangeDateFormat($event.target)" class="slds-select">
+        <option disabled selected>Select date format</option>
+        <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+        <option value="dd-MM-yyyy">DD-MM-YYYY</option>
+        <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+        <option value="yyyy/MM/dd">YYYY/MM/DD</option>
+        <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+      </select>
+    </div>
+
+
+
+
+      <table class="slds-table slds-table_bordered ">
+        <tbody>
+        <tr *ngFor="let file of filesArray; let i=index">
+          <td width="40%">
+            <label>{{file.fileName}}</label>
+
+          </td>
+          <td>
+            <div class="slds-p-around--medium">
+              <label>File contains header</label>
+              <input (change)="onChangeFileHeader($event.target,file)" type="checkbox">
+            </div>
+
+          </td>
+          <td width="20%">
+            <select id="fileTypeSelect{{i}}"  (change)="onChangeFileType($event.target,file)" class="slds-select">
+              <option disabled selected>Choose file type</option>
+              <option  *ngFor="let key of fileTypeObj | keys" [disabled]="(tempArr.indexOf(fileTypeObj[key]) >= 0)" value="{{fileTypeObj[key]}}">{{key}}</option>
+            </select>
+          </td>
+          <td align="center">
+            <button (click)="removeUploadedFile(file)" class="slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Remove">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+              </svg>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5" align="center">
+            <div class="slds-form-element slds-align--absolute-center">
+
+              <div class="slds-form-element__control">
+                <div class="slds-file-selector slds-file-selector--files">
+                  <div class="slds-file-selector__dropzone">
+                    <input #fileUploaderInput type="file"  class="slds-file-selector__input slds-assistive-text" name="File Upload" accept=".csv"  id="file-upload-input-01" (change)="upload($event)" aria-multiselectable="true"  aria-describedby="file-selector-id" multiple>
+                    <label class="slds-file-selector__body" for="file-upload-input-01">
+          <span class="slds-file-selector__button slds-button slds-button--neutral">
+            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+              <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#upload'"></use>
+            </svg>Upload Files</span>
+                    </label>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody></table>
+
+
+    <div class="slds-p-around--medium slds-align--absolute-center">
+      <button  (click)="nextBtnPressed()" class="slds-button slds-button--urebal">Next</button>
+    </div>
+
+
+
+
+  </div>
+
+
+</div>

@@ -1,0 +1,7 @@
+<softpak-combobox #InputRef
+                  [width]="'100%'" [height]="'32px'"
+                  [placeHolder]="'Enter Account Name'"
+                  [valueMember]="'portfolioName'" [displayMember]="'portfolioName'" [showArrow]="false"
+                  [minLength]="1" [remoteAutoComplete]="true" [multiSelect]="true" [dropDownHeight]="'250px'"
+                  [searchMode]="'containsignorecase'" [renderer]="renderer" (onChange)="autoCompleteClose($event)" (onClose)="clearInput()">
+</softpak-combobox>

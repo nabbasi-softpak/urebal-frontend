@@ -1,0 +1,25 @@
+<div class="slds-col slds-grid--vertical-align-center slds-grid--align-spread slds-p-around--medium">
+    <div class="slds-col slds-text-heading--medium slds-text-align--left slds-float--left slds-text-color_weak blueleaf-widget-subheading">
+        <b>{{currentOverview}}</b>
+    </div>
+    <div class="slds-grid slds-grid--vertical-align-center slds-float--right">
+        <div>
+            <label>
+                <select [(ngModel)]="currentOverview" class="blueleaf-dropdown">
+                    <option *ngFor="let overview of overviewOptions;" [value]="overview">{{overview}}</option>
+                </select>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="slds-p-around--medium">
+    <div *ngIf="isType(OverviewType.account)">
+        <hr/>
+        <app-household-overview></app-household-overview> <!-- Household-overview -->
+    </div>
+    <div *ngIf="isType(OverviewType.restrictions)">
+        <hr/>
+        <app-restriction-overview></app-restriction-overview>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<urebal-widget [showHeader]="displayHeader" [showDivider]="displayHeader" [contentClass]="customContentClass">
+    <div header>
+        <div class="blueleaf-widget-header blueleaf-widget-header-left">
+            <!-- Grid Header -->
+            <div id="grid-header-{{gridId}}">
+                <div class="slds-grid slds-grid--vertical-align-center">
+                    <div class="slds-col">
+                        <div class="slds-media slds-no-space slds-grow">
+                            <div class="slds-media__body">
+                                {{panelTitle}}
+                                <h4 *ngIf="panelAdditionalLabel"
+                                    class="slds-m-right--small slds-align-middle slds-truncate">{{panelAdditionalLabel}}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="actionButton" class="slds-bump--left slds-m-horizontal--medium">
+                        <button class="slds-button slds-button--blueleaf actionButton"
+                                (click)="actionClick()">{{actionButton.label}}</button>
+                    </div>
+                    <!-- Referesh button -->
+                    <div class="slds-m-horizontal--x-large">
+                        <button class="slds-button slds-button_icon" aria-haspopup="true" (click)="refreshGrid()">
+                            <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-reload.svg'">
+                        </button>
+                    </div>
+
+                    <!-- Search Panel -->
+                    <div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                <img [attr.src]="urebalService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                                     class="slds-input__icon slds-icon-text-default blueleaf-search-input-icon"
+                                     aria-hidden="true">
+                                <input autocomplete="off" type="text" id="text-input-01"
+                                       class="slds-input blueleaf-search-input" placeholder="Search"
+                                       [(ngModel)]="txtSearch"
+                                       (keyup)="searchInGrid($event)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div body>
+        <!-- Grid container -->
+        <div class="uGrid" id='{{gridId}}'>
+            <jqxGrid #gridReference [auto-create]='false' [virtualmode]="false" [rendergridrows]="rendergridrows"
+                     [cellhover]="cellHover" (onRowselect)="rowSelectGrid($event)" (onCellendedit)="cellEdited($event)"
+                     (onRowunselect)="rowUnSelectGrid($event)" (onBindingcomplete)="bindingComplete($event)"
+                     (onPagechanged)="pageChanged($event)" (onSort)="onGridSort($event)"></jqxGrid>
+        </div>
+    </div>
+</urebal-widget>
+
+
+<div id="Filters" style="display: none">
+    <div style="margin: 15px;" *ngIf="filters != undefined">Filter By:&nbsp;&nbsp;
+        <span *ngFor="let filter of filters" style="margin-right: 8px;">
+          <button class="slds-button slds-button--neutral" *ngIf="filter.type == 'Button'" id="{{filter.id}}"
+                  (click)="onFilter(filter)">{{filter.caption}}</button>
+          <button class="slds-button slds-button--neutral" style="margin-right: -5px;" *ngIf="filter.type == 'Input'"
+                  id="{{filter.id}}_button" (click)="onFilter(filter)">{{filter.caption}}</button>
+          <input class="slds-input" style="width:60px; text-align:right; float:right; min-height:auto;" type="text"
+                 ur-number-bounded-format minimum={{filter.min}} maximum={{filter.max}} [(ngModel)]="filter.paramVal"
+                 *ngIf="filter.type == 'Input'" id="{{filter.id}}" (keyup)="onFilterKeyUp(filter, $event)"
+                 value="{{filter.defaultValue}}">
+      </span>
+    </div>
+</div>
+
+

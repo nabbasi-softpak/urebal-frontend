@@ -1,0 +1,14 @@
+<li *ngFor="let item of items">
+  <a (click)="selectItem(item.ticker)">
+    <div class="slds-grid slds-grid--align-spread">
+      <div class="slds-col">
+        <span class="ticker-title slds-p-bottom--xx-small" style="text-align: left !important;">{{item.ticker}}</span>
+        <span class="slds-text-color--weak">Price Date: {{item.priceDate | date}}</span>
+      </div>
+      <div class="slds-col">
+        <span class="text-color-price">{{item.price | currency:'USD':'symbol'}}</span>
+      </div>
+    </div>
+  </a>
+</li>
+

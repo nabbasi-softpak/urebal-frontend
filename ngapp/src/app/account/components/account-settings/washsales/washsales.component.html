@@ -1,0 +1,25 @@
+<urebal-grid [data]="accountWashsales"  [autoHeight]=true panelTitle="Wash Sale"  gridId="washsalesgrid-{{randomText}}" [displayHeader]=false
+             [columnReorder]=false
+             [columnResize]=false
+             dataType="json"
+             [pageSize]=10
+             dataColumns='[
+                                { "name": "ticker", "type": "string" },
+                                { "name": "tickerName", "type": "string" },
+                                { "name": "sellDate", "type": "date" },
+                                { "name": "accountId", "type": "string" }
+                            ]'
+
+             gridColumns='[
+                                {
+                                    "text": "Security ID", "datafield": "ticker","width" : "30%", "align": "center", "cellsalign":"left"
+                                },
+                                {
+                                    "text": "Security Name", "datafield": "tickerName","width" : "40%", "align": "center", "cellsalign":"left"
+                                },
+                                {
+                                    "text": "Sell Date", "datafield": "sellDate","width" : "30%", "align": "center", "cellsalign":"right", "cellsformat":"MMM dd, yyyy"
+                                }
+                            ]'
+>
+</urebal-grid>

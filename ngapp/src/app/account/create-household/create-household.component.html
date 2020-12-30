@@ -1,0 +1,137 @@
+<div class="slds-grid slds-wrap slds-m-around_medium">
+  <div class="slds-size--1-of-1">
+    <div class="slds-grid">
+      <div class="slds-size--1-of-1 box slds-p-around--medium color-white">
+        <div class="slds-grid slds-grid--vertical-align-center">
+          <div class="slds-size--8-of-12">
+            <h3 class="text-size--heading" >Create - Household</h3>
+          </div>
+        </div>
+        <div class="slds-clearfix">&nbsp;</div>
+        <fieldset class="slds-form--compound">
+          <div class="slds-form-element__group">
+            <div class="slds-form-element__row">
+              <div class="slds-size--2-of-8">
+                <label class="slds-form-element__label slds-text-title--caps">Household Name</label>
+                <input _ngcontent-c3="" id="houseHoldName" [(ngModel)]="portfolioName" class="slds-input" placeholder="Enter New Household Name" (blur)="checkHouseHoldName()" type="text">
+                <label class="slds-text-color--error">{{errMsg}}</label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="slds-clearfix">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slds-grid slds-wrap slds-m-around--medium box color-white">
+  <div class="slds-size--1-of-1">
+
+  <urebal-grid #grid dataUrl="portfolios/list?type=3" panelTitle="Accounts" [autoHeight]=true [columnReorder]=false [columnResize]=false selectionMode="checkbox"
+               dataType="json"
+               gridId="singleAccountList"
+               linkRendererParams='[{"click": "routeToAccount","params": ["accountName"]}]'
+               (selectedRow) = "select($event)"
+               (unSelectedRow) = "deSelect($event)"
+
+               dataColumns='[{ "name": "portfolioId", "type": "number" },
+                { "name": "portfolioName", "type": "link" },
+                { "name": "houseHold", "type": "boolean" },
+                { "name": "taxable", "type": "string" },
+                { "name": "accountId", "type": "string" },
+                { "name": "marketValue", "type": "number" },
+                { "name": "freeCash", "type": "number" },
+                { "name": "freeCashPercentage", "type": "number" },
+                { "name": "cash", "type": "number" },
+                { "name": "cashPercentage", "type": "number" },
+                { "name": "positionsCount", "type": "number" }
+            ]'
+
+               gridColumns='[
+                {
+                    "text": "Account ID",  "datafield": "accountId", "align": "center", "cellsalign":"left"
+                },
+                {
+                    "text": "Account Name",  "datafield": "portfolioName", "cellsrenderer":"cellsRenderer", "align": "center", "cellsalign":"left"
+                },
+                {
+                    "text": "Taxable", "datafield": "taxable", "align": "center", "cellsalign":"center", "cellsrenderer":"cellsRenderer"
+                },
+                {
+                    "text": "Free Cash (USD)",  "datafield": "freeCash", "cellsformat":"c0", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "Free Cash %",  "datafield": "freeCashPercentage", "cellsformat":"d2", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "Core Cash (USD)",  "datafield": "cash", "cellsformat":"c0", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "Core Cash %",  "datafield": "cashPercentage", "cellsformat":"d2", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "No. of Holdings",  "datafield": "positionsCount", "align": "center", "cellsalign":"right"
+                },
+                {
+                    "text": "Market Value (USD)",  "datafield": "marketValue", "cellsformat":"c0", "align": "center", "cellsalign":"right"
+                }
+
+
+            ]'
+               (onLinkClick)="OnLinkActive($event)"
+  >
+  </urebal-grid>
+
+
+  <div _ngcontent-c3="" class="slds-size--1-of-1 ">
+
+    <div _ngcontent-c3="" class="slds-modal__footer">
+      <button _ngcontent-c3="" class="slds-button slds-button--urebal" (click)="createHousehold()" >Create Household</button>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<app-modal id="modal1" >
+  <div class="slds-modal__header">
+
+    <h3 id="header43" class="slds-text-heading--large">{{portfolioName}}</h3>
+  </div>
+  <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+    <p><strong>Please note: </strong> Account settings will be maintained, all other configuration settings will be lost.</p>
+    <p>Are you sure you want to continue?</p>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--neutral" (click)="closeModal()">NO</button>
+    <button class="slds-button slds-button--urebal" (click)="mergeAccounts()">YES</button>
+  </div>
+</app-modal>
+
+<app-modal id="modal2" >
+  <div class="slds-modal__header">
+
+    <h3 id="header44" class="slds-text-heading--large">{{portfolioName}}</h3>
+  </div>
+  <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+    <p>{{responseMsg}}</p>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--urebal" (click)="redirectToAccounts()">OK</button>
+  </div>
+</app-modal>
+
+<app-modal id="modal3" >
+  <div class="slds-modal__header">
+    <h3 id="header45" class="slds-text-heading--large">ERROR</h3>
+  </div>
+  <div class="slds-modal__content slds-text-align--center slds-p-around--medium">
+    <p>Too many accounts selected.</p>
+    <p>Please select up to 15 accounts.</p>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--urebal" (click)="closeModal()">OK</button>
+  </div>
+</app-modal>
+

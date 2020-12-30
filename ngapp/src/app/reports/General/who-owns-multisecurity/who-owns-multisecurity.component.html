@@ -1,0 +1,116 @@
+
+<div class="slds-grid slds-wrap slds-p-around--medium">
+
+
+
+  <div class="slds-size--1-of-1 box color-white">
+
+    <div class="slds-page-header color-white no-print">
+      <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-col">
+          <div class="slds-media slds-no-space slds-grow">
+
+            <div class="slds-media__body">
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Report - Who Owns (Multi Security) </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security ID AutoComplete Filter  -->
+    <div class="slds-p-around--small slds-p-horizontal--medium gradient-background  quick-filters slds-align--absolute-center no-print">
+      <div class="slds-form--inline">
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" style="display: none;">Security ID</label>
+          <div class="slds-form-element__control">
+            <div>
+              <div>
+                <table>
+                  <tr>
+                    <td style="width: 100px;">
+                      <div class="slds-align--absolute-center slds-m-horizontal--small">Security ID</div>
+                    </td>
+                    <td>
+                      <div>
+                        <app-autocomplete [items]="tickerArr" [inputID]="'autocomplete-0'" [template]="'security'"
+                                          [placeholder]="'Enter Security ID'" [defaultValue]="''"> </app-autocomplete>
+                      </div>
+                    </td>
+                    <td style="width: 20px;">
+                      &nbsp;
+                    </td>
+                    <td>
+                      <span id="errMsgautocomplete-0" class="slds-text-color--error"></span>
+                    </td>
+                  </tr>
+                  <ng-container #vcAutocomplete>
+                  </ng-container>
+                </table>
+
+              </div>
+
+              <div class="slds-p-left--xx-large" style="padding-left: 8.25rem;">
+                <a id="addAutocompleteButton" (click)="addAutocomplete()" class="slds-m-horizontal--small" aria-haspopup="true" title="Add New">
+                  + Add another security
+                </a>
+              </div>
+              <div *ngIf="errMsg">
+                <span class="slds-text-color--error" style="padding-left: 5rem;">{{errMsg}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-p-around--small slds-p-horizontal--medium gradient-background  quick-filters slds-align--absolute-center no-print">
+      <div class="slds-form--inline">
+        <div class="slds-form-element">
+          <div class="slds-form-element__control slds-p-left--xx-large">
+              <button id="fetchButton" (click)="bindReportData()" class="slds-button slds-button--neutral slds-m-horizontal--small" aria-haspopup="true" title="Fetch">
+                Fetch Report
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <ng-container #vc></ng-container>
+      </div>
+    </div>
+
+    <ng-template #tpl let-id >
+      <tr>
+        <td>
+            &nbsp;
+        </td>
+        <td>
+          <div class="slds-p-bottom--x-small"></div>
+          <div>
+            <app-autocomplete [inputID]="id" [items]="tickerArr" [template]="'security'"
+                              [placeholder]="'Enter Security ID'" [defaultValue]="''"> </app-autocomplete>
+          </div>
+        </td>
+        <td>
+          <div>
+            <button id="removeSecurityButton" (click)="removeSecurity(id)" class="no-print slds-button slds-button_icon-border slds-button_icon slds-m-horizontal--small" aria-haspopup="true" title="Remove Security">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use [attr.xlink:href]="service.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+              </svg>
+            </button>
+          </div>
+        </td>
+        <td>
+          <span id='errMsg{{id}}' class="slds-text-color--error"></span>
+        </td>
+      </tr>
+
+    </ng-template>
+
+
+  </div>
+
+</div>

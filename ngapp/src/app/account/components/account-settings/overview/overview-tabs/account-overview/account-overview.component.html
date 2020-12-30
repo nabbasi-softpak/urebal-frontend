@@ -1,0 +1,28 @@
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-2 star-chart">
+    <div class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak">
+      <b>Account Current Allocation</b><br />&nbsp;
+    </div>
+    <app-urebal-cytoscape #accountDistributionChart></app-urebal-cytoscape>
+  </div>
+  <div class="slds-col slds-size_1-of-2">
+    <div
+      class="slds-col slds-p-around--medium slds-size_1-of-1 slds-text-heading--small slds-text-align--center slds-text-color_weak">
+      <b>Household Target Allocation</b><br />{{overviewData.model?.name}}
+    </div>
+    <div>
+      <br /><br /><br /><br />
+      <softpak-chart #accountModelChart [height]='350' [showLegend]='false'
+                [borderLineWidth]="0" [title]="''" [description]="''"
+                [enableAnimations]='true' [padding]='padding'
+                [source]='accountModelPieData' [legendLayout]='legendLayout'
+                [seriesGroups]='accountModelSeriesGroups' [showBorderLine]="true">
+      </softpak-chart>
+    </div>
+  </div>
+</div>
+<div class="slds-grid">
+  <div class="slds-col slds-size_1-of-1">
+    <app-chart-legend *ngIf="overviewService.getChartColors().length != 0" [chartColors]="overviewService.getChartColors()"></app-chart-legend>
+  </div>
+</div>

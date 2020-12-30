@@ -1,0 +1,255 @@
+<div *ngIf="accountSettings" >
+
+  <div class="slds-p-left--medium slds-m-bottom--medium" style="color:red" *ngIf="settingsError">{{settingsError}}</div>
+  <div class="slds-p-left--medium slds-m-bottom--medium" style="color:green" *ngIf="success">{{success}}</div>
+
+<fieldset class="slds-form--compound">
+  <div class="slds-form-element__group slds-p-left--medium">
+    <div class="slds-form-element_row">
+      <div class="slds-size--1-of-6">
+        <label class="slds-checkbox--toggle slds-grid slds-grid--vertical-align-center">
+          <span class="slds-form-element__label slds-m-bottom--none">Taxable</span>
+          <input type="checkbox" [ngModel]="accountSettings.isTaxable" (change)="accountSettings.isTaxable = !accountSettings.isTaxable" name="checkbox" aria-describedby="toggle-taxable" />
+          <span id="toggle-taxable" class="slds-checkbox--faux_container" aria-live="assertive">
+                          <span class="slds-checkbox--faux"></span>
+                        </span>
+        </label>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</fieldset>
+
+<div class="slds-clearfix  slds-m-around--small"></div>
+
+  <div class="slds-grid">
+    <div class="slds-col slds-p-left--medium slds-p-right--x-large">
+      <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box"  style="position:relative;">Tax Rate
+      </h3>
+      <div class="slds-clearfix slds-m-around--small"></div>
+      <fieldset class="slds-form--compound">
+
+        <div class="slds-form-element__group">
+          <div class="slds-form-element__row">
+
+            <div class="">
+              <label class="slds-form-element__label">Long-Term Tax Rate</label>
+              <div class="slds-form-element__control slds-input-has-fixed-addon">
+                <input [disabled]="!accountSettings.isTaxable" type="number" class="slds-input" [(ngModel)]="accountSettings.ltTaxRate" style="text-align: right"/>
+                <span class="slds-form-element__addon">%</span>
+              </div>
+            </div>
+
+
+            <div class=" ">
+              <label class="slds-form-element__label">Short-Term Tax Rate</label>
+              <div class="slds-form-element__control slds-input-has-fixed-addon">
+                <input [disabled]="!accountSettings.isTaxable" type="number"  class="slds-input" [(ngModel)]="accountSettings.stTaxRate" style="text-align: right" />
+                <span class="slds-form-element__addon">%</span>
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+        </div>
+      </fieldset>
+    </div>
+    <div class="slds-col slds-p-right--medium" style="width: 40%">
+      <!-- Capital Gain Constraint Group -->
+
+      <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box" style="position:relative;">Capital Gain Constraint
+        <app-toggle-button #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [labelFalse]="'Net'" [labelTrue]="'S/L Term Separation'" [buttonProperty]="'isMcgSlSeparation'" [buttonValue]="accountSettings?.isMcgSlSeparation" style="position:absolute; top:4px; right:5px;"></app-toggle-button>
+      </h3>
+
+      <div class="slds-clearfix slds-m-around--small"></div>
+
+      <fieldset class="slds-form--compound">
+
+        <div class="slds-form-element__group">
+
+          <div class="slds-form-element__row">
+
+            <div class="slds-p-right--large">
+              <table style="width:auto;">
+                <tr *ngIf="accountSettings.isMcgSlSeparation">
+                  <td class="slds-p-left--large" colspan="2">
+                    <strong><label class="slds-form-element__label ">Short Term</label></strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="slds-p-left--large"><label class="slds-form-element__label"><strong>Realized G/L YTD</strong></label></td>
+                  <td class="slds-p-left--large"><label class="slds-form-element__label"><strong>Maximum Capital Gain</strong></label></td>
+                </tr>
+                <tr *ngIf="!accountSettings.isMcgSlSeparation">
+                  <td>
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                      <span class="slds-form-element__addon">$</span>
+                      <input  type="number"  class="slds-input" [disabled]="accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.ytdNetGainLoss" style="text-align: right" />
+
+                    </div>
+
+                  </td>
+                  <td>
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                      <span class="slds-form-element__addon">$</span>
+                      <input  type="number"  class="slds-input" [disabled]="accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.maxCapitalGain" style="text-align: right" />
+
+                    </div>
+
+                  </td>
+                </tr>
+                <tr *ngIf="accountSettings.isMcgSlSeparation">
+                  <td>
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                      <span class="slds-form-element__addon">$</span>
+                      <input type="number"  class="slds-input" [disabled]="!accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.ytdStGainLoss" style="text-align: right" />
+
+                    </div>
+                  </td>
+                  <td>
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                      <span class="slds-form-element__addon">$</span>
+                      <input type="number"  class="slds-input" [disabled]="!accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.maxCapitalGainSt" style="text-align: right" />
+
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div *ngIf="accountSettings.isMcgSlSeparation" class="slds-p-left--medium slds-border--left">
+              <table style="width:auto;">
+                <tr >
+                  <td class="slds-p-left--large" colspan="2">
+                    <strong><label class="slds-form-element__label ">Long Term</label></strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="slds-p-left--large"><label class="slds-form-element__label"><strong>Realized G/L YTD</strong></label></td>
+                  <td class="slds-p-left--large"><label class="slds-form-element__label"><strong>Maximum Capital Gain</strong></label></td>
+                </tr>
+                <tr *ngIf="accountSettings.isMcgSlSeparation">
+                <td>
+                <div class="slds-form-element__control slds-input-has-fixed-addon">
+                <span class="slds-form-element__addon">$</span>
+                <input type="number"  class="slds-input" [disabled]="!accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.ytdLtGainLoss" style="text-align: right" />
+
+                </div>
+                </td>
+                <td>
+                <div class="slds-form-element__control slds-input-has-fixed-addon">
+                <span class="slds-form-element__addon">$</span>
+                <input type="number"  class="slds-input" [disabled]="!accountSettings.isMcgSlSeparation || !accountSettings.isTaxable" [(ngModel)]="accountSettings.maxCapitalGainLt" style="text-align: right" />
+
+                </div>
+                </td>
+
+                </tr>
+
+              </table>
+            </div>
+
+
+
+          </div>
+
+
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="slds-clearfix slds-border--bottom slds-m-around--large"></div>
+
+ <div class="slds-grid">
+
+
+   <!--here-->
+   <div class="slds-col slds-p-left--medium">
+     <!-- Lot Trading Constraint Group -->
+
+     <h3 class="slds-text-heading--label slds-p-around--small slds-theme--shade box">Lot Trading Constraint</h3>
+
+     <div class="slds-clearfix slds-m-around--small"></div>
+
+     <fieldset class="">
+
+       <div class="slds-form-element__group">
+
+         <div class="slds-form-element_row slds-grid slds-grid--align-spread">
+           <div class="slds-form-element">
+             <label class="slds-form-element__label">Lots having L/T Loss</label>
+             <app-toggle-button  #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [buttonProperty]="'donotSellLtl'" [buttonValue]="accountSettings?.donotSellLtl"></app-toggle-button>
+           </div>
+
+           <div class="slds-form-element">
+             <label class="slds-form-element__label">Lots having S/T Loss</label>
+             <app-toggle-button #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [buttonProperty]="'donotSellStl'" [buttonValue]="accountSettings?.donotSellStl"></app-toggle-button>
+           </div>
+
+           <div class="slds-form-element">
+             <label class="slds-form-element__label">Lots having L/T Gain</label>
+             <app-toggle-button #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [buttonProperty]="'donotSellLtg'" [buttonValue]="accountSettings?.donotSellLtg"></app-toggle-button>
+           </div>
+
+           <div class="slds-form-element">
+             <label class="slds-form-element__label">Lots having S/T Gain</label>
+             <app-toggle-button #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [buttonProperty]="'donotSellStg'" [buttonValue]="accountSettings?.donotSellStg"></app-toggle-button>
+           </div>
+
+           <div class="slds-form-element slds-p-right--medium">
+             <label class="slds-form-element__label">Lots having S/T Gain Convertible to L/T</label>
+             <div class="slds-form-element_row slds-grid slds-grid--align-spread">
+               <app-toggle-button #ToggleButtonRef [disableBtn]="!accountSettings.isTaxable" (onChange)="toggleButtonOnChange()" [buttonProperty]="'donotSellConvertibleStg'" [buttonValue]="accountSettings?.donotSellConvertibleStg">
+               </app-toggle-button>
+               <div class="slds-p-left--small">
+                 <label>Roll over</label>
+                 <input style="text-align: right" type="text" class="slds-input input-size--x-small" [disabled]="!accountSettings?.donotSellConvertibleStg || !accountSettings.isTaxable" [(ngModel)]="accountSettings.rollOverPeriod" ur-NumberOfDays >
+                 <span>days</span>
+               </div>
+
+             </div>
+
+
+
+
+
+           </div>
+
+         </div>
+
+         <!--<div class="slds-p-around&#45;&#45;medium"></div>-->
+
+         <!--<div class="slds-form-element_row slds-grid">-->
+
+
+
+
+
+         <!--</div>-->
+
+       </div>
+
+     </fieldset>
+   </div>
+
+ </div>
+
+
+
+
+
+
+
+<div class="slds-clearfix slds-border--bottom slds-m-around--large"></div>
+
+
+
+</div>

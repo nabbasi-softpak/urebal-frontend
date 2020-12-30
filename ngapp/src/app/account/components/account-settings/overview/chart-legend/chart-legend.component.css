@@ -1,0 +1,19 @@
+.square {
+  height: 16px;
+  width: 16px;
+  display: block;
+  float: left;
+  margin-right: 5px;
+  border: 1px solid #eeeeee;
+}
+
+.colorBlock {
+  display: inline-block;
+  margin: 0 15px 0 15px;
+}
+
+.legendContainer {
+  text-align: center;
+  margin: 50px 0 15px 0;
+  width: 100%;
+}

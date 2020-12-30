@@ -1,0 +1,45 @@
+<div class="slds-filter--row slds-p-around--medium">
+    <label class="slds-form-element__label blueleaf-text">Drift</label>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_3-of-12 slds-p-right--small">
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <div>
+                        <select class="blueleaf-dropdown" #operatorChange (change)="onOperatorChange(operatorChange.value)"
+                                [(ngModel)]="driftValOperator" name="driftValOperator">
+                            <option>Equal</option>
+                            <option>Not Equal</option>
+                            <option>Greater</option>
+                            <option>Greater or Equal</option>
+                            <option>Less</option>
+                            <option>Less or Equal</option>
+                            <option>Between</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-size_4-of-12  slds-p-right--x-small">
+            <input type="text" class="slds-input blueleaf-text" placeholder="Drift" id="driftStart" ur-number-format
+                   [(ngModel)]="drift1" (blur)="onDriftChange()" name="drift1"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12 slds-p-right--x-small slds-p-top--x-small blueleaf-text" *ngIf="showRange">
+            <p>AND</p>
+        </div>
+        <div class="slds-col slds-size_4-of-12 slds-p-right--small" *ngIf="showRange">
+            <input type="text" class="slds-input blueleaf-text" placeholder="Drift" ur-number-format [(ngModel)]="drift2"
+                   (blur)="onDriftChange()" name="drift2"/>
+        </div>
+        <div class="slds-col slds-size_2-of-12">
+            <div class="slds-form-element__control">
+                <button (click)="removeParameter()" class="slds-button slds-button--icon-border" aria-live="assertive"
+                        title="Remove Drift">
+                    <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">
+                        <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Remove Drift</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-grid dataUrl="models?sort=modelName:desc" panelTitle="Model List" [autoHeight]=false
+                     [columnReorder]=false
+                     [columnResize]=false
+                     [height]="590"
+                     dataType="json"
+                     gridId="model-list"
+                     linkRendererParams='[{"click": "routeToDetail","params": ["modelTypeNum","modelName","modelAttributeType", "modelId"]}]'
+                     linkRendererPermissions='[{
+                                        "datafield": "modelName",
+                                        "checkParamPermission": true,
+                                        "paramName": "modelTypeNum",
+                                        "paramValuePermissions": [{"paramValue": "1", "permissionName": "modelViewSecurityModel"},
+                                                                  {"paramValue": "4", "permissionName": "modelViewModelOfModel"},
+                                                                  {"paramValue": "3", "permissionName": "modelViewAssetModel"}]
+                                       }]'
+                     actionItemsPermissions='[{
+                                        "item": "Edit",
+                                        "checkParamPermission": true,
+                                        "paramName": "modelTypeNum",
+                                        "paramValuePermissions": [{"paramValue": "1", "permissionName": "modelModifySecurityModel"},
+                                                                  {"paramValue": "4", "permissionName": "modelModifyModelOfModel"},
+                                                                  {"paramValue": "3", "permissionName": "modelModifyAssetModel"}]
+                                      }, {
+                                        "item": "Copy",
+                                        "checkParamPermission": true,
+                                        "paramName": "modelTypeNum",
+                                       "paramValuePermissions": [{"paramValue": "1", "permissionName": "modelCloneSecurityModel"},
+                                                                 {"paramValue": "4", "permissionName": "modelCloneModelOfModel"},
+                                                                 {"paramValue": "3", "permissionName": "modelCloneAssetModel"}]
+                                      }]'
+                     actionItems='[{"item":"Edit","click": "routeToAction","params": ["modelName","modelTypeNum", "modelId"]},
+                      {"item":"Copy","click": "routeToCopyAction","params": ["modelName","modelTypeNum", "modelId"]},
+                      {"item":"Delete","click": "deleteModel","params": ["modelName","modelTypeNum","modelId", "assignedAccountsCount"]}]'
+                     dataColumns='[{ "name": "impartial", "type": "boolean" },
+                { "name": "modelId", "type": "number" },
+                { "name": "modelName", "type": "string" },
+                { "name": "modelType", "type": "string" },
+                { "name": "elementsCount", "type": "number" },
+                { "name": "modelAttributeType", "type": "string" },
+                { "name": "cashTargetPctWt", "type": "number" },
+                { "name": "assignedAccountsCount", "type": "number" },
+                { "name": "modelAttributeType", "type": "string" },
+                { "name": "subModelsCount", "type": "number" },
+                { "name": "modelTypeNum", "type": "number" }
+            ]'
+
+                     [gridColumns]="modelListGridCols()"
+                     (onLinkClick)="OnLinkActive($event)"
+        >
+        </urebal-grid>
+    </div>
+</div>
+
+<app-dialog-modal #dialogDeleteModal id='deleteModal'
+                  [modalSize]="'default'"
+                  [title]="'Delete Model'"
+                  (yes)="closeModal()"
+                  [yesText]="'OK'"
+                  [content]="deleteResposeMsg"
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>
+
+
+<app-dialog-modal #dialogDeleteConfirmationModal id='deleteConfirmationModal'
+                  [modalSize]="'default'"
+                  [title]="'Delete Model'"
+                  (yes)="deleteModelYes()"
+                  (no)="closeModal()">
+</app-dialog-modal>
+

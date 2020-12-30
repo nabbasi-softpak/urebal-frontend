@@ -1,0 +1,21 @@
+<div class="blueleaf-text" style="height: 500px; text-align: center;line-height: 35; font-weight: 200;" *ngIf="!driftDataExists">
+    {{errorMessage}}
+
+</div>
+
+<urebal-grid #driftGridRef [hidden]="!driftDataExists" panelTitle="" [debug]=false [displayHeader]=false [autoHeight]=false
+             [columnReorder]=false [columnResize]=false [pageSize]=10
+             [dataType]="'json'"
+             [gridId]="'drift-report'"
+             [height]="398"
+             [linkRendererParams]="'[]'"
+             [rowRendererColumns]="driftRowRenderColumns"
+             [dataColumns]="driftDataColumns"
+             [gridColumns]="driftGridColumns"
+>
+</urebal-grid>
+
+
+
+
+

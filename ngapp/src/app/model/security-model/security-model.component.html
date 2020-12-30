@@ -1,0 +1,178 @@
+<div class="slds-grid slds-wrap blueleaf-dashboard-container">
+    <div class="slds-size--1-of-1 box color-white">
+        <urebal-widget>
+            <div header>
+                <div class="blueleaf-widget-header">
+                    <div *ngIf="!isEdit">
+                        Create A New Security Model
+                    </div>
+                    <div *ngIf="isEdit">
+                        Edit Security Model
+                    </div>
+                </div>
+            </div>
+            <div body>
+                <div>
+                    <div class="slds-grid slds-grid--vertical-align-center">
+                        <div class="slds-size--12-of-12">
+                            <span class="blueleaf-form-control-label slds-m-right--small">Model
+                                Name</span>
+                            <input *ngIf="!isEdit" type="text" id="input-011"
+                                   class="slds-input slds-input--blueleaf"
+                                   [(ngModel)]="modelName" name="modelName" (keyup)="modelNameChanged()"
+                                   placeholder="Enter Model Name" autofocus autocomplete="off">
+                            <span *ngIf="isEdit" class="blueleaf-widget-subheader" style="text-transform: none">{{modelName}}</span>
+                            <span *ngIf="invalidModelName" class="error-text-red slds-m-left--small">
+                                <i class="material-icons text-color-red slds-align-middle slds-m-right--x-small">warning</i>
+                                <span class="slds-align-middle blueleaf-error-message">{{modelErrorMessage}}</span>
+                            </span>
+                            <span *ngIf="!invalidModelName && modelAlreadyExist" class="error-text-red slds-m-left--small">
+                                <i class="material-icons text-color-red slds-align-middle slds-m-right--x-small">warning</i>
+                                <span class="slds-align-middle blueleaf-error-message">Model already exists.
+                                      <a [routerLink]="['/secure/model/securityModel/edit', modelId]">Click here</a> to load model.
+                                    </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </urebal-widget>
+    </div>
+    <div class="slds-size--1-of-1 slds-m-top--medium box color-white">
+        <urebal-widget [showHeader]="false" [showDivider]="false" [showFooter]="true">
+            <div body>
+                <div class="slds-grid slds-grid--vertical-stretch">
+                    <div class="slds-col slds-size--9-of-12">
+                        <div class="slds-large-size--1-of-1 slds-border--right">
+                            <div class="slds-filters">
+                                <div class="slds-filter--row slds-form-element__control slds-p-bottom--small">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_2-of-8">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                                                    <img [attr.src]="modelService.getAppContext() + '/assets/images/blueleaf/icon-search.svg'"
+                                                         class="slds-input__icon slds-icon-text-default blueleaf-combo-search-input-icon"
+                                                         aria-hidden="true">
+                                                    <app-autocomplete-security
+                                                            (onSelect)="onSecuritySelect($event)"></app-autocomplete-security>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col slds-size_2-of-8 slds-p-left--x-small slds-p-top--x-small">
+                                            <security-advanced-search
+                                                    (securitiesSelect)="onSelectSearchSecurities($event)"></security-advanced-search>
+                                        </div>
+
+                                        <div class="slds-col slds-size_2-of-8 slds-p-top--x-small">
+                                            <p *ngIf="securityExist"
+                                               class="slds-text-align--right slds-m-right--medium blueleaf-error-message">
+                                                <i class="material-icons slds-align-middle slds-m-right--x-small">warning</i>
+                                                <span class="slds-align-middle">{{securityExist}}</span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical"
+                                     style="height: 378px">
+                                    <softpak-grid
+                                        #secModelGridRef
+                                        [editable]="true"
+                                        [columns]='columnsModelEdit'
+                                        [source]="dataAdapterModelEdit"
+                                        [width]="'100%'"
+                                        [height]="'375px'"
+                                        [showstatusbar]="true"
+                                        [showaggregates]="true"
+                                        [editmode]="'click'"
+                                        [selectionmode]="'singlecell'"
+                                        (onCellvaluechanged)="endSecurityCellEdit($event)"
+                                        (onCellselect)="onCellSelect($event)"
+                                    >
+                                    </softpak-grid>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Temporarily hiding pie chart -->
+                    <div class="slds-col slds-size--3-of-12 slds-p-around--large slds-hide">
+                        <softpak-chart #secModelChartRef [width]="chartWidth" [height]="chartHeight"
+                                       [showLegend]='false'
+                                       [borderLineWidth]="0" [title]="title" [description]="description"
+                                       [enableAnimations]='false' [padding]='padding'
+                                       [source]='pieData' [legendLayout]='legendLayout'
+                                       [seriesGroups]='seriesGroups'>
+                        </softpak-chart>
+
+                        <div [hidden]="pieData.length == 0 || (pieData.length == 1 && pieData[0].name == '')">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Color"></div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Primary Asset Class"><b>PAC</b></div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Target"><b>Target</b></div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="slds-hint-parent" *ngFor="let pie of pieData; let idx = index">
+                                    <ng-container *ngIf="pie.name">
+                                        <td>
+                                            <div class="slds-truncate" title="Color">
+                                        <span class="square"
+                                              [style.backgroundColor]="modelPieChart.getSoftpakColorScheme(idx)"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-truncate" title="Primary Asset Class">{{ pie.name }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-truncate"
+                                                 title="Primary Asset Class">{{ pie.value.toFixed(3) }} %
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div footer>
+                <label class="slds-form-element__label" style="float: left;color: #a94442;font-weight: bold;"
+                       *ngIf="invalidModel">{{modelErrorMessage}}</label>
+                <button class="slds-button slds-button--blueleaf--neutral" (click)="navigateToModelDetail()">Cancel
+                </button>
+                <button class="slds-button slds-button--blueleaf" (click)="saveSecurityModel()"
+                        [disabled]="!allowSave()">
+                    Save
+                </button>
+            </div>
+        </urebal-widget>
+    </div>
+</div>
+
+
+<app-dialog-modal #saveModelRef id='saveModelRef'
+                  [modalSize]="'default'"
+                  [title]="'Success'"
+                  (yes)="navigateToModelDetail()"
+                  [yesText]="'OK'"
+                  [content]="modelSuccessMessage"
+                  [hideSecondaryButton]=true>
+</app-dialog-modal>
+
+
+<app-dialog-modal #removeSecurityModalRef id='removeSecurityModal'
+                  [modalSize]="'default'"
+                  [title]="'Remove Security'"
+                  (yes)="removeSecurityGridRow()"
+                  (no)="removeSecurityModal.close()">
+</app-dialog-modal>

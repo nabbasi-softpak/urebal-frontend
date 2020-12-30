@@ -1,0 +1,192 @@
+<div class="slds-grid slds-wrap slds-m-around--medium">
+    <div class="slds-size--1-of-1">
+        <div class="slds-grid">
+
+            <div class="slds-size--1-of-1 box slds-p-around--medium color-white">
+
+                <div class="slds-grid slds-grid--vertical-align-center">
+                    <div class="slds-size--8-of-12">
+                        <h3 class="text-size--heading" *ngIf="!isEdit">Create - Model of Models</h3>
+                        <h3 class="text-size--heading" *ngIf="isEdit">{{modelName}}</h3>
+                    </div>
+                </div>
+
+                <fieldset class="slds-form--compound" *ngIf="!isEdit">
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row slds-p-bottom--none">
+                            <div class="slds-size--2-of-8">
+                                <label class="slds-form-element__label slds-text-title--caps" for="input-01">Model
+                                    Name</label>
+                                <input [(ngModel)]="modelName" name="modelName" type="text" autocomplete="off"
+                                       id="input-01" class="slds-input slds-size--1-of-1" value=""
+                                       placeholder="Enter Model Name" (blur)="getModel()">
+                            </div>
+                            <div class="slds-size--6-of-8 slds-p-around--x-small slds-p-bottom--none slds-p-left--medium">
+                                <br/>
+                                <p *ngIf="invalidModelName" class="error-text-red">
+                                    <i class="material-icons slds-align-middle slds-m-right--x-small">error</i>
+                                    <span class="slds-align-middle">{{modelErrorMessage}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slds-grid slds-wrap slds-m-around--medium box color-white">
+    <div class="slds-size--1-of-1">
+        <div class="slds-grid slds-grid--vertical-stretch">
+            <div class="slds-col slds-size_9-of-12 slds-filters">
+                <div class="slds-grid slds-p-around--small">
+                    <div class="slds-col slds-size_2-of-12 slds-p-right--small">
+                        <label for="select-01"></label>
+                        <select (change)="selectModelType($event)" id="select-01" class="slds-select">
+                            <option value="{{ MMItemType.SECURITY }}">Security</option>
+                            <option value="{{ MMItemType.MODEL }}" [selected]="true">Model</option>
+                        </select>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <!-- Security Search -->
+                        <app-autocomplete-security *ngIf="this.isSecurity"
+                                                   (onSelect)="addItemsOnSelect($event)"></app-autocomplete-security>
+                        <!-- Model Search -->
+                        <app-autocomplete #AutocompleteRef [focusAfterSelection]="true"
+                                          (postSelect)="addItemsOnSelect($event)"
+                                          [emptyOnSelection]="true" [template]="'model'"
+                                          [inputID]="'securityAutoComplete'"
+                                          [placeholder]="'Enter Model Name'"
+                                          [defaultValue]="''" [hidden]="this.isSecurity"></app-autocomplete>
+                    </div>
+
+                    <div class="slds-col slds-size_3-of-12 slds-p-left--x-small slds-p-top--x-small">
+                        <security-advanced-search *ngIf="this.isSecurity"
+                                                  (securitiesSelect)="onSelectSearchSecurities($event)"></security-advanced-search>
+                    </div>
+
+                    <div class="slds-col slds-size_3-of-12 slds-p-top--x-small">
+                        <p *ngIf="errorMessage" class="slds-text-align--right error-text-red">
+                            <i class="material-icons slds-align-middle slds-m-right--x-small">error</i>
+                            <span class="slds-align-middle">{{errorMessage}}</span>
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="slds-form--stacked slds-grow slds-scrollable--y slds-grid slds-grid--vertical"
+                     style="height: 600px">
+                    <softpak-grid
+                        #modelGridRef
+                        [editable]="true"
+                        [columns]='columnsModelEdit'
+                        [source]="dataAdapterModelEdit"
+                        [width]="'100%'"
+                        [height]="'598px'"
+                        [showstatusbar]="true"
+                        [showaggregates]="true"
+                        [editmode]="'click'"
+                        [selectionmode]="'singlecell'"
+                        (onCellvaluechanged)="endSecurityCellEdit($event)"
+                        (onCellselect)="onCellSelect($event)"
+                        (onCellclick)="onCellClick($event)"
+                    >
+                    </softpak-grid>
+                </div>
+
+            </div>
+            <div class="slds-col slds-size_3-of-12 slds-p-around--large" style="border-left: 1px solid lightgrey;">
+                <!-- TODO: remove this style="..." -->
+                <softpak-chart #pieChartRef [width]="chartWidth" [height]="chartHeight" [showLegend]='false'
+                               [borderLineWidth]="0" [title]="title" [description]="description"
+                               [enableAnimations]='false' [padding]='padding'
+                               [source]='pieData' [legendLayout]='legendLayout'
+                               [seriesGroups]='seriesGroups'>
+                </softpak-chart>
+
+                <div [hidden]="pieData.length == 0 || (pieData.length == 1 && pieData[0].name == '')">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Color"></div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align--center" title="Primary Asset Class">
+                                    <b>PAC</b></div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align--center" title="Target"><b>Target</b></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="slds-hint-parent" *ngFor="let pie of pieData; let idx = index">
+                            <ng-container *ngIf="pie.name">
+                                <td>
+                                    <div class="slds-truncate" title="Color">
+                                        <span class="square"
+                                              [style.backgroundColor]="modelPieChart.getSoftpakColorScheme(idx)"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" title="Primary Asset Class">{{ pie.name }}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align--right"
+                                         title="Primary Asset Class">{{ pie.value.toFixed(3) }} %
+                                    </div>
+                                </td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 ">
+            <div class="slds-modal__footer">
+                <label class="slds-form-element__label" style="float: left;color: #a94442;font-weight: bold;"
+                       *ngIf="invalidModel">{{modelErrorMessage}}</label>
+                <button class="slds-button slds-button--blueleaf--neutral" (click)="navigateToModelList()">Cancel</button>
+                <button class="slds-button slds-button--blueleaf" (click)="saveModelOfModel()" [disabled]="!allowSave()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-message-modal #saveModalRef title="Success" [modalSize]="'default'" (ok)="navigateToModelList()">
+    {{modelSuccessMessage}}
+</app-message-modal>
+
+<app-dialog-modal #saveAsSecurityModelModalRef id='saveAsSecurityModel'
+                  [modalSize]="'default'"
+                  [title]="'Save as Security Model'"
+                  (yes)="saveAsSecurityModel()"
+                  (no)="saveAsSecurityModelModal.close()">
+</app-dialog-modal>
+
+<app-dialog-modal #removeSecurityModalRef id='removeSecurityModal'
+                  [modalSize]="'default'"
+                  [title]="'Remove'"
+                  (yes)="removeSecurityGridRow()"
+                  (no)="removeSecurityModal.close()">
+</app-dialog-modal>
+
+<app-message-modal #showModelSecuritiesRef id='showModelSecurities'
+                   [modalSize]="'default'"
+                   [title]="'Model Details'"
+                   (ok)="closeShowSecuritiesModal()">
+    <softpak-grid
+        #modelSecuritiesGridRef
+        [selectionmode]="'none'"
+        [columns]="showModelDetailColumns"
+        [source]="showModelDetailsDataAdapter"
+        [width]="'100%'"
+    >
+    </softpak-grid>
+</app-message-modal>

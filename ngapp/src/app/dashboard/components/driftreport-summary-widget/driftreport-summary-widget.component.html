@@ -1,0 +1,19 @@
+<urebal-widget>
+    <div header>
+        <div class="blueleaf-widget-header">
+            Top Ten Drifted Accounts
+        </div>
+        <div class="blueleaf-widget-subheader">
+            By Drift %
+        </div>
+    </div>
+    <div body>
+        <softpak-grid #driftSummaryWidgetGridRef
+                      [id]="driftSummaryWidgetGrid"
+                      [columns]=driftSummaryWidgetGridCols
+                      [source]=driftSummaryWidgetGridAdapter
+                      [height]="'368px'"
+        >
+        </softpak-grid>
+    </div>
+</urebal-widget>

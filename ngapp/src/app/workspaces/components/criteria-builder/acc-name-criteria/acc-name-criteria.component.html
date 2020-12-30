@@ -1,0 +1,37 @@
+<div class="slds-filter--row slds-p-around--medium">
+  <label class="slds-form-element__label blueleaf-text" >Account Name</label>
+  <div class="slds-form--inline">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <div>
+          <select  class="blueleaf-dropdown" (change)="accountNameChange()" [(ngModel)] = "operator" name="operator">
+            <option>Equal</option>
+            <option>Not Equal</option>
+            <option>Contains</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <!--<input required name="accountName" #accountModel="ngModel" type="text" [(ngModel)] = "accountName" (blur)="accountNameChange(accountModel.invalid)" class="slds-input form-control" placeholder="Account Name"/>-->
+        <app-autocomplete #accountModel="ngModel" (textValue)="accountNameOnBlur($event, accountModel.invalid)" (postSelect)="accountNameChange($event, accountModel.invalid)" [items]="accountsList" [(ngModel)]="accountName" [upperCase]="false" [template]="'portfolio_simple'" [inputID]="'accountName-'+componentIndex" [placeholder]="'Account Name'" [defaultValue]="''"></app-autocomplete>
+      </div>
+    </div>
+
+
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <button (click)="removeParameter()" class="slds-button slds-button--icon-border" aria-live="assertive" title="Remove Account Name">
+          <svg class="slds-button__icon" aria-hidden="true" style="color: #007dc4">a
+            <use [attr.xlink:href]="urebalService.getAppContext() + '/assets/css_framework/assets/icons/utility-sprite/svg/symbols.svg#dash'"></use>
+          </svg>
+          <span class="slds-assistive-text">Remove Account Name</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

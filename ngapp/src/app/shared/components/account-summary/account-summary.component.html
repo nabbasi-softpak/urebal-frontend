@@ -1,0 +1,30 @@
+<div id="printSummary" class="slds-size--1-of-1 slds-align--absolute-center color-white " style="width: 100%;">
+  <div class="slds-grid slds-wrap">
+    <div class="slds-col slds-size_1-of-2 slds-p-around--medium">
+      <span class="text-color-grey--c4c6c7">Account Name: </span><span id="account-title">{{accountDetail?.portfolioName}}</span>
+      <br>
+      <span *ngIf="tax != -1" class="text-color-grey--c4c6c7">Type: </span> <span *ngIf="tax != -1" id="account-type">{{accountDetail?.isHouseHold ? 'Household' : 'Single'}}</span>
+
+    </div>
+    <div class="slds-col slds-size_1-of-2 slds-p-around--medium">
+      <span class="text-color-grey--c4c6c7">Account ID: </span> <span id="account-id">{{accountDetail?.isHouseHold ? 'N/A' : accountDetail?.accounts[0].id }}</span>
+    </div>
+    <div class="slds-col slds-size_2-of-2">
+
+    </div>
+
+    <div class="slds-col slds-size_1-of-3 slds-border--top slds-p-around--medium">
+      <span *ngIf="tax != -1" class="text-color-grey--c4c6c7">Total Market Value: </span><span *ngIf="tax == -1" class="text-color-grey--c4c6c7">Account Market Value: </span><span class="text-color-price" id="account-mkv">${{accountDetail?.marketValue | number:'1.0-0'}}</span>
+      <br>
+      <span *ngIf="accountDetail?.isHouseHold ? true : (tax == -1)" class="text-color-grey--c4c6c7">Taxable: </span> <span *ngIf="accountDetail?.isHouseHold ? true : (tax == -1)" id="account-tax" class="text-color-price">{{tax == -1 ? (accountDetail.isTaxable ? 'Yes': 'No') : tax | currency:'USD':'symbol'}}</span>
+    </div>
+    <div class="slds-col slds-size_1-of-3 slds-border--top slds-p-around--medium">
+      <span class="text-color-grey--c4c6c7">No. of Holdings: </span><span id="account-holdings">{{accountDetail?.positionsCount}}</span>
+    </div>
+    <div *ngIf="accountDetail?.freeCash != -1" class="slds-col slds-size_1-of-3 slds-border--top slds-p-around--medium">
+      <span class="text-color-grey--c4c6c7">Free Cash: </span> <span class="text-color-price" id="account-freecash">{{accountDetail?.freeCash | currency:'USD':'symbol'}}</span>
+      <br>
+      <span class="text-color-grey--c4c6c7">Core Cash:  </span><span class="text-color-price" id="account-corecash">{{accountDetail?.cash | currency:'USD':'symbol'}}</span>
+    </div>
+  </div>
+</div>

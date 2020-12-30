@@ -1,0 +1,130 @@
+[
+  {
+    "text": "Ticker",
+    "hidden": false
+  },
+  {
+    "text": "Security<br />Name",
+    "hidden": false
+  },
+  {
+    "text": "Account Number",
+    "hidden": false
+  },
+  {
+    "text": "Trade<br />Type",
+    "hidden": false
+  },
+  {
+    "text": "Round Trade<br />Shares",
+    "hidden": false
+  },
+  {
+    "text": "Round<br />Proposed",
+    "hidden": false
+  },
+  {
+    "text": "Basis<br />Price",
+    "hidden": false
+  },
+  {
+    "text": "Purchase<br />Date",
+    "hidden": false
+  },
+  {
+    "text": "Initial<br />Shares",
+    "hidden": false
+  },
+  {
+    "text": "Round Trade<br />Value",
+    "hidden": false
+  },
+  {
+    "text": "Initial %",
+    "hidden": false
+  },
+  {
+    "text": "Round<br />Prop. %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted<br />Min %",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted<br />Max %",
+    "hidden": false
+  },
+  {
+    "text": "Price",
+    "hidden": false
+  },
+  {
+    "text": "Round Prop.<br />Shares",
+    "hidden": false
+  },
+  {
+    "text": "Round<br />Tax",
+    "hidden": false
+  },
+  {
+    "text": "S/L",
+    "hidden": false
+  },
+  {
+    "text": "Round<br />G/L",
+    "hidden": false
+  },
+  {
+    "text": "Proposed<br />Shares",
+    "hidden": false
+  },
+  {
+    "text": "Adjusted<br />Target %",
+    "hidden": false
+  },
+  {
+    "text": "Trade<br />Shares",
+    "hidden": false
+  },
+  {
+    "text": "Tax",
+    "hidden": false
+  },
+  {
+    "text": "Trade<br />Value",
+    "hidden": false
+  },
+  {
+    "text": "Trade %",
+    "hidden": false
+  },
+  {
+    "text": "Proposed %",
+    "hidden": false
+  },
+  {
+    "text": "Initial<br />Value",
+    "hidden": false
+  },
+  {
+    "text": "Proposed<br />Value",
+    "hidden": false
+  },
+  {
+    "text": "Round<br />Trade %",
+    "hidden": false
+  },
+  {
+    "text": "Tax<br />Rate %",
+    "hidden": false
+  },
+  {
+    "text": "Restricted<br />Min %",
+    "hidden": false
+  },
+  {
+    "text": "Restricted<br />Max %",
+    "hidden": false
+  }
+]

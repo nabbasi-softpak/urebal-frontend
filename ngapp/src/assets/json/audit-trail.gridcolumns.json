@@ -1,0 +1,23 @@
+[
+  {
+    "text": "Date Time",
+    "hidden": false
+  },
+  {
+    "text": "Entity",
+    "hidden": false
+  },
+  {
+    "text": "Name",
+    "hidden": false
+  },
+  {
+    "text": "Action",
+    "hidden": false
+  },
+  {
+    "text": "Modified By",
+    "hidden": false
+  }
+
+]

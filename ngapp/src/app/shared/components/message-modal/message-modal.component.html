@@ -1,0 +1,30 @@
+<div [ngClass]="'backdrop-'+id" class="blueleaf-backdrop"></div>
+<div role="dialog" tabindex="-1" aria-labelledby="header43" [ngClass]="['modal-'+id, 'blueleaf-modal--' + modalSize]"
+     class="blueleaf-modal slds-align_absolute-center">
+  <div [ngClass]="['blueleaf-modal__container'+containerSize, 'modal-position--' + modalPosition]">
+    <div class="blueleaf-modal-header" *ngIf="showHeader">
+      <label>{{title}}</label>
+    </div>
+    <hr class="blueleaf-modal-divider" *ngIf="showDivider">
+    <div class="blueleaf-modal__content">
+      <p>
+        <ng-container *ngIf="content && content.length > 0; else ngContent">
+          <span style="white-space: pre-line" [innerHTML]="content"></span>
+        </ng-container>
+
+        <ng-template #ngContent>
+          <ng-content></ng-content>
+        </ng-template>
+      </p>
+    </div>
+    <div class="blueleaf-modal__footer" *ngIf="showFooter">
+      <div class="blueleaf-modal__footer-content-container slds-text-align--left slds-p-horizontal--medium">
+        <ng-content select="[footerMessage]"></ng-content>
+      </div>
+
+      <div class="blueleaf-modal__footer-buttons-container">
+        <button class="slds-button slds-button--blueleaf"  (click)="okClicked()">{{okText}}</button>
+      </div>
+    </div>
+  </div>
+</div>

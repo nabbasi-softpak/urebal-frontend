@@ -1,0 +1,60 @@
+<div *ngIf="equivalence.securities.length != 0" class="slds-grid slds-wrap slds-grid--pull-padded"
+     style="cursor: pointer">
+    <div class="slds-p-horizontal--small slds-size--1-of-2">
+        <div style="max-height: 250px; overflow-y: auto">
+            <table class="blueleaf-text blueleaf-table blueleaf-table--collapsible" id="securities-{{equivalence.id}}">
+                <thead>
+                <tr class=" slds-border--bottom">
+                    <th scope="col">
+                        <div class="slds-truncate"><b>Securities</b></div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="slds-border--bottom" style="color: #36454f;"
+                    *ngFor="let security of equivalence.securities">
+                    <td scope="row">
+                        <div class="slds-truncate">
+                            {{security.ticker}}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="slds-p-horizontal--small slds-size--1-of-2">
+        <div style="max-height: 250px; overflow-y: auto">
+            <table class="slds-table blueleaf-text blueleaf-table blueleaf-table--collapsible">
+                <thead>
+                <tr class="slds-border--bottom">
+                    <th scope="col">
+                        <div class="slds-truncate"><b>Account Number</b></div>
+                    </th>
+
+                    <th scope="col">
+                        <div class="slds-truncate"><b>Account Name</b>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="slds-border--bottom"
+                    *ngFor="let account of equivalence.accounts">
+                    <td scope="row">
+                        <div class="slds-truncate">
+                            {{account.accountNumber || '--'}}
+                        </div>
+                    </td>
+
+                    <td scope="row">
+                        <div class="slds-truncate">
+                            {{account.accountName}}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
